@@ -3,7 +3,7 @@
 > Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-05 (5ª tarefa: deploy no Supabase e na Vercel)** · branch `claude/intelligent-bohr-54teds`.
 
 ## Fase atual
-**Fase 1 · Base: ~95%.** Banco no Supabase pronto (migrations + seed) e app na Vercel (`sdm-app`, deploy automático do GitHub). Falta a dona: `DATABASE_URL` na Vercel e testar o login. Endereço público: https://sdm-app.vercel.app (ver `docs/DEPLOY.md`).
+**Fase 1 · Base: ~98%.** Banco no Supabase pronto (migrations + seed) e app na Vercel (`sdm-app`, deploy automático do GitHub). Falta a dona: `DATABASE_URL` na Vercel e testar o login. Endereço público: https://sdm-app.vercel.app (ver `docs/DEPLOY.md`).
 
 | Fase | % | Nota |
 |---|---|---|
@@ -53,7 +53,7 @@
 - Webhook Hubla: nomes de evento, caminhos do payload e header `x-hubla-token` **não conferidos** na doc da Hubla.
 
 ## Quebrado / bugs conhecidos
-- Produção: `DATABASE_URL` cadastrada, mas o banco recusa a senha (`28P01 password authentication failed`, visto em https://sdm-app.vercel.app/api/health). Login e admin dão erro 500 até corrigir a senha. Login por e-mail e por link de acesso ainda não testados de ponta a ponta no Supabase real.
+- Produção OK desde 2026-11-05: `/api/health` com banco conectado (117 aulas); testado A01→A02 com e-mail sem cadastro, link falso recusado, /admin sem login → /admin/entrar. Falta a dona testar o login do admin pelo e-mail e o link de uma aluna teste. (A senha nova do banco levou alguns minutos pra valer no pooler.) Login por e-mail e por link de acesso ainda não testados de ponta a ponta no Supabase real.
 
 ## Próximos 3 passos
 1. **Você**: `docs/DEPLOY.md` → "Falta": `DATABASE_URL` na Vercel, Redeploy, revogar tokens; depois testar `/admin/entrar` e o link de acesso de uma aluna teste.
@@ -64,7 +64,7 @@
 | Desde | Pendência |
 |---|---|
 | 2026-11-05 | Subir `docs/SDM_contexto_completo_v6.md` (protótipos já chegaram) |
-| 2026-11-05 | `DATABASE_URL` na Vercel (reset da senha do banco) + Redeploy (`docs/DEPLOY.md`) |
+| 2026-11-05 | Testar login do admin (https://sdm-app.vercel.app/admin/entrar, link "Sign in" no e-mail) e o link de acesso de uma aluna teste |
 | 2026-11-05 | Revogar os tokens Supabase/Vercel e rodar (roll) a chave secret do Supabase: foram colados no chat |
 | 2026-11-05 | SMTP próprio no Supabase (e-mail padrão: 2/hora; sem ele não dá pra pôr o código no e-mail) |
 | 2026-11-05 | Cadastrar na Vercel só 3 variáveis: `SUPABASE_SERVICE_ROLE_KEY` (secret), `DATABASE_URL` (pooler, com a senha do banco) e `ADMIN_EMAIL`. A senha do banco e a chave secret nunca foram enviadas (no chat veio `[YOUR-PASSWORD]`) e não vão pro código |
