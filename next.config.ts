@@ -4,6 +4,8 @@ import type { NextConfig } from "next";
 // dinâmico. Ver docs/DECISOES.md (ADR-002).
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Upload de imagem por server action (a Vercel aceita até 4,5 MB por requisição).
+  experimental: { serverActions: { bodySizeLimit: "4.5mb" } },
   async headers() {
     return [
       {

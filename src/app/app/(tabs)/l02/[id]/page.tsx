@@ -18,7 +18,7 @@ export default async function L02({ params }: PageProps<"/app/l02/[id]">) {
   const todas = j.modulos.flatMap((m) => m.aulas);
   const i = todas.findIndex((a) => a.id === id);
   const prox = todas.slice(i + 1).find((a) => !a.lock.travado);
-  const alvo = agoraFacaLink(aula.agoraFacaAlvo);
+  const alvo = agoraFacaLink(aula.agoraFacaAlvo, j.student.produtoAtivo);
 
   return (
     <div className="flex flex-col gap-3.5 pt-3 lg:max-w-3xl lg:pt-0">

@@ -11,7 +11,7 @@ export const metadata: Metadata = { title: "Meus produtos" };
 export default async function V01() {
   const { student } = await requireStudent();
   const pastas = await db()
-    .select({ id: schema.studentProducts.id, code: schema.studentProducts.code, pais: schema.studentProducts.paisVenda, nome: schema.vitrineProducts.nome })
+    .select({ id: schema.studentProducts.id, code: schema.studentProducts.code, pais: schema.studentProducts.paisVenda, funil: schema.studentProducts.funil, nome: schema.vitrineProducts.nome })
     .from(schema.studentProducts)
     .leftJoin(schema.vitrineProducts, eq(schema.vitrineProducts.id, schema.studentProducts.vitrineProductId))
     .where(eq(schema.studentProducts.studentId, student.id))
@@ -28,11 +28,12 @@ export default async function V01() {
           </div>
         ) : (
           pastas.map((p) => (
-            <div key={p.id} className="flex flex-col gap-2 rounded-[14px] border border-line bg-surface p-4">
+            <Link key={p.id} href={`/app/v05/${p.id}`} className="flex flex-col gap-2 rounded-[14px] border border-line bg-surface p-4 text-text no-underline hover:border-accent">
               <span className="kk">{p.code}</span>
               <span className="text-[17px] font-bold">{p.nome ?? "[produto]"}</span>
-              <span className="mu">{p.pais ?? "País a escolher"}</span>
-            </div>
+              <span className="mu">{p.pais ? `Vende pra ${p.pais.toUpperCase()}` : "País a escolher"}{p.funil ? ` · funil ${p.funil}` : ""}</span>
+              <span className="text-[13px] font-semibold text-accent-2">Abrir a pasta</span>
+            </Link>
           ))
         )}
         <Link href="/app/v02" className="b2 no-underline">Ver a vitrine de produtos</Link>

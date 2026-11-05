@@ -19,3 +19,14 @@ describe("desbloqueio", () => {
     expect(lessonLock(["up1", "d1"], "compra", { ...base, produtos: ["sdm", "d1"] }).travado).toBe(false);
   });
 });
+
+import { agoraFacaLink } from "@/lib/domain/screens";
+describe("Agora faça", () => {
+  it("telas da pasta usam a pasta ativa; sem pasta vai pra vitrine", () => {
+    expect(agoraFacaLink("V08", "abc")).toEqual({ href: "/app/v08/abc" });
+    expect(agoraFacaLink("F04", null)).toEqual({ href: "/app/v02" });
+    expect(agoraFacaLink("A03")).toEqual({ href: "/app/a03" });
+    expect(agoraFacaLink("fora")).toBeNull();
+    expect(agoraFacaLink("N02", "abc")).toBeNull();
+  });
+});

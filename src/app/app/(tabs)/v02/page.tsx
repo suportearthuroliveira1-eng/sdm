@@ -1,4 +1,6 @@
 import { asc, eq } from "drizzle-orm";
+import Link from "next/link";
+import { criarPasta } from "@/lib/actions/pasta";
 import type { Metadata } from "next";
 import { PageTitle } from "@/components/app/ui";
 import { requireStudent } from "@/lib/auth/session";
@@ -11,8 +13,10 @@ const IDIOMA: Record<string, string> = { en: "Inglês", es: "Espanhol", pt: "Por
 
 // V02 · Vitrine (dados do admin AD06; hoje os 6 exemplos do protótipo). Filtros, favoritos e pasta: Fase 3.
 export default async function V02() {
-  await requireStudent();
+  const { student } = await requireStudent();
   const prods = await db().select().from(schema.vitrineProducts).where(eq(schema.vitrineProducts.ativo, true)).orderBy(asc(schema.vitrineProducts.ordem));
+  const minhas = await db().select({ id: schema.studentProducts.id, vit: schema.studentProducts.vitrineProductId }).from(schema.studentProducts).where(eq(schema.studentProducts.studentId, student.id));
+  const pastaDe = new Map(minhas.map((m) => [m.vit, m.id]));
   return (
     <>
       <PageTitle k="Produtos">Vitrine</PageTitle>
@@ -34,6 +38,13 @@ export default async function V02() {
               {v.funilIndicado ? <span className="rounded-lg border border-line-2 px-2 py-1 text-[11px] text-muted">Funil: {FUNIL[v.funilIndicado]}</span> : null}
             </div>
             <span className="mu">Comissão: {v.comissaoValor ? `${v.comissaoValor}${v.comissaoTipo === "pct" ? "%" : ""}` : "[valor]"}</span>
+            {pastaDe.has(v.id) ? (
+              <Link href={`/app/v05/${pastaDe.get(v.id)}`} className="b2 mt-1 no-underline">Abrir minha pasta</Link>
+            ) : (
+              <form action={criarPasta.bind(null, v.id)} className="mt-1">
+                <button className="b1 min-h-[46px] text-sm">Divulgar este produto</button>
+              </form>
+            )}
           </article>
         ))}
       </div>
