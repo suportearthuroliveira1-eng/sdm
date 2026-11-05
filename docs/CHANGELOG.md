@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-05 · Pasta do produto: criar, gerar, criativos e imagens
+- Telas: V05, V06, V07, V08, F02, F04, DV01, V09; V02 cria a pasta; V01 lista as pastas.
+- `src/lib/gen/modelo.ts` (motor modelo SDM, porte do GEN/LG/PT do protótipo) + `texto.ts`; `src/lib/gen/ia.ts` (OpenAI imagem, desligado sem chave).
+- `src/lib/actions/pasta.ts` (criar pasta, país, testar link, funil, gerar, aprovar, excluir, editar anúncio, cartão, enviar/gerar/excluir imagem).
+- `src/lib/server/safe-fetch.ts` (SSRF), `storage.ts` (bucket privado `sdm`, URLs assinadas), `pasta.ts` (dona da pasta, etapas).
+- `/api/criativo/[id]`: PNG do anúncio (1:1, 4:5, 9:16) com cor ou imagem de fundo.
+- `next.config.ts`: `serverActions.bodySizeLimit` 4.5mb.
+- Testes: 34 unitários, 6 e2e; fluxo inteiro conferido em produção.
+- Quebra algo existente: não.
+
 ## 2026-11-05 · App logado com abas (celular e web)
 - `AppShell` em `src/app/app/(tabs)/layout.tsx`: menu de 5 abas embaixo no celular, menu lateral + cabeçalho na web, link pro admin; admin ganhou "Ver o app da aluna".
 - Telas: I01, L01, L02, L04, V01, V02, Q01 (aviso), U01, com dados reais do banco (`src/lib/server/aluna.ts`).

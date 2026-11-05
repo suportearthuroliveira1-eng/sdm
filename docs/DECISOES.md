@@ -58,3 +58,9 @@
 - **Decisão:** `signInWithPassword` na A01 e no admin. Cadastro pelo servidor (`auth.admin.createUser` com `email_confirm: true`, cadastro público do Supabase continua desligado) e acesso SDM automático enquanto `cadastro_aberto` = true. E-mail já existente não pode se cadastrar de novo; quem foi criado pelo time entra pelo link de acesso e cria a senha em `/app/senha`, ou o admin define a senha na AD03.
 - **Alternativas:** manter código/link por e-mail (precisa de SMTP próprio); senha gerada e enviada por e-mail (adiado junto com a Hubla).
 - **Consequência:** muda a regra do prompt (seção 3: "sem senha" e "só entra quem comprou") enquanto `cadastro_aberto` estiver ligado. Sem e-mail, "esqueci a senha" é pelo time (AD03) ou pela A02. Quando a Hubla entrar, desligar `cadastro_aberto`.
+
+## ADR-012 · Geração sem IA enquanto a chave não existe (motor modelo SDM)
+- **Contexto:** pedido de fluxo funcional de criar produto, copy e criativo; ainda não há `OPENAI_API_KEY` nem nomes de modelo conferidos.
+- **Decisão:** portar o gerador do protótipo (`GEN`, frases `LG`/`PT`) pra `src/lib/gen/modelo.ts`: monta kit, quiz, anúncios, ganchos, roteiros e bio a partir da ficha do produto, no idioma de venda + pt, com `por_que_funciona` e `checagem`. Mesmo formato de saída que os agentes de IA vão usar, então trocar o motor não muda telas nem banco. Criativo em PNG por `next/og` (sem IA, sem custo).
+- **Alternativas:** esperar a chave (nada funcional); texto fixo de exemplo (seria inventado).
+- **Consequência:** os textos são corretos mas previsíveis. Quando a IA ligar, `gerarItens` passa a chamar os agentes por tipo, com cache por hash de entrada.

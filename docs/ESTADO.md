@@ -1,6 +1,6 @@
 # Estado do projeto
 
-> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-05 (7ª tarefa: app logado com abas, versão web)** · branch `claude/intelligent-bohr-54teds`.
+> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-05 (8ª tarefa: fluxo da pasta do produto, geração e criativos)** · branch `claude/intelligent-bohr-54teds`.
 
 ## Fase atual
 **Fase 1 · Base: ~98%.** Banco no Supabase pronto (migrations + seed) e app na Vercel (`sdm-app`, deploy automático do GitHub). Falta a dona: `DATABASE_URL` na Vercel e testar o login. Endereço público: https://sdm-app.vercel.app (ver `docs/DEPLOY.md`).
@@ -9,9 +9,9 @@
 |---|---|---|
 | 1 Base | 90 | infra, banco, RLS, auth manual, admin inicial, PWA, webhook desligado, seeds do protótipo ✓ · falta validar no Supabase real |
 | 2 Casca do app | 40 | moldura com 5 abas (menu de baixo no celular, lateral + cabeçalho na web), I01, L01, L02 (sem vídeo), L04, V01, V02 (sem filtros), Q01 (aviso), U01, desbloqueios ✓ · faltam A04–A07, I02–I05, FR*, B*, L03/L05/L06, cartões, combinado |
-| 3 Diagnóstico e produto | 0 | |
-| 4 Funil | 0 | |
-| 5 Divulgação e números | 0 | |
+| 3 Diagnóstico e produto | 55 | pasta (V02→V05), V06 ficha + cartão, V07 país, V08 link com teste real, V09 biblioteca ✓ · faltam A05/A06 diagnóstico, V03/V04 recomendação, filtros e favoritos da vitrine |
+| 4 Funil | 40 | F02 escolha (pré-venda/quiz/direto), F04 kit com tradução, copiar e quiz jogável ✓ · faltam F05 "monte comigo", F06 conferência da página, F07 teste até o checkout, link da bio `/l/[código]` |
+| 5 Divulgação e números | 25 | DV01: 3 anúncios por vez (editar, aprovar, PNG 1:1/4:5/9:16 com cor ou imagem), 10 ganchos, 10 roteiros, bio/legenda/chamadas, imagens (envio pro Storage; geração com IA pronta, desligada sem chave) ✓ · faltam trilhas T01–T03, PG03–PG08, OG01/OG03–OG09, números N00–N04, rotina com push |
 | 6 Dinheiro, escalar, ebook | 0 | |
 | 7 Professora e suporte | 0 | tabela `support_tickets` já recebe pedidos da A02 |
 | 8 Admin completo | 15 | AD01 (KPIs e jornada reais), AD02 (filtros do protótipo), AD03, AD08, AD11 iniciais |
@@ -31,7 +31,11 @@
 - **Moldura do app** ✓ (`src/components/app/app-shell.tsx`): celular = menu de 5 abas embaixo só nas telas raiz e voltar nas subtelas (protótipo); web (≥1024px) = menu lateral fixo + cabeçalho + link "Painel admin" pra quem é admin.
 - **I01** ✓ próximo passo (próxima aula liberada), próxima aula, "Agora faça" pendentes, progresso, atalhos (só pra telas que existem), plantão (placeholder).
 - **L01** ✓ progresso, continuar, módulos por parte com cadeado e motivo (trilha, 1ª venda, PO = UP1/D1). **L02** ✓ aula + "Agora faça" (botão só se a tela existe) + marcar vista/feito; vídeo e roteiro: placeholder até o AD05. **L04** ✓ glossário.
-- **V01** ✓ estado vazio (criar pasta: Fase 3). **V02** ✓ vitrine do banco (selos, funil, comissão `[valor]`), sem filtros/favoritos.
+- **V01** ✓ lista as pastas (abre o painel). **V02** ✓ vitrine do banco + "Divulgar este produto" (cria a pasta) / "Abrir minha pasta"; sem filtros/favoritos.
+- **V05** ✓ painel da pasta com etapas 0–6, a atual destacada e o motivo de cada bloqueio. Etapas 4–6 (números, dinheiro, escalar): ainda não construídas.
+- **V06** ✓ ficha automática + cartão "ajuda quem". **V07** ✓ país (sugere os do idioma do produto; trocar marca `precisa_refazer`). **V08** ✓ teste real do link (servidor, redirecionamentos, sem IP interno, rate limit); domínio da rede: `[rede a definir no admin]`.
+- **F02** ✓ 3 funis com textos do protótipo e o indicado. **F04** ✓ kit (7 blocos pré-venda / 3 perguntas + resultado no quiz), aba tradução, copiar por bloco, prompt de imagem, "responda como cliente", aprovar, gerar de novo. F05/F06/F07: aviso até definirem `PAGE_TOOL_NAME` e os modelos.
+- **DV01** ✓ anúncios, ganchos, roteiros, bio/legenda, imagens (enviar até 4 MB, gerar com IA se houver chave), fundo dos criativos, PNG pronto. **V09** ✓ biblioteca com filtro por tipo, copiar, aprovar, excluir.
 - **Q01** aviso "professora chega numa próxima atualização" (Fase 7). **U01** ✓ dados, acessos, trocar senha, instalar, painel admin, sair.
 - **A04–A07, I*, FR*, B*, V*, EN*, F*, T*, DV*, PG*, OG*, N*, DN*, E*, EB*, L*, Q*, U01**: não começadas.
 - **Admin** (visual do Admin.dc.html): login do time ✓ · AD01 ✓ 6 KPIs + jornada de 10 passos com contagens reais do banco (abandono e dúvidas: placeholders até Fases 2/7) · AD02 ✓ (busca, filtros Todas/Sem acesso 7 dias/Sem funil/Com venda, colunas do protótipo; "Onde está" = [—] até as etapas existirem; nova aluna com link, importar CSV) · AD03 parcial (dados, acessos, gerar link, copiar mensagem WhatsApp, desativar, **definir senha da aluna**; faltam conversas, pastas, impersonar) · AD08 ✓ (o que cada acesso libera, mapa produto→acesso, log de eventos, reprocessar) · AD11 parcial (editor JSON das settings) · AD04–AD07, AD09, AD10, AD12, AD13: não começadas.
@@ -47,23 +51,24 @@
 - `supabase/migrations` + `supabase/seed.sql` testados num Postgres com cara de Supabase (schema `extensions`, aplicar 2x o seed não duplica).
 - Build passa sem nenhuma variável de ambiente (pronto pra Vercel).
 - `/api/health`: diz se as variáveis existem e se o banco conecta (só o tipo do erro, sem valores).
-- Testes: 29 unitários (Vitest, incluindo conferência do conteúdo contra o protótipo) + 5 e2e (Playwright). `typecheck`, `lint` e `build` limpos.
+- Testes: 34 unitários (Vitest, incluindo conferência do conteúdo contra o protótipo) + 5 e2e (Playwright). `typecheck`, `lint` e `build` limpos.
 
 ## Simulado ou provisório
 - Ícones do app (marca "SDM" gerada por script) até vir a arte oficial.
 - Roteiros de 5 blocos das aulas: vazios (vêm do contexto v6).
 - Comissão dos produtos da vitrine: vazia (`[valor]` no protótipo).
 - `WhatsAppSender`: só adaptador de log. `TrackingProvider`: vazio. `MetricsProvider`: manual.
-- Agentes de IA: 10 linhas em `agents`, inativas, prompt `[PENDENTE]`.
+- Agentes de IA: 10 linhas em `agents`, inativas, prompt `[PENDENTE]`. Hoje os textos saem do **motor modelo SDM** (`src/lib/gen/modelo.ts`, frases-base do protótipo + ficha do produto; agente gravado como `modelo-sdm`, custo 0). Geração de imagem com IA: código pronto (`src/lib/gen/ia.ts`), liga com `OPENAI_API_KEY` + `ai_models.image` no AD11.
 - Settings `ai_models`: `[conferir]` (a doc da OpenAI estava bloqueada pela rede do ambiente de dev).
 - Webhook Hubla: nomes de evento, caminhos do payload e header `x-hubla-token` **não conferidos** na doc da Hubla.
 
 ## Quebrado / bugs conhecidos
+- Fluxo completo testado em produção com conta de teste (cadastro → pasta → país → link → kit → 3 anúncios, ganchos, roteiros, bio → upload → PNG com imagem → biblioteca), conta apagada depois.
 - Produção OK desde 2026-11-05: `/api/health` com banco conectado (117 aulas); testado A01→A02 com e-mail sem cadastro, link falso recusado, /admin sem login → /admin/entrar. Falta a dona testar o login do admin pelo e-mail e o link de uma aluna teste. (A senha nova do banco levou alguns minutos pra valer no pooler.) Login por e-mail e por link de acesso ainda não testados de ponta a ponta no Supabase real.
 
 ## Próximos 3 passos
 1. **Você**: `docs/DEPLOY.md` → "Falta": `DATABASE_URL` na Vercel, Redeploy, revogar tokens; depois testar `/admin/entrar` e o link de acesso de uma aluna teste.
-2. Fase 2 (resto): A04–A07 (boas-vindas, diagnóstico, resultado, combinado), I02–I05, FR01–FR04, B01–B04, L03/L05/L06, cartões e grupo, seguindo o protótipo.
+2. Fases 3–5 (resto): A05/A06 diagnóstico, V03/V04 recomendação, F05–F07 (depende de `PAGE_TOOL_NAME`), link da bio com contagem de cliques, trilhas T01–T03, números N00–N04. Fase 2 (resto): A04–A07 (boas-vindas, diagnóstico, resultado, combinado), I02–I05, FR01–FR04, B01–B04, L03/L05/L06, cartões e grupo, seguindo o protótipo.
 3. Quando o contexto v6 chegar: roteiros de 5 blocos, regras dos agentes (seção 10) e conferência das regras de desbloqueio (4.4).
 
 ## Pendências que dependem de você
@@ -99,6 +104,8 @@
 - RLS sem FORCE: dono das tabelas/service role ignoram RLS, anon/authenticated não (migration 0005).
 - pgvector no schema `extensions` no Supabase.
 - A02 "Reenviar" nunca manda pro número digitado, só pro cadastrado.
+- Pasta do produto: textos gerados pelo motor modelo SDM até a IA ser ligada; cada geração vira uma versão nova em `generated_items` (rascunho → aprovado), nada é publicado pelo app (ADR-012).
+- Imagens no bucket privado `sdm` do Supabase Storage (`alunas/{aluna}/{pasta}/...`), sempre por URL assinada; upload até 4 MB (limite da Vercel).
 - Deploy do banco por GitHub Actions (`.github/workflows/supabase.yml`), porque o container de dev não alcança o Supabase e a dona do projeto prefere não usar terminal. CI (`ci.yml`) roda typecheck, lint, testes e build em todo push.
 - 1º admin nasce no 1º login com `ADMIN_EMAIL` (sem precisar de `pnpm seed:admin`).
 - URL e chave publishable do Supabase fixas no código (`src/lib/public-config.ts`), a pedido; env com o mesmo nome tem prioridade (ADR-009).
