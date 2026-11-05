@@ -7,6 +7,8 @@ import { usePathname } from "next/navigation";
 export const ADMIN_SCREENS: { id: string; label: string; href?: string; fase?: string }[] = [
   { id: "AD01", label: "Visão geral", href: "/admin" },
   { id: "AD02", label: "Alunas", href: "/admin/alunas" },
+  { id: "AFIL", label: "Pedidos de afiliação", href: "/admin/afiliacao" },
+  { id: "KIT", label: "Kit do SDM", href: "/admin/kit" },
   { id: "AD04", label: "Agentes de IA", fase: "Fase 8" },
   { id: "AD05", label: "Aulas", fase: "Fase 8" },
   { id: "AD06", label: "Vitrine", fase: "Fase 8" },

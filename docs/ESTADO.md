@@ -1,27 +1,29 @@
 # Estado do projeto
 
-> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-05 (8ª tarefa: fluxo da pasta do produto, geração e criativos)** · branch `claude/intelligent-bohr-54teds`.
+> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-05 (9ª tarefa: fluxo ideal do PDF, IA ligada, movimento e retorno ao toque)** · branch `claude/intelligent-bohr-54teds`.
 
 ## Fase atual
-**Fase 1 · Base: ~98%.** Banco no Supabase pronto (migrations + seed) e app na Vercel (`sdm-app`, deploy automático do GitHub). Falta a dona: `DATABASE_URL` na Vercel e testar o login. Endereço público: https://sdm-app.vercel.app (ver `docs/DEPLOY.md`).
+**O app agora segue `docs/App_SDM_Fluxo_Ideal.pdf`** (dois caminhos + divulgação). IA real ligada (OpenAI) e testada de ponta a ponta localmente. Em produção a IA liga quando `OPENAI_API_KEY` estiver na Vercel (pendência da dona).
 
-| Fase | % | Nota |
-|---|---|---|
-| 1 Base | 90 | infra, banco, RLS, auth manual, admin inicial, PWA, webhook desligado, seeds do protótipo ✓ · falta validar no Supabase real |
-| 2 Casca do app | 40 | moldura com 5 abas (menu de baixo no celular, lateral + cabeçalho na web), I01, L01, L02 (sem vídeo), L04, V01, V02 (sem filtros), Q01 (aviso), U01, desbloqueios ✓ · faltam A04–A07, I02–I05, FR*, B*, L03/L05/L06, cartões, combinado |
-| 3 Diagnóstico e produto | 55 | pasta (V02→V05), V06 ficha + cartão, V07 país, V08 link com teste real, V09 biblioteca ✓ · faltam A05/A06 diagnóstico, V03/V04 recomendação, filtros e favoritos da vitrine |
-| 4 Funil | 40 | F02 escolha (pré-venda/quiz/direto), F04 kit com tradução, copiar e quiz jogável ✓ · faltam F05 "monte comigo", F06 conferência da página, F07 teste até o checkout, link da bio `/l/[código]` |
-| 5 Divulgação e números | 25 | DV01: 3 anúncios por vez (editar, aprovar, PNG 1:1/4:5/9:16 com cor ou imagem), 10 ganchos, 10 roteiros, bio/legenda/chamadas, imagens (envio pro Storage; geração com IA pronta, desligada sem chave) ✓ · faltam trilhas T01–T03, PG03–PG08, OG01/OG03–OG09, números N00–N04, rotina com push |
-| 6 Dinheiro, escalar, ebook | 0 | |
-| 7 Professora e suporte | 0 | tabela `support_tickets` já recebe pedidos da A02 |
-| 8 Admin completo | 15 | AD01 (KPIs e jornada reais), AD02 (filtros do protótipo), AD03, AD08, AD11 iniciais |
-| 9 Endurecimento | 0 | |
+| Bloco (PDF) | Situação |
+|---|---|
+| Primeiro acesso (telas 1–7) | ✓ login e-mail+senha, instalar, boas-vindas, combinado, diagnóstico 8 perguntas com IA (reserva por regras), "o que a IA entendeu", escolha do caminho cria a pasta |
+| Início (I1–I5) | ✓ I1 próximo passo único, I2 meu caminho (7 fases), I5 novidades (placeholder) · ✗ I3 rotina, I4 números da semana |
+| Produtos (P1–P3) | ✓ pastas agrupadas, criar produto com IA, quero ser afiliada, painel com ✓/●/cadeado e motivo, biblioteca |
+| Caminho A · afiliada SDM (A0–A7) | ✓ A0 entenda, A1 pedir afiliação + aprovação no admin, A2 link por canal + teste, A3 kit do time + adaptar com IA, A4 conta (Wise), A5 regras, A6 → divulgação · ✗ A7 comissões (depende da Hubla) |
+| Caminho B · produto próprio (B0–B10) | ✓ B0, B1 ideias (IA, outras 3, avaliar a minha), B2 ficha (IA + corrigir campo), B3 oferta (IA, aprovar/editar/outra), B4 ebook (sumário editável, capítulos 1 a 1 com progresso, ajustes, 6 temas, PDF + versão pt), B5 revisão, B6 página (pagina/pre/quiz, editar bloco, prévia celular/computador), B7 checkout testado, B8 conta, B9 teste · ✗ B10 vendas, publicar a página (onde fica: a definir) |
+| Divulgação (D0, DP1–DP5, DO1–DO4) | ✓ D0 pago/orgânico/os dois, DP1 base, DP2 criativos (IA + PNG), DP3 pixel, DP5/DO4 digitar números + histórico, DO1 perfil (link da bio `/l/código` com contagem de cliques, bio IA, aquecimento 7 dias), DO2 roteiros por tipo (IA) · ✗ DP4 campanha recomendada, DO3 calendário, sinal verde/amarelo/vermelho (regras pendentes) |
+| Aulas (L1–L7) | ✓ grade, player com "Agora faça", "Tenho dúvida" → Professora, glossário · ✗ L1 "só minha rota", plantão, PO com oferta, conquistas |
+| Professora (Q1–Q3) | ✓ chat com IA em streaming (glossário + aulas no prompt, cita aula com link, lê print reduzido), histórico, sugestões pela etapa, chamado pro time |
+| Perfil (U1–U6) | ✓ dados, meu caminho (somar/trocar/refazer diagnóstico), acessos, ajuda, trocar senha · ✗ editar dados, contas, avisos |
+| Admin | ✓ + Pedidos de afiliação (aprovar com link / recusar com motivo) e Kit do SDM (peças) · ✗ AD04–AD07, AD09, AD10, AD12, AD13 |
+| Movimento / retorno ao toque | ✓ barra de progresso no clique, esqueleto de carregamento, fade de tela, botões que afundam, spinners em formulários, toasts |
 
 ## Bloqueio principal
-- **Contexto v6 ainda não chegou** (`docs/SDM_contexto_completo_v6.md`). Os protótipos chegaram em 2026-11-05 e já estão em `docs/prototipo/`. Do contexto ainda faltam: roteiro de 5 blocos de cada aula (seção 6), regras de conteúdo dos agentes (seção 10), regras de desbloqueio detalhadas (4.4), mapa de funil (3.1), campos (8), métricas (12) e pendências (13).
-- **Produção bloqueada por 2 itens da dona**: `DATABASE_URL` (senha do banco nunca foi enviada; criar um usuário de banco novo foi barrado pelas permissões do ambiente). (`sdm-app.vercel.app` já é público; Supabase Site URL aponta pra ele.)
+- **`OPENAI_API_KEY` na Vercel** (sem ela, em produção os botões de IA mostram "IA ainda não ligada" e o diagnóstico usa as regras de reserva). O token da Vercel que a dona passou expirou, por isso não deu pra cadastrar por API.
+- Contexto v6 ainda não chegou (roteiros das aulas, regras dos agentes da seção 10). As regras de conteúdo dos agentes foram escritas a partir do prompt original (`src/lib/ai/regras.ts`).
 
-## Telas
+## Telas (detalhe antigo, por ID do protótipo)
 - **A01** ✓ visual do protótipo; login com **e-mail e senha** (sem código, decisão do Fellipe em 2026-11-05) + botão "Criar conta".
 - **Cadastro** `/app/cadastro` ✓ nome, e-mail, senha (8+, letra e número); sem confirmação por e-mail; com `cadastro_aberto`=true já libera SDM. E-mail que já existe não pode ser cadastrado de novo (proteção contra tomar conta alheia).
 - **Senha** `/app/senha` ✓ criar/trocar senha logada; o link de acesso leva pra cá na 1ª vez.
@@ -51,7 +53,7 @@
 - `supabase/migrations` + `supabase/seed.sql` testados num Postgres com cara de Supabase (schema `extensions`, aplicar 2x o seed não duplica).
 - Build passa sem nenhuma variável de ambiente (pronto pra Vercel).
 - `/api/health`: diz se as variáveis existem e se o banco conecta (só o tipo do erro, sem valores).
-- Testes: 34 unitários (Vitest, incluindo conferência do conteúdo contra o protótipo) + 5 e2e (Playwright). `typecheck`, `lint` e `build` limpos.
+- Testes: 40 unitários (etapas com trava em cadeia, diagnóstico, motor, senha...) + 6 e2e + `scripts/e2e/fluxo-ia.mjs` (fluxo completo com IA real: passou em ~4 min, PDF de 4 capítulos gerado) (Vitest, incluindo conferência do conteúdo contra o protótipo) + 5 e2e (Playwright). `typecheck`, `lint` e `build` limpos.
 
 ## Simulado ou provisório
 - Ícones do app (marca "SDM" gerada por script) até vir a arte oficial.
@@ -75,6 +77,9 @@
 | Desde | Pendência |
 |---|---|
 | 2026-11-05 | Subir `docs/SDM_contexto_completo_v6.md` (protótipos já chegaram) |
+| 2026-11-05 | Cadastrar `OPENAI_API_KEY` na Vercel (Settings → Environments → Production → Environment Variables) e fazer Redeploy |
+| 2026-11-05 | Revogar/rotacionar a chave da OpenAI depois (foi colada no chat) |
+| 2026-11-05 | Definir: comissão do SDM (`sdm_comissao`), regras de pausa/escala (sinal dos números), plataforma de venda e onde a página do produto próprio fica publicada, regras da afiliação (`afiliacao.regras`), ficha do SDM (`sdm.ficha.en/es`) |
 | 2026-11-05 | Trocar as senhas temporárias das 2 contas full (dona e Fellipe: aluna com SDM/UP1/D1/UP2/D2 + admin) em Perfil → Trocar senha |
 | 2026-11-05 | Decidir quando desligar `cadastro_aberto` (hoje qualquer pessoa cria conta e ganha SDM) |
 | 2026-11-05 | Revogar os tokens Supabase/Vercel e rodar (roll) a chave secret do Supabase: foram colados no chat |
@@ -89,6 +94,12 @@
 | 2026-11-05 | Arte oficial do ícone do app |
 
 ## Decisões tomadas (uma linha cada)
+- Fluxo do PDF "App SDM · fluxo ideal" substitui a ordem do protótipo onde divergem: primeiro acesso → caminho (afiliada SDM / produto próprio) → divulgação (ADR-013).
+- Pastas por tipo (`student_products.tipo`: vitrine | sdm | proprio) e etapas como regra pura (`src/lib/domain/etapas.ts`), com trava em cadeia e motivo; dados das etapas em `student_products.dados` (jsonb).
+- IA: OpenAI Responses API + structured outputs (Zod); `gpt-6-luna` (barato) e `gpt-6.1-terra` (oferta, ebook, página), imagem `gpt-image-1-mini`; regras fixas no começo do prompt (cache), cache próprio por hash, custo em `ai_usage`, cota por aluna (ADR-014).
+- Professora sem RAG por enquanto: glossário + índice das 117 aulas cabem no prompt (cacheado); pgvector entra com os roteiros completos.
+- Ebook gerado capítulo por capítulo pela tela (cada chamada < 60 s na Vercel), sem Inngest; PDF com @react-pdf/renderer (fontes padrão).
+- Primeiro login vai pra boas-vindas; depois o Início mostra o próximo passo (dá pra "salvar e continuar depois").
 - Next 16 com `cacheComponents` desligado: app quase todo autenticado/dinâmico (ADR-002).
 - Rotas da aluna = ID da tela em minúsculo sob `/app` (`/app/a01`).
 - Banco acessado pelo servidor via Drizzle (`DATABASE_URL`), sempre filtrando pela aluna da sessão; RLS como segunda barreira pro cliente com anon key (ADR-003).

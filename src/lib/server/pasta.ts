@@ -72,3 +72,31 @@ export function etapas(p: PastaCompleta["pasta"], temItens: { kit: boolean; cria
     { n: 6, nome: "Escalar", ok: false, href: null, travada: "Abre depois da 1ª venda." },
   ];
 }
+
+type FichaIA = { nome: string; publico: Bi; dor: Bi; promessa: Bi; o_que_e: Bi; ganchos: Bi[]; prompt_imagem: string; tags: string[] };
+
+/** Base de geração de qualquer pasta: vitrine (ficha da vitrine), produto próprio (ficha da IA) ou SDM (ficha cadastrada pelo time). */
+export async function baseDaPasta(c: PastaCompleta): Promise<ProdutoBase | null> {
+  if (c.vit) return produtoBase(c.vit);
+  const lang: Lang = ["latam", "esp"].includes(c.pasta.paisVenda ?? "") ? "es" : "en";
+  const dados = (c.pasta.dados ?? {}) as { ficha?: FichaIA };
+  let f = dados.ficha;
+  if (!f && c.pasta.tipo === "sdm") {
+    const row = await db().query.contentBlocks.findFirst({ where: eq(schema.contentBlocks.key, `sdm.ficha.${lang}`) });
+    f = row?.data as FichaIA | undefined;
+  }
+  if (!f) return null;
+  return {
+    nome: f.nome,
+    lang,
+    aX: f.publico.x,
+    aPt: f.publico.pt,
+    quem: f.publico,
+    dor: f.dor,
+    oque: f.o_que_e,
+    prom: f.promessa,
+    hooks: { x: f.ganchos.map((g) => g.x), pt: f.ganchos.map((g) => g.pt) },
+    img: f.prompt_imagem,
+    tags: (f.tags ?? []).join(" "),
+  };
+}

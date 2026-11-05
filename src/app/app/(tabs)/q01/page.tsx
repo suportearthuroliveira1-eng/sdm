@@ -1,27 +1,43 @@
+import { asc, eq } from "drizzle-orm";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { PageTitle } from "@/components/app/ui";
+import { iaLigada } from "@/lib/ai/run";
 import { requireStudent } from "@/lib/auth/session";
+import { db, schema } from "@/lib/db";
+import { minhasPastas } from "@/lib/server/pastas";
+import { Chat } from "./chat";
 
 export const metadata: Metadata = { title: "Professora" };
 
-// Q01 · Professora (IA). A conversa com IA entra na Fase 7.
-export default async function Q01() {
+// Professora (aba 4): conversa com IA, print, histórico por produto e "falar com o time".
+export default async function Q01({ searchParams }: PageProps<"/app/q01">) {
   const { student } = await requireStudent();
+  const aula = typeof (await searchParams).aula === "string" ? String((await searchParams).aula) : null;
+  const [hist, pastas, ligada] = await Promise.all([
+    db().select({ id: schema.chatMessages.id, papel: schema.chatMessages.papel, texto: schema.chatMessages.texto }).from(schema.chatMessages).where(eq(schema.chatMessages.studentId, student.id)).orderBy(asc(schema.chatMessages.createdAt)).limit(60),
+    minhasPastas(),
+    iaLigada("text_cheap"),
+  ]);
+  const ativa = pastas.find((p) => p.id === student.produtoAtivo) ?? pastas[0];
+  const agora = ativa?.etapas.find((e) => e.agora);
+  const sugestoes = [
+    agora ? `Me explica a etapa "${agora.nome}"` : "Por onde eu começo?",
+    "O que é CTR?",
+    "Qual a diferença entre anúncio pago e vídeo orgânico?",
+    "O que eu faço agora no app?",
+  ];
   return (
     <>
       <PageTitle>Professora</PageTitle>
-      <div className="flex flex-col gap-2.5 lg:max-w-2xl">
-        <span className="mu">Eu explico e sugiro; a decisão é sempre sua.</span>
-        <div className="max-w-[420px] self-start rounded-[16px_16px_16px_4px] bg-surface px-3.5 py-3 text-sm leading-normal">
-          Oi, {student.nome.split(/\s+/)[0]}! Pode perguntar qualquer coisa, mandar print do gerenciador ou do painel da rede, ou me explicar com as suas palavras o que aprendeu.
-        </div>
-        <div className="warn">A professora com IA está sendo preparada e chega numa próxima atualização. Enquanto isso, o glossário responde as palavras do SDM.</div>
-        <div className="flex flex-wrap gap-2">
-          <Link href="/app/l04" className="b2 no-underline">Abrir o glossário</Link>
-          <Link href="/app/l01" className="b2 no-underline">Ver as aulas</Link>
-        </div>
-      </div>
+      <Chat
+        nome={student.nome.split(/\s+/)[0] ?? ""}
+        inicial={hist.map((h) => ({ id: h.id, eu: h.papel === "user", texto: h.texto }))}
+        sugestoes={sugestoes}
+        pastas={pastas.map((p) => ({ id: p.id, nome: p.nome }))}
+        pastaInicial={ativa?.id ?? null}
+        aula={aula}
+        ligada={ligada}
+      />
     </>
   );
 }

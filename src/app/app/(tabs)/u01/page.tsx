@@ -53,6 +53,20 @@ export default async function U01() {
               );
             })}
           </ul>
+          <span className="lb">Meu caminho</span>
+          <div className="cd gap-1.5">
+            <span className="text-[15px] font-bold">{({ afiliada: "Afiliada do SDM", produto: "Meu produto com a IA", ambos: "Os dois caminhos", depois: "Ainda não escolhido" } as Record<string, string>)[student.caminho ?? ""] ?? "Ainda não escolhido"}</span>
+            <span className="mu">Divulgação: {trilha}</span>
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              <Link href="/app/caminho" className="b2 no-underline">Somar ou trocar</Link>
+              <Link href="/app/a05?q=0" className="b2 no-underline">Refazer diagnóstico</Link>
+            </div>
+          </div>
+          <span className="lb">Ajuda</span>
+          <div className="grid grid-cols-2 gap-2">
+            <Link href="/app/q01" className="b2 no-underline">Professora e suporte</Link>
+            <Link href="/app/l04" className="b2 no-underline">Glossário</Link>
+          </div>
           <div className="grid grid-cols-2 gap-2">
             <Link href="/app/senha" className="b2 no-underline">Trocar senha</Link>
             <Link href="/app/a03" className="b2 no-underline">Instalar na tela</Link>

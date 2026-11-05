@@ -6,7 +6,7 @@ import { PastaHead } from "@/components/pasta/head";
 import { LangProvider, T } from "@/components/pasta/lang";
 import { iaConfigurada } from "@/lib/gen/ia";
 import { CORES, type Anuncio, type Bi, type Roteiro } from "@/lib/gen/modelo";
-import { getPasta, imagensDaPasta, itensDaPasta } from "@/lib/server/pasta";
+import { baseDaPasta, getPasta, imagensDaPasta, itensDaPasta } from "@/lib/server/pasta";
 import { urlsAssinadas } from "@/lib/server/storage";
 import { AnuncioEditor } from "./anuncio-editor";
 import { ImagemForms } from "./imagem-forms";
@@ -17,7 +17,9 @@ export const metadata: Metadata = { title: "Divulgação" };
 export default async function DV01({ params, searchParams }: PageProps<"/app/dv01/[id]">) {
   const { id } = await params;
   const fundo = String((await searchParams).fundo ?? "");
-  const { pasta, vit } = await getPasta(id);
+  const c = await getPasta(id);
+  const { pasta, vit } = c;
+  const base = await baseDaPasta(c);
   const [itens, imgs, ia] = await Promise.all([itensDaPasta(pasta.id), imagensDaPasta(pasta.id), iaConfigurada("image")]);
   const urls = await urlsAssinadas(imgs.map((i) => i.storagePath!).filter(Boolean));
   const ads = itens.filter((i) => i.tipo === "anuncio");
@@ -25,11 +27,13 @@ export default async function DV01({ params, searchParams }: PageProps<"/app/dv0
   const roteiro = itens.find((i) => i.tipo === "roteiro");
   const bio = itens.find((i) => i.tipo === "bio");
   const imgFundo = imgs.find((i) => i.id === fundo);
-  const idioma = vit?.idioma ?? "en";
+  const idioma = base?.lang ?? vit?.idioma ?? "en";
+  const nomeProduto = vit?.nome ?? pasta.nome ?? "";
 
   return (
     <div className="flex flex-col gap-6">
-      <PastaHead id={pasta.id} code={pasta.code} produto={vit?.nome ?? ""} k="ETAPA 3 · DIVULGAÇÃO" t="Seus criativos" />
+      <PastaHead id={pasta.id} code={pasta.code} produto={nomeProduto} k="DIVULGAÇÃO" t="Criativos e roteiros" />
+      {!base ? <div className="warn">{pasta.tipo === "sdm" ? "Pra afiliada do SDM, use as peças prontas do kit (etapa Kit de divulgação). Os criativos com IA aparecem aqui quando o time cadastrar a ficha do SDM." : "Complete a ficha do produto (etapa Ficha) pra gerar criativos com a IA."}</div> : null}
       <LangProvider idioma={idioma}>
         {/* ANÚNCIOS */}
         <section aria-labelledby="h-ads" className="flex flex-col gap-3">
@@ -151,7 +155,7 @@ export default async function DV01({ params, searchParams }: PageProps<"/app/dv0
           <h2 id="h-i" className="m-0 text-lg font-bold">Imagens ({imgs.length})</h2>
           <p className="mu m-0 text-[13px]">Gere com IA ou envie a sua (foto, print, arte). Elas ficam guardadas na pasta e podem virar fundo dos criativos.</p>
         </div>
-        <ImagemForms id={pasta.id} promptBase={vit?.promptImagem ?? ""} ia={ia} />
+        <ImagemForms id={pasta.id} promptBase={base?.img ?? vit?.promptImagem ?? ""} ia={ia} />
         {imgs.length ? (
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
             {imgs.map((im) => (

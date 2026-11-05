@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { excluirImagem, excluirItem, gerarAction, statusItem } from "@/lib/actions/pasta";
+import { Spinner } from "@/components/ux/submit-button";
+import { toast } from "@/components/ux/toaster";
 
 type Tipo = "kit" | "anuncio" | "gancho" | "roteiro" | "bio";
 
@@ -20,11 +22,14 @@ export function GerarButton({ pastaId, tipo, label, className = "b1" }: { pastaI
           start(async () => {
             const r = await gerarAction(pastaId, tipo);
             if (!r.ok) setErro("erro" in r ? (r.erro ?? "Erro") : "Erro");
-            else router.refresh();
+            else {
+              toast("Pronto! Gerado e salvo na biblioteca.");
+              router.refresh();
+            }
           })
         }
       >
-        {pending ? "Gerando..." : label}
+        {pending ? (<><Spinner /> Gerando...</>) : label}
       </button>
       {erro ? <span role="alert" className="text-xs text-danger">{erro}</span> : null}
     </div>
@@ -40,18 +45,18 @@ export function ItemAcoes({ id, status }: { id: string; status: string }) {
       <button
         type="button"
         disabled={pending}
-        className={`inline-flex min-h-11 cursor-pointer items-center rounded-[22px] px-3 text-xs font-bold ${aprovado ? "border border-ok-line bg-ok-bg text-ok" : "border-0 bg-accent text-accent-ink"}`}
-        onClick={() => start(async () => { await statusItem(id, aprovado ? "rascunho" : "aprovado"); router.refresh(); })}
+        className={`press inline-flex min-h-11 cursor-pointer items-center rounded-[22px] px-3 text-xs font-bold ${aprovado ? "border border-ok-line bg-ok-bg text-ok" : "border-0 bg-accent text-accent-ink"}`}
+        onClick={() => start(async () => { await statusItem(id, aprovado ? "rascunho" : "aprovado"); toast(aprovado ? "Voltou pra rascunho" : "Aprovado"); router.refresh(); })}
       >
         {aprovado ? "Aprovado ✓ (desfazer)" : "Aprovar"}
       </button>
       <button
         type="button"
         disabled={pending}
-        className="inline-flex min-h-11 cursor-pointer items-center rounded-[22px] border border-line-2 bg-transparent px-3 text-xs text-muted hover:text-danger"
+        className="press inline-flex min-h-11 cursor-pointer items-center rounded-[22px] border border-line-2 bg-transparent px-3 text-xs text-muted hover:text-danger"
         onClick={() => {
           if (!confirm("Excluir este item?")) return;
-          start(async () => { await excluirItem(id); router.refresh(); });
+          start(async () => { await excluirItem(id); toast("Excluído"); router.refresh(); });
         }}
       >
         Excluir
@@ -67,10 +72,10 @@ export function ExcluirImagem({ id }: { id: string }) {
     <button
       type="button"
       disabled={pending}
-      className="inline-flex min-h-11 cursor-pointer items-center rounded-[22px] border border-line-2 bg-transparent px-3 text-xs text-muted hover:text-danger"
+      className="press inline-flex min-h-11 cursor-pointer items-center rounded-[22px] border border-line-2 bg-transparent px-3 text-xs text-muted hover:text-danger"
       onClick={() => {
         if (!confirm("Excluir esta imagem?")) return;
-        start(async () => { await excluirImagem(id); router.refresh(); });
+        start(async () => { await excluirImagem(id); toast("Imagem excluída"); router.refresh(); });
       }}
     >
       Excluir

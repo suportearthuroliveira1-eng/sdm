@@ -9,7 +9,8 @@ import { requireStudent } from "@/lib/auth/session";
 import { db, schema } from "@/lib/db";
 import * as gen from "@/lib/gen/modelo";
 import { log, errMsg } from "@/lib/server/log";
-import { getPasta, paises, produtoBase } from "@/lib/server/pasta";
+import { baseDaPasta, getPasta, paises } from "@/lib/server/pasta";
+import { erroIa, iaLigada, IaDesligada, IaLimite, rodar } from "@/lib/ai/run";
 import { rateLimit } from "@/lib/server/rate-limit";
 import { fetchSeguro } from "@/lib/server/safe-fetch";
 import { apagarArquivo, salvarArquivo } from "@/lib/server/storage";
@@ -102,39 +103,65 @@ export async function escolherFunil(pastaId: string, funil: string) {
   redirect(`/app/f04/${pasta.id}`);
 }
 
-/** Gera (ou refaz) um tipo de conteúdo pra pasta. Sempre salva uma versão nova; nada vai pro ar sem aprovar. */
+/**
+ * Gera (ou refaz) um tipo de conteúdo pra pasta. Com a IA ligada usa os agentes
+ * (AGT-montador/anuncios/roteiros); sem IA usa o motor modelo SDM. Sempre salva
+ * uma versão nova; nada vai pro ar sem aprovar.
+ */
 export async function gerarItens(pastaId: string, tipo: Tipo) {
-  const { pasta, vit, student } = await getPasta(pastaId);
-  if (!vit) throw new Error("pasta sem produto");
+  const c = await getPasta(pastaId);
+  const { pasta, student } = c;
+  const base = await baseDaPasta(c);
+  if (!base) throw new Error(pasta.tipo === "sdm" ? "O time ainda não cadastrou a ficha do SDM. Use as peças prontas do kit." : "Complete a ficha do produto antes (etapa Ficha).");
   const rl = await rateLimit(`gen:${student.id}`, 60, 3600);
   if (!rl.ok) throw new Error("Muitas gerações seguidas. Espere um pouco.");
-  const base = produtoBase(vit);
   const idioma = base.lang;
+  const ia = await iaLigada("text_cheap");
   const versao = Number(
     (await db().select({ n: sql<number>`coalesce(max(versao),0)::int` }).from(schema.generatedItems).where(eq(schema.generatedItems.studentProductId, pasta.id)))[0]?.n ?? 0,
   ) + 1;
-  const comum = { studentProductId: pasta.id, studentId: student.id, idioma, agente: "modelo-sdm", versao, custoUsd: "0", hashEntrada: createHash("sha256").update(`${vit.id}:${idioma}:${tipo}`).digest("hex") };
-  const anteriores = await db().select({ n: sql<number>`count(*)::int` }).from(schema.generatedItems).where(and(eq(schema.generatedItems.studentProductId, pasta.id), eq(schema.generatedItems.tipo, "anuncio")));
+  const comum = { studentProductId: pasta.id, studentId: student.id, idioma, versao, custoUsd: "0", hashEntrada: createHash("sha256").update(`${pasta.id}:${idioma}:${tipo}:${versao}`).digest("hex") };
+  const ficha = (pasta.dados as { ficha?: unknown }).ficha ?? { nome: base.nome, publico: base.quem, dor: base.dor, o_que_e: base.oque, promessa: base.prom, ganchos: base.hooks };
+  const entrada = { idioma_venda: idioma, pais_venda: pasta.paisVenda, ficha };
   const rows: (typeof schema.generatedItems.$inferInsert)[] = [];
+  const modelo = { agente: "modelo-sdm", checagem: { sem_cara_de_ia: true, sem_prova_inventada: true, regras_da_rede: true, regras_sdm: true } };
+
   if (tipo === "kit") {
-    if (pasta.funil === "quiz") {
+    if (ia) {
+      const r = await rodar("pagina", { ...entrada, formato: pasta.funil === "quiz" ? "quiz" : "pre" }, { studentId: student.id, semCache: true });
+      rows.push({ ...comum, tipo: pasta.funil === "quiz" ? "kit_quiz" : "kit_pre", agente: r.agente, conteudo: { formato: pasta.funil ?? "pre", blocos: r.saida.blocos.map((b) => ({ n: b.n, oq: b.porque, x: b.x, pt: b.pt })), imagemPrompt: r.saida.prompt_imagem }, porQueFunciona: r.saida.por_que_funciona, checagem: r.saida.checagem, custoUsd: r.custoUsd.toFixed(6) });
+    } else if (pasta.funil === "quiz") {
       const q = gen.kitQuiz(base);
-      rows.push({ ...comum, tipo: "kit_quiz", conteudo: { blocos: q.blocos, quiz: q.quiz, resultado: q.resultado, imagemPrompt: base.img }, porQueFunciona: gen.PORQUE.kit_quiz });
+      rows.push({ ...comum, ...modelo, tipo: "kit_quiz", conteudo: { blocos: q.blocos, quiz: q.quiz, resultado: q.resultado, imagemPrompt: base.img }, porQueFunciona: gen.PORQUE.kit_quiz });
     } else {
-      rows.push({ ...comum, tipo: "kit_pre", conteudo: { blocos: gen.kitPre(base), imagemPrompt: base.img }, porQueFunciona: gen.PORQUE.kit_pre });
+      rows.push({ ...comum, ...modelo, tipo: "kit_pre", conteudo: { blocos: gen.kitPre(base), imagemPrompt: base.img }, porQueFunciona: gen.PORQUE.kit_pre });
     }
   } else if (tipo === "anuncio") {
-    const inicio = ((anteriores[0]?.n ?? 0) * 1) % 10;
-    for (const a of gen.anuncios(base, inicio)) rows.push({ ...comum, tipo: "anuncio", conteudo: a, porQueFunciona: gen.PORQUE.anuncio });
+    const ja = await db().select({ c: schema.generatedItems.conteudo }).from(schema.generatedItems).where(and(eq(schema.generatedItems.studentProductId, pasta.id), eq(schema.generatedItems.tipo, "anuncio")));
+    if (ia) {
+      const evitar = ja.map((x) => (x.c as gen.Anuncio).gancho?.x).filter(Boolean).slice(-12);
+      const r = await rodar("anuncios", { ...entrada, evitar }, { studentId: student.id, semCache: true });
+      r.saida.anuncios.slice(0, 3).forEach((a, k) => rows.push({ ...comum, tipo: "anuncio", agente: r.agente, conteudo: { ...a, cor: (ja.length + k) % 4 }, porQueFunciona: r.saida.por_que_funciona, checagem: r.saida.checagem, custoUsd: k === 0 ? r.custoUsd.toFixed(6) : "0" }));
+    } else {
+      for (const a of gen.anuncios(base, ja.length % 10)) rows.push({ ...comum, ...modelo, tipo: "anuncio", conteudo: a, porQueFunciona: gen.PORQUE.anuncio });
+    }
   } else if (tipo === "gancho") {
-    rows.push({ ...comum, tipo: "gancho", conteudo: { ganchos: gen.ganchos(base) }, porQueFunciona: gen.PORQUE.gancho });
+    if (ia) {
+      const r = await rodar("ganchos", entrada, { studentId: student.id, semCache: true });
+      rows.push({ ...comum, tipo: "gancho", agente: r.agente, conteudo: { ganchos: r.saida.ganchos }, porQueFunciona: r.saida.por_que_funciona, checagem: r.saida.checagem, custoUsd: r.custoUsd.toFixed(6) });
+    } else rows.push({ ...comum, ...modelo, tipo: "gancho", conteudo: { ganchos: gen.ganchos(base) }, porQueFunciona: gen.PORQUE.gancho });
   } else if (tipo === "roteiro") {
-    rows.push({ ...comum, tipo: "roteiro", conteudo: { roteiros: gen.roteiros(base, pasta.formatos) }, porQueFunciona: gen.PORQUE.roteiro });
+    if (ia) {
+      const r = await rodar("roteiros", entrada, { studentId: student.id, semCache: true });
+      rows.push({ ...comum, tipo: "roteiro", agente: r.agente, conteudo: { roteiros: r.saida.roteiros.map((x) => ({ ...x, formato: `${x.tipo} · ${x.formato}` })) }, porQueFunciona: r.saida.por_que_funciona, checagem: r.saida.checagem, custoUsd: r.custoUsd.toFixed(6) });
+    } else rows.push({ ...comum, ...modelo, tipo: "roteiro", conteudo: { roteiros: gen.roteiros(base, pasta.formatos) }, porQueFunciona: gen.PORQUE.roteiro });
   } else if (tipo === "bio") {
-    rows.push({ ...comum, tipo: "bio", conteudo: gen.bioLegenda(base), porQueFunciona: gen.PORQUE.bio });
+    if (ia) {
+      const r = await rodar("bio", entrada, { studentId: student.id, semCache: true });
+      rows.push({ ...comum, tipo: "bio", agente: r.agente, conteudo: r.saida, porQueFunciona: r.saida.por_que_funciona, checagem: r.saida.checagem, custoUsd: r.custoUsd.toFixed(6) });
+    } else rows.push({ ...comum, ...modelo, tipo: "bio", conteudo: gen.bioLegenda(base), porQueFunciona: gen.PORQUE.bio });
   }
-  const checagem = { sem_cara_de_ia: true, sem_prova_inventada: true, regras_da_rede: null, regras_sdm: true, motor: "modelo-sdm" };
-  await db().insert(schema.generatedItems).values(rows.map((r) => ({ ...r, checagem })));
+  await db().insert(schema.generatedItems).values(rows);
   if (pasta.precisaRefazer && tipo === "kit") await db().update(schema.studentProducts).set({ precisaRefazer: false }).where(eq(schema.studentProducts.id, pasta.id));
   reval();
   return { ok: true, n: rows.length };
@@ -144,7 +171,9 @@ export async function gerarAction(pastaId: string, tipo: Tipo) {
   try {
     return await gerarItens(pastaId, tipo);
   } catch (e) {
-    return { ok: false, erro: errMsg(e) };
+    if (e instanceof IaDesligada || e instanceof IaLimite) return { ok: false, erro: erroIa(e) };
+    log("error", "gerar itens", { tipo, err: errMsg(e) });
+    return { ok: false, erro: e instanceof Error && !/fetch|timeout|ECONN|status/i.test(e.message) ? e.message : erroIa(e) };
   }
 }
 

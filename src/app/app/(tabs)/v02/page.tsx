@@ -1,6 +1,7 @@
 import { asc, eq } from "drizzle-orm";
 import Link from "next/link";
 import { criarPasta } from "@/lib/actions/pasta";
+import { SubmitButton } from "@/components/ux/submit-button";
 import type { Metadata } from "next";
 import { PageTitle } from "@/components/app/ui";
 import { requireStudent } from "@/lib/auth/session";
@@ -42,7 +43,7 @@ export default async function V02() {
               <Link href={`/app/v05/${pastaDe.get(v.id)}`} className="b2 mt-1 no-underline">Abrir minha pasta</Link>
             ) : (
               <form action={criarPasta.bind(null, v.id)} className="mt-1">
-                <button className="b1 min-h-[46px] text-sm">Divulgar este produto</button>
+                <SubmitButton className="b1 min-h-[46px] text-sm" pendente="Criando a pasta...">Divulgar este produto</SubmitButton>
               </form>
             )}
           </article>

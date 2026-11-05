@@ -99,6 +99,10 @@ export const students = pgTable(
     produtoAtivo: uuid("produto_ativo"),
     ativo: boolean("ativo").notNull().default(true),
     instaladoEm: timestamp("instalado_em", { withTimezone: true }),
+    /** Primeiro acesso (fluxo ideal): boas-vindas vistas, diagnóstico feito, caminho escolhido. */
+    boasVindasEm: timestamp("boas_vindas_em", { withTimezone: true }),
+    diagnosticoEm: timestamp("diagnostico_em", { withTimezone: true }),
+    caminho: text("caminho"), // afiliada | produto | ambos | depois
     criadoEm: createdAt(),
     ultimoAcesso: timestamp("ultimo_acesso", { withTimezone: true }),
     updatedAt: updatedAt(),
@@ -223,6 +227,12 @@ export const studentProducts = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     code: code("PRD", "prd_seq", 6),
     studentId: uuid("student_id").notNull().references(() => students.id, { onDelete: "cascade" }),
+    /** vitrine (afiliada de produto da vitrine) | sdm (afiliada do próprio SDM) | proprio (produto criado com a IA) */
+    tipo: text("tipo").notNull().default("vitrine"),
+    nome: text("nome"),
+    /** Dados das etapas: ideias, ficha, oferta, afiliação, checklists, links. */
+    dados: jsonb("dados").notNull().default(sql`'{}'::jsonb`),
+    divulgacao: text("divulgacao"), // pago | org | ambos
     vitrineProductId: uuid("vitrine_product_id").references(() => vitrineProducts.id),
     paisVenda: text("pais_venda"),
     paisConfirmado: boolean("pais_confirmado").notNull().default(false),
@@ -552,6 +562,29 @@ export const auditLog = pgTable("audit_log", {
   ip: text("ip"),
   ts: timestamp("ts", { withTimezone: true }).notNull().defaultNow(),
 }, (t) => [index("audit_log_ts_idx").on(t.ts)]);
+
+/** Peças prontas do time pro caminho "afiliada do SDM" (A3). */
+export const kitPieces = pgTable("kit_pieces", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  tipo: text("tipo").notNull(), // anuncio | video | texto | story | pagina
+  titulo: text("titulo").notNull(),
+  texto: text("texto"),
+  idioma: text("idioma").notNull().default("pt"),
+  arquivoPath: text("arquivo_path"),
+  ativo: boolean("ativo").notNull().default(true),
+  ordem: integer("ordem").notNull().default(0),
+  createdAt: createdAt(),
+  updatedAt: updatedAt(),
+});
+
+/** Cache de respostas da IA: mesma entrada (agente + versão + entradas) → resposta salva. */
+export const aiCache = pgTable("ai_cache", {
+  hash: text("hash").primaryKey(),
+  agente: text("agente").notNull(),
+  versao: integer("versao").notNull(),
+  saida: jsonb("saida").notNull(),
+  createdAt: createdAt(),
+});
 
 /** Janela de rate limit simples no Postgres (login, IA). */
 export const rateLimits = pgTable("rate_limits", {

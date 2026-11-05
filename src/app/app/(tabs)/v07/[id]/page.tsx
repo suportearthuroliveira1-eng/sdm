@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PastaHead } from "@/components/pasta/head";
 import { escolherPais } from "@/lib/actions/pasta";
+import { FormPending } from "@/components/ux/submit-button";
 import { getPasta, itensDaPasta, paises } from "@/lib/server/pasta";
 
 export const metadata: Metadata = { title: "País e idioma" };
@@ -21,13 +22,14 @@ export default async function V07({ params }: PageProps<"/app/v07/[id]">) {
           const reco = p.lang === lang;
           return (
             <form key={p.k} action={escolherPais.bind(null, pasta.id, p.k)}>
-              <button className={`flex w-full cursor-pointer flex-col items-start gap-1.5 rounded-[14px] border-[1.5px] p-3.5 text-left text-text ${sel ? "border-accent bg-sel" : "border-line bg-surface hover:border-line-2"} ${!reco ? "opacity-70" : ""}`}>
+              <button className={`press flex w-full cursor-pointer flex-col items-start gap-1.5 rounded-[14px] border-[1.5px] p-3.5 text-left text-text ${sel ? "border-accent bg-sel" : "border-line bg-surface hover:border-line-2"} ${!reco ? "opacity-70" : ""}`}>
                 <span className="flex w-full items-center gap-2">
                   <span className="flex-1 text-base font-bold">{p.nome}</span>
                   {sel ? <span className="rounded-[10px] bg-accent px-2 py-1 text-[11px] font-bold text-accent-ink">ESCOLHIDO</span> : reco ? <span className="rounded-[10px] bg-sel px-2 py-1 text-[11px] font-bold text-accent-2">SUGERIDO</span> : null}
                 </span>
                 <span className="tx text-[13px]">{reco ? `O ${vit?.nome} é em ${p.idioma.toLowerCase()}: combina com esse público.` : `O ${vit?.nome} não é em ${p.idioma.toLowerCase()}.`}</span>
                 <span className="mu">Recebe em {p.moeda} · tudo sai em {p.idioma.toLowerCase()}</span>
+                <FormPending label="Confirmando o país..." />
               </button>
             </form>
           );

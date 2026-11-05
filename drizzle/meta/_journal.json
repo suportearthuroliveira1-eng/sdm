@@ -43,6 +43,20 @@
       "when": 1793842991908,
       "tag": "0005_rls_sem_force",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1793917299559,
+      "tag": "0006_fluxo_ideal",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1793917300421,
+      "tag": "0007_rls_novas",
+      "breakpoints": true
     }
   ]
 }

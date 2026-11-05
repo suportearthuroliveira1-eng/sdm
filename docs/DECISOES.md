@@ -64,3 +64,13 @@
 - **Decisão:** portar o gerador do protótipo (`GEN`, frases `LG`/`PT`) pra `src/lib/gen/modelo.ts`: monta kit, quiz, anúncios, ganchos, roteiros e bio a partir da ficha do produto, no idioma de venda + pt, com `por_que_funciona` e `checagem`. Mesmo formato de saída que os agentes de IA vão usar, então trocar o motor não muda telas nem banco. Criativo em PNG por `next/og` (sem IA, sem custo).
 - **Alternativas:** esperar a chave (nada funcional); texto fixo de exemplo (seria inventado).
 - **Consequência:** os textos são corretos mas previsíveis. Quando a IA ligar, `gerarItens` passa a chamar os agentes por tipo, com cache por hash de entrada.
+
+## ADR-013 · O fluxo do PDF "App SDM · fluxo ideal" vira a referência de navegação
+- **Contexto:** a dona mandou o PDF com o fluxo ideal: dois caminhos (afiliada do SDM e produto próprio com IA) que seguem pela mesma divulgação; regras "um próximo passo só", "explica antes de pedir", "tudo por produto", "etapa bloqueada diz por quê".
+- **Decisão:** primeiro acesso em `(primeiro)`, pastas por tipo com etapas definidas em código puro (`etapas.ts`) e rota única `/app/p/[id]/[etapa]`. As telas antigas da vitrine (V05–V09, F02, F04, DV01) continuam pras pastas de produto da vitrine e o DV01 serve de "Criativos e roteiros" pra todas.
+- **Consequência:** IDs de aula do PDF (A1.x, B1.x...) ainda não existem na grade; a tela mostra "[vídeo em breve]" até a grade nova chegar.
+
+## ADR-014 · Modelos e custo da IA
+- **Contexto:** doc oficial conferida em 2026-11-05 (developers.openai.com/api/docs/pricing.md).
+- **Decisão:** `gpt-6-luna` (US$ 0,10/0,50 por 1M) pra diagnóstico, ideias, ficha, anúncios, roteiros, professora; `gpt-6.1-terra` (US$ 1/5) pra oferta, ebook e página; `gpt-image-1-mini` pra imagem; `text-embedding-3-small` reservado. Raciocínio "low", regras fixas no início (cache automático), `prompt_cache_key` por agente, cache de resposta por hash, cota diária por aluna.
+- **Medido no teste:** diagnóstico ~6–15 s; ebook de 4 capítulos ~50 s; fluxo inteiro ~4 min.

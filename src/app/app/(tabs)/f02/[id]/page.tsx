@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PastaHead } from "@/components/pasta/head";
 import { escolherFunil } from "@/lib/actions/pasta";
+import { SubmitButton } from "@/components/ux/submit-button";
 import { getPasta } from "@/lib/server/pasta";
 
 export const metadata: Metadata = { title: "Escolher o funil" };
@@ -38,7 +39,7 @@ export default async function F02({ params }: PageProps<"/app/f02/[id]">) {
               <span className="text-xs text-warn">− {f.contras}</span>
               <span className="kk mt-1">O QUE VOCÊ VAI FAZER</span>
               <span className="tx text-[13px]">{f.monta}</span>
-              <button className={`${sel ? "b2" : "b1"} mt-auto min-h-[46px] text-sm`}>{sel ? `Usando ${f.nome} · gerar de novo` : `Usar ${f.nome}`}</button>
+              <SubmitButton className={`${sel ? "b2" : "b1"} mt-auto min-h-[46px] text-sm`} pendente="Preparando o kit...">{sel ? `Usando ${f.nome} · gerar de novo` : `Usar ${f.nome}`}</SubmitButton>
             </form>
           );
         })}

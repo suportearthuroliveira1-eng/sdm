@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getPasta, etapas, itensDaPasta } from "@/lib/server/pasta";
 
 export const metadata: Metadata = { title: "Painel do produto" };
@@ -8,6 +9,7 @@ export const metadata: Metadata = { title: "Painel do produto" };
 export default async function V05({ params }: PageProps<"/app/v05/[id]">) {
   const { id } = await params;
   const { pasta, vit } = await getPasta(id);
+  if (pasta.tipo !== "vitrine") redirect(`/app/p/${pasta.id}`);
   const itens = await itensDaPasta(pasta.id);
   const et = etapas(pasta, {
     kit: itens.some((i) => i.tipo === "kit_pre" || i.tipo === "kit_quiz"),

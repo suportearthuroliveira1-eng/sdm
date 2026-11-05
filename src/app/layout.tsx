@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { SwRegister } from "@/components/pwa/sw-register";
+import { NavProgress } from "@/components/ux/nav-progress";
+import { Toaster } from "@/components/ux/toaster";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -31,7 +33,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="pt-BR" className={`${jakarta.variable} h-full antialiased`}>
       <body className="min-h-full">
+        <NavProgress />
         {children}
+        <Toaster />
         <SwRegister />
       </body>
     </html>

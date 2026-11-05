@@ -50,6 +50,7 @@ export default async function L02({ params }: PageProps<"/app/l02/[id]">) {
             </div>
           ) : null}
           <AulaAcoes id={aula.id} vista={aula.vista} feita={aula.feita} />
+          <Link href={`/app/q01?aula=${encodeURIComponent(aula.id)}`} className="b2 no-underline lg:max-w-md">Tenho dúvida (abre a Professora já sabendo a aula)</Link>
           {prox ? <Link href={`/app/l02/${encodeURIComponent(prox.id)}`} className="b3 self-start">Próxima aula: {prox.id} · {prox.titulo}</Link> : null}
         </>
       )}

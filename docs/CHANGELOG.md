@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-11-05 · Fluxo ideal (PDF), IA real e movimento
+- **UX**: `NavProgress` (barra no clique), `loading.tsx` com esqueleto, `template.tsx` com fade, botões/cartões que reagem ao toque, `SubmitButton`/`FormPending` com spinner, `Toaster`.
+- **Primeiro acesso** `src/app/app/(primeiro)/`: a04, a07, a05 (8 perguntas, salva a cada resposta), a06 (IA ou regras), caminho (cria a pasta).
+- **Início** com próximo passo único e "Meu caminho" (7 fases). **Produtos** com pastas por tipo, "+ Criar produto com a IA", "Quero ser afiliada do SDM".
+- **Pastas** `/app/p/[id]` e `/app/p/[id]/[etapa]`: caminho A (afiliada SDM), caminho B (produto próprio com ideias, ficha, oferta, ebook+PDF, revisão, página, checkout, teste), divulgação (pago/orgânico, base, pixel, perfil, números).
+- **IA** `src/lib/ai/`: regras base, 13 agentes com schema Zod, `rodar()` com cache (`ai_cache`), checagem que refaz 1x, custo e cota; geração de anúncios/ganchos/roteiros/bio usa IA quando ligada.
+- **Professora** `/api/professora` (streaming, print, histórico, cita aula); chamado pro time.
+- **Link da bio** `/l/[código]` com contagem de cliques (sem robôs, sem repetição no minuto).
+- **Admin**: Pedidos de afiliação e Kit do SDM.
+- Migrations `0006_fluxo_ideal` (students.boas_vindas_em/diagnostico_em/caminho; student_products.tipo/nome/dados/divulgacao; kit_pieces; ai_cache) e `0007_rls_novas`, já aplicadas em produção. Settings `ai_models` (conferidos), `ai_prices`, `quota_ia_dia`.
+- Correções achadas no teste com IA: trava de etapas em cadeia; efeito que devolvia a promessa de `scrollIntoView` (quebrava a Professora no Chrome novo).
+- Quebra algo existente: `/app` agora leva pras boas-vindas no primeiro acesso; pastas da vitrine seguem nas telas antigas.
+
 ## 2026-11-05 · Pasta do produto: criar, gerar, criativos e imagens
 - Telas: V05, V06, V07, V08, F02, F04, DV01, V09; V02 cria a pasta; V01 lista as pastas.
 - `src/lib/gen/modelo.ts` (motor modelo SDM, porte do GEN/LG/PT do protótipo) + `texto.ts`; `src/lib/gen/ia.ts` (OpenAI imagem, desligado sem chave).

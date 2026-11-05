@@ -15,7 +15,7 @@ export const TABS = [
 
 // Seções de cada aba (pra marcar a aba certa em subtelas, ex.: /app/l02 é de Aulas).
 const SECAO: [RegExp, string][] = [
-  [/^\/app\/(v0[2-9]|f0|en|t0|dv|pg|og|n0|dn|e0|eb)/, "/app/v01"],
+  [/^\/app\/(p\/|v0[2-9]|f0|en|t0|dv|pg|og|n0|dn|e0|eb)/, "/app/v01"],
   [/^\/app\/l0/, "/app/l01"],
   [/^\/app\/q0/, "/app/q01"],
   [/^\/app\/u0/, "/app/u01"],

@@ -28,14 +28,15 @@ export const SETTINGS: SeedSetting[] = [
   { key: "PAGE_TOOL_NAME", value: "[a definir]", grupo: "funil", descricao: "Ferramenta externa onde a aluna monta a página.", pendente: true },
   { key: "sdm_page_templates", value: { pre: null, quiz: null }, grupo: "funil", descricao: "Links dos modelos do SDM na ferramenta de página.", pendente: true },
 
-  // IA — nomes NÃO conferidos na doc da OpenAI (rede bloqueada no dev). Conferir antes de ligar.
+  // IA — conferidos em developers.openai.com/api/docs/pricing em 2026-11-05 (mais baratos que atendem cada tarefa).
   {
     key: "ai_models",
-    value: { text_cheap: "[conferir]", text_mid: "[conferir]", image: "[conferir]", embedding: "[conferir]" },
+    value: { text_cheap: "gpt-6-luna", text_mid: "gpt-6.1-terra", image: "gpt-image-1-mini", embedding: "text-embedding-3-small" },
     grupo: "ia",
-    descricao: "Modelos por classe. text_cheap: professora, fichas, checagens, ganchos. text_mid: kit e ebook.",
-    pendente: true,
+    descricao: "Modelos por classe. text_cheap: diagnóstico, ideias, ficha, anúncios, roteiros, professora. text_mid: oferta, ebook, página. Preços em ai_prices.",
   },
+  { key: "ai_prices", value: { "gpt-6-luna": [0.1, 0.01, 0.5], "gpt-6.1-terra": [1, 0.05, 5] }, grupo: "ia", descricao: "US$ por 1M tokens: [entrada, entrada em cache, saída]. Usado no custo do AD12." },
+  { key: "quota_ia_dia", value: 200, grupo: "ia", descricao: "Chamadas de IA por aluna por dia (texto)." },
   { key: "ai_budget_usd", value: null, grupo: "ia", descricao: "Teto mensal de custo de IA (alerta no AD12).", pendente: true },
   { key: "quota_professora_dia", value: null, grupo: "ia", descricao: "Mensagens por aluna por dia na professora.", pendente: true },
   { key: "quota_imagens_dia", value: null, grupo: "ia", descricao: "Imagens por aluna por dia.", pendente: true },

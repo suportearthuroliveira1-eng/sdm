@@ -131,3 +131,122 @@ body {
 @utility ain {
   @apply box-border block min-h-11 w-full rounded-xl border border-line-2 bg-bg px-3 text-sm text-text placeholder:text-muted/70 focus:border-accent focus:outline-none;
 }
+
+/* ---------- movimento e retorno ao toque ---------- */
+@layer base {
+  a,
+  button,
+  summary,
+  [role="tab"],
+  [role="radio"],
+  label:has(input[type="checkbox"]),
+  label:has(input[type="radio"]) {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: default;
+  }
+}
+
+/* Todo elemento clicável com borda/fundo reage: hover clareia, toque afunda. */
+@utility press {
+  @apply transition-[transform,background-color,border-color,filter,opacity] duration-150 ease-out active:scale-[0.98];
+}
+@layer components {
+  .b1, .b2, .b3, .ab1, .ab2 {
+    transition: transform 150ms ease-out, filter 150ms ease-out, background-color 150ms ease-out, border-color 150ms ease-out, opacity 150ms;
+  }
+  .b1:not(:disabled):active, .b2:not(:disabled):active, .ab1:not(:disabled):active, .ab2:not(:disabled):active, .b3:not(:disabled):active {
+    transform: scale(0.97);
+  }
+  .b1:not(:disabled):hover, .ab1:not(:disabled):hover {
+    filter: brightness(1.08);
+    box-shadow: 0 6px 20px -8px rgb(169 139 255 / 0.6);
+  }
+  .b2:not(:disabled):hover, .ab2:not(:disabled):hover {
+    border-color: var(--accent);
+  }
+  /* cartões clicáveis (links/botões com borda) */
+  a[class*="rounded"][class*="border"], button[class*="rounded"][class*="border"], details > summary {
+    transition: transform 150ms ease-out, border-color 150ms ease-out, background-color 150ms ease-out;
+  }
+  a[class*="rounded"][class*="border"]:active, button[class*="rounded"][class*="border"]:not(:disabled):active {
+    transform: scale(0.985);
+  }
+  a[class*="rounded"][class*="border"]:hover {
+    border-color: var(--line-2);
+  }
+}
+
+.nav-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 3px;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms;
+}
+.nav-progress > div {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 10px var(--accent);
+}
+.nav-progress.is-on {
+  opacity: 1;
+}
+.nav-progress.is-on > div {
+  animation: nav-grow 8s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+}
+@keyframes nav-grow {
+  0% { width: 0; }
+  10% { width: 35%; }
+  100% { width: 92%; }
+}
+
+.page-in {
+  animation: page-in 220ms ease-out both;
+}
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.toast-in {
+  animation: toast-in 200ms ease-out both;
+}
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+.skeleton {
+  border-radius: 12px;
+  background: linear-gradient(90deg, var(--surface) 0%, var(--surface-2) 50%, var(--surface) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+.spinner {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border-radius: 999px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  animation: spin 700ms linear infinite;
+  vertical-align: -0.15em;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-in, .toast-in, .skeleton, .nav-progress.is-on > div { animation: none !important; }
+  .nav-progress.is-on > div { width: 60%; }
+  * { transition-duration: 0ms !important; }
+}

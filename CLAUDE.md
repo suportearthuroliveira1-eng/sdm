@@ -6,7 +6,7 @@ Leia também `AGENTS.md`: o Next.js aqui é a 16 e mudou muito (`proxy.ts` no lu
 
 ## O que é
 App instalável (PWA) do **SDM (Sistema Dólar Mundial)** para alunas da Amanda Gomes. A aluna é **afiliada**: escolhe produto da vitrine, pega o link de afiliada e divulga (pago ou orgânico). O app tem área de membros (111 aulas + B1 + PO), IA (kit, anúncios, roteiros, professora), gerador de imagem, gerador de ebook e painel admin completo.
-Fonte única de produto: `docs/SDM_contexto_completo_v6.md`. Telas e textos: `docs/prototipo/App.dc.html` e `Admin.dc.html`. Pedido original: `docs/PROMPT_ORIGINAL.md`.
+Fonte única de produto: `docs/SDM_contexto_completo_v6.md` (ainda não chegou). **Fluxo atual: `docs/App_SDM_Fluxo_Ideal.pdf`** (dois caminhos: afiliada do SDM e produto próprio com IA; vale acima do protótipo onde divergem). Telas e textos: `docs/prototipo/App.dc.html` e `Admin.dc.html`. Pedido original: `docs/PROMPT_ORIGINAL.md`.
 
 ## Stack e comandos
 Next.js 16 (App Router) + TypeScript estrito + Tailwind 4 · Supabase (Postgres, Auth, Storage, RLS, pgvector) · Drizzle · Inngest · OpenAI (só servidor) · @react-pdf/renderer · web-push · Zod · Vitest + Playwright · Vercel.
@@ -43,7 +43,10 @@ O container de dev NÃO alcança *.supabase.co nem openai.com (política de rede
 
 ## Mapa
 ```
-src/app/app/<id>/        telas da aluna, rota = ID da tela em minúsculo (a01, i01, v05...)
+src/app/app/(primeiro)/  primeiro acesso: a04 boas-vindas, a07 combinado, a05 diagnóstico, a06 resultado, caminho
+src/app/app/(tabs)/      app logado com menu (AppShell): Início, v01 Produtos, l01 Aulas, q01 Professora, u01 Perfil
+src/app/app/(tabs)/p/[id]/[etapa]  pastas dos caminhos (sdm | proprio) e divulgação; slug da etapa em src/lib/domain/etapas.ts
+src/app/app/<id>/        demais telas pelo ID do protótipo (a01, v02, v05 e f02/f04/dv01 pras pastas da vitrine)
 src/app/admin/(painel)/  telas AD01–AD13 (layout checa papel); admin/entrar = login do time
 src/app/acesso/[token]   link de acesso (uso único, 72h)
 src/app/api/             webhooks (hubla, hotmart), inngest, app/*
@@ -54,6 +57,8 @@ src/lib/domain/          regras puras e testáveis (entitlements, csv, ...)
 src/lib/server/          serviços de servidor (alunas, settings, auditoria, rate limit, log)
 src/lib/actions/         server actions (auth, admin)
 src/lib/integrations/    webhooks, WhatsAppSender, TrackingProvider, MetricsProvider
+src/lib/ai/              IA: regras base, agentes (tarefa + schema Zod), rodar() com cache/custo, professora
+src/lib/gen/             motor modelo SDM (sem IA), textos, imagem
 src/lib/inngest/         client e funções de job
 db/seed-data/            settings, agentes, schema do conteúdo, conteudo.json (gerado do protótipo)
 supabase/                migrations (cópia gerada de drizzle/) e seed.sql — não editar à mão
