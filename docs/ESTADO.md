@@ -1,6 +1,6 @@
 # Estado do projeto
 
-> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-05 (6ª tarefa: login com e-mail e senha)** · branch `claude/intelligent-bohr-54teds`.
+> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-05 (7ª tarefa: app logado com abas, versão web)** · branch `claude/intelligent-bohr-54teds`.
 
 ## Fase atual
 **Fase 1 · Base: ~98%.** Banco no Supabase pronto (migrations + seed) e app na Vercel (`sdm-app`, deploy automático do GitHub). Falta a dona: `DATABASE_URL` na Vercel e testar o login. Endereço público: https://sdm-app.vercel.app (ver `docs/DEPLOY.md`).
@@ -8,7 +8,7 @@
 | Fase | % | Nota |
 |---|---|---|
 | 1 Base | 90 | infra, banco, RLS, auth manual, admin inicial, PWA, webhook desligado, seeds do protótipo ✓ · falta validar no Supabase real |
-| 2 Casca do app | 0 | |
+| 2 Casca do app | 40 | moldura com 5 abas (menu de baixo no celular, lateral + cabeçalho na web), I01, L01, L02 (sem vídeo), L04, V01, V02 (sem filtros), Q01 (aviso), U01, desbloqueios ✓ · faltam A04–A07, I02–I05, FR*, B*, L03/L05/L06, cartões, combinado |
 | 3 Diagnóstico e produto | 0 | |
 | 4 Funil | 0 | |
 | 5 Divulgação e números | 0 | |
@@ -28,7 +28,11 @@
 - **A02** ✓ protótipo: "Reenviar meu acesso" (e-mail + WhatsApp) e "Falar com o time". Reenvio manda link novo pro WhatsApp **cadastrado** se `whatsapp_auto_send` e o provedor existirem; senão vira ticket. Resposta igual nos dois casos (não revela cadastro).
 - **A03** ✓ protótipo (5 passos iPhone/Android, aviso iOS 16.4, "Já instalei" marca `instalado_em` e o "Agora faça" da aula 0.1). Print do passo: placeholder até o admin subir as imagens (AD10).
 - **Link de acesso** `/acesso/[token]` ✓ (botão "Entrar" protege o uso único contra a prévia do WhatsApp).
-- **/app** provisório: confirma acesso e leva pra A03. Vira A04/I01 na Fase 2.
+- **Moldura do app** ✓ (`src/components/app/app-shell.tsx`): celular = menu de 5 abas embaixo só nas telas raiz e voltar nas subtelas (protótipo); web (≥1024px) = menu lateral fixo + cabeçalho + link "Painel admin" pra quem é admin.
+- **I01** ✓ próximo passo (próxima aula liberada), próxima aula, "Agora faça" pendentes, progresso, atalhos (só pra telas que existem), plantão (placeholder).
+- **L01** ✓ progresso, continuar, módulos por parte com cadeado e motivo (trilha, 1ª venda, PO = UP1/D1). **L02** ✓ aula + "Agora faça" (botão só se a tela existe) + marcar vista/feito; vídeo e roteiro: placeholder até o AD05. **L04** ✓ glossário.
+- **V01** ✓ estado vazio (criar pasta: Fase 3). **V02** ✓ vitrine do banco (selos, funil, comissão `[valor]`), sem filtros/favoritos.
+- **Q01** aviso "professora chega numa próxima atualização" (Fase 7). **U01** ✓ dados, acessos, trocar senha, instalar, painel admin, sair.
 - **A04–A07, I*, FR*, B*, V*, EN*, F*, T*, DV*, PG*, OG*, N*, DN*, E*, EB*, L*, Q*, U01**: não começadas.
 - **Admin** (visual do Admin.dc.html): login do time ✓ · AD01 ✓ 6 KPIs + jornada de 10 passos com contagens reais do banco (abandono e dúvidas: placeholders até Fases 2/7) · AD02 ✓ (busca, filtros Todas/Sem acesso 7 dias/Sem funil/Com venda, colunas do protótipo; "Onde está" = [—] até as etapas existirem; nova aluna com link, importar CSV) · AD03 parcial (dados, acessos, gerar link, copiar mensagem WhatsApp, desativar, **definir senha da aluna**; faltam conversas, pastas, impersonar) · AD08 ✓ (o que cada acesso libera, mapa produto→acesso, log de eventos, reprocessar) · AD11 parcial (editor JSON das settings) · AD04–AD07, AD09, AD10, AD12, AD13: não começadas.
 
@@ -43,7 +47,7 @@
 - `supabase/migrations` + `supabase/seed.sql` testados num Postgres com cara de Supabase (schema `extensions`, aplicar 2x o seed não duplica).
 - Build passa sem nenhuma variável de ambiente (pronto pra Vercel).
 - `/api/health`: diz se as variáveis existem e se o banco conecta (só o tipo do erro, sem valores).
-- Testes: 27 unitários (Vitest, incluindo conferência do conteúdo contra o protótipo) + 5 e2e (Playwright). `typecheck`, `lint` e `build` limpos.
+- Testes: 29 unitários (Vitest, incluindo conferência do conteúdo contra o protótipo) + 5 e2e (Playwright). `typecheck`, `lint` e `build` limpos.
 
 ## Simulado ou provisório
 - Ícones do app (marca "SDM" gerada por script) até vir a arte oficial.
@@ -59,14 +63,14 @@
 
 ## Próximos 3 passos
 1. **Você**: `docs/DEPLOY.md` → "Falta": `DATABASE_URL` na Vercel, Redeploy, revogar tokens; depois testar `/admin/entrar` e o link de acesso de uma aluna teste.
-2. Fase 2: casca do app (5 abas Início/Produtos/Aulas/Professora/Perfil, cabeçalho com histórico, A04–A07, I01–I05, L01–L06 com PO e cadeado, cartões, combinado, grupo, ferramentas FR01–FR04, base B01–B04, perfil U01, desbloqueios), seguindo o protótipo tela a tela.
+2. Fase 2 (resto): A04–A07 (boas-vindas, diagnóstico, resultado, combinado), I02–I05, FR01–FR04, B01–B04, L03/L05/L06, cartões e grupo, seguindo o protótipo.
 3. Quando o contexto v6 chegar: roteiros de 5 blocos, regras dos agentes (seção 10) e conferência das regras de desbloqueio (4.4).
 
 ## Pendências que dependem de você
 | Desde | Pendência |
 |---|---|
 | 2026-11-05 | Subir `docs/SDM_contexto_completo_v6.md` (protótipos já chegaram) |
-| 2026-11-05 | Dona: criar conta em /app/cadastro com o ADMIN_EMAIL e entrar em /admin/entrar. Fellipe: abrir o link de acesso que foi gerado, criar a senha e entrar em /admin/entrar |
+| 2026-11-05 | Trocar as senhas temporárias das 2 contas full (dona e Fellipe: aluna com SDM/UP1/D1/UP2/D2 + admin) em Perfil → Trocar senha |
 | 2026-11-05 | Decidir quando desligar `cadastro_aberto` (hoje qualquer pessoa cria conta e ganha SDM) |
 | 2026-11-05 | Revogar os tokens Supabase/Vercel e rodar (roll) a chave secret do Supabase: foram colados no chat |
 | 2026-11-05 | SMTP próprio no Supabase (e-mail padrão: 2/hora; sem ele não dá pra pôr o código no e-mail) |

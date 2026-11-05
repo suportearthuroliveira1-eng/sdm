@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-05 · App logado com abas (celular e web)
+- `AppShell` em `src/app/app/(tabs)/layout.tsx`: menu de 5 abas embaixo no celular, menu lateral + cabeçalho na web, link pro admin; admin ganhou "Ver o app da aluna".
+- Telas: I01, L01, L02, L04, V01, V02, Q01 (aviso), U01, com dados reais do banco (`src/lib/server/aluna.ts`).
+- `src/lib/domain/unlock.ts` (trilha, 1ª venda, PO) e `screens.ts` + testes (29). `src/lib/actions/aulas.ts` marca aula vista / "Agora faça" feito.
+- CSS: cor de link em `@layer base` (antes passava por cima das classes).
+- Dados: 2 contas full (aluna com todos os acessos + admin) com senha temporária, registradas na auditoria.
+- Quebra algo existente: `/app` deixou de ser a página provisória.
+
 ## 2026-11-05 · Login com e-mail e senha
 - A01 e /admin/entrar: e-mail + senha (`signInWithPassword`). Sem código, sem e-mail. Página `/auth/confirmar` removida.
 - `/app/cadastro`: criar conta livre (cria usuário confirmado pelo servidor + aluna + SDM), controlado por `settings.cadastro_aberto` (novo, padrão true, já criado em produção).
