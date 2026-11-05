@@ -3,7 +3,7 @@
 > Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-05 (5ª tarefa: deploy no Supabase e na Vercel)** · branch `claude/intelligent-bohr-54teds`.
 
 ## Fase atual
-**Fase 1 · Base: ~95%.** Banco no Supabase pronto (migrations + seed) e app na Vercel (`sdm-app`, deploy automático do GitHub). Falta a dona: `DATABASE_URL` na Vercel, desligar a Deployment Protection e testar o login (ver `docs/DEPLOY.md`).
+**Fase 1 · Base: ~95%.** Banco no Supabase pronto (migrations + seed) e app na Vercel (`sdm-app`, deploy automático do GitHub). Falta a dona: `DATABASE_URL` na Vercel e testar o login. Endereço público: https://sdm-app.vercel.app (ver `docs/DEPLOY.md`).
 
 | Fase | % | Nota |
 |---|---|---|
@@ -19,7 +19,7 @@
 
 ## Bloqueio principal
 - **Contexto v6 ainda não chegou** (`docs/SDM_contexto_completo_v6.md`). Os protótipos chegaram em 2026-11-05 e já estão em `docs/prototipo/`. Do contexto ainda faltam: roteiro de 5 blocos de cada aula (seção 6), regras de conteúdo dos agentes (seção 10), regras de desbloqueio detalhadas (4.4), mapa de funil (3.1), campos (8), métricas (12) e pendências (13).
-- **Produção bloqueada por 2 itens da dona**: `DATABASE_URL` (senha do banco nunca foi enviada; criar um usuário de banco novo foi barrado pelas permissões do ambiente) e Deployment Protection da Vercel ligada (desligar foi barrado: é decisão dela).
+- **Produção bloqueada por 2 itens da dona**: `DATABASE_URL` (senha do banco nunca foi enviada; criar um usuário de banco novo foi barrado pelas permissões do ambiente). (`sdm-app.vercel.app` já é público; Supabase Site URL aponta pra ele.)
 
 ## Telas
 - **A01** ✓ visual e textos do protótipo; login por e-mail: o Supabase manda um link (`/auth/confirmar`, fluxo implicit, funciona em outro aparelho); se houver SMTP com `{{ .Token }}`, o código de 6 dígitos também vale; sem cadastro/sem SDM ativo → A02. Única diferença do protótipo: a nota "você entra direto" virou "a gente manda um código" (decisão do prompt, seção 3).
@@ -55,7 +55,7 @@
 - Produção ainda sem `DATABASE_URL`: qualquer tela que lê o banco (login, admin) dá erro até cadastrar. Login por e-mail e por link de acesso ainda não testados de ponta a ponta no Supabase real.
 
 ## Próximos 3 passos
-1. **Você**: `docs/DEPLOY.md` → "Falta": `DATABASE_URL` na Vercel, desligar Deployment Protection, Redeploy, revogar tokens; depois testar `/admin/entrar` e o link de acesso de uma aluna teste.
+1. **Você**: `docs/DEPLOY.md` → "Falta": `DATABASE_URL` na Vercel, Redeploy, revogar tokens; depois testar `/admin/entrar` e o link de acesso de uma aluna teste.
 2. Fase 2: casca do app (5 abas Início/Produtos/Aulas/Professora/Perfil, cabeçalho com histórico, A04–A07, I01–I05, L01–L06 com PO e cadeado, cartões, combinado, grupo, ferramentas FR01–FR04, base B01–B04, perfil U01, desbloqueios), seguindo o protótipo tela a tela.
 3. Quando o contexto v6 chegar: roteiros de 5 blocos, regras dos agentes (seção 10) e conferência das regras de desbloqueio (4.4).
 
@@ -63,7 +63,7 @@
 | Desde | Pendência |
 |---|---|
 | 2026-11-05 | Subir `docs/SDM_contexto_completo_v6.md` (protótipos já chegaram) |
-| 2026-11-05 | `DATABASE_URL` na Vercel (reset da senha do banco) + desligar Deployment Protection + Redeploy (`docs/DEPLOY.md`) |
+| 2026-11-05 | `DATABASE_URL` na Vercel (reset da senha do banco) + Redeploy (`docs/DEPLOY.md`) |
 | 2026-11-05 | Revogar os tokens Supabase/Vercel e rodar (roll) a chave secret do Supabase: foram colados no chat |
 | 2026-11-05 | SMTP próprio no Supabase (e-mail padrão: 2/hora; sem ele não dá pra pôr o código no e-mail) |
 | 2026-11-05 | Cadastrar na Vercel só 3 variáveis: `SUPABASE_SERVICE_ROLE_KEY` (secret), `DATABASE_URL` (pooler, com a senha do banco) e `ADMIN_EMAIL`. A senha do banco e a chave secret nunca foram enviadas (no chat veio `[YOUR-PASSWORD]`) e não vão pro código |
