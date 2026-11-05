@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-05 · Rota de saúde
+- `src/app/api/health/route.ts`: variáveis presentes e conexão com o banco, sem expor valores. Produção hoje: senha do banco recusada (28P01).
+
 ## 2026-11-05 · Deploy no Supabase e na Vercel
 - Supabase: migrations e seed aplicados pela API de gerenciamento e registrados em `supabase_migrations.schema_migrations`; Auth com Site URL, redirect, sem cadastro aberto, código de 6 dígitos.
 - Vercel: projeto `sdm-app` ligado ao GitHub, variáveis `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_EMAIL`, `WHATSAPP_PROVIDER`; primeiro deploy READY.

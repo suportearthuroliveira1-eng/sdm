@@ -40,6 +40,7 @@
 - **Conteúdo do protótipo no banco**: 19 módulos, 117 aulas (111 + B1 + PO.1–PO.5, PO libera com UP1 ou D1), 39 termos (32 oficiais + 7 do app), 6 produtos da vitrine (marcados `exemplo`, códigos VIT do protótipo), 42 blocos de texto (CKDEF, PASSOS, INFODEF, ENT, HEAD, DIAG, PAISES, LG).
 - `supabase/migrations` + `supabase/seed.sql` testados num Postgres com cara de Supabase (schema `extensions`, aplicar 2x o seed não duplica).
 - Build passa sem nenhuma variável de ambiente (pronto pra Vercel).
+- `/api/health`: diz se as variáveis existem e se o banco conecta (só o tipo do erro, sem valores).
 - Testes: 25 unitários (Vitest, incluindo conferência do conteúdo contra o protótipo) + 5 e2e (Playwright). `typecheck`, `lint` e `build` limpos.
 
 ## Simulado ou provisório
@@ -52,7 +53,7 @@
 - Webhook Hubla: nomes de evento, caminhos do payload e header `x-hubla-token` **não conferidos** na doc da Hubla.
 
 ## Quebrado / bugs conhecidos
-- Produção ainda sem `DATABASE_URL`: qualquer tela que lê o banco (login, admin) dá erro até cadastrar. Login por e-mail e por link de acesso ainda não testados de ponta a ponta no Supabase real.
+- Produção: `DATABASE_URL` cadastrada, mas o banco recusa a senha (`28P01 password authentication failed`, visto em https://sdm-app.vercel.app/api/health). Login e admin dão erro 500 até corrigir a senha. Login por e-mail e por link de acesso ainda não testados de ponta a ponta no Supabase real.
 
 ## Próximos 3 passos
 1. **Você**: `docs/DEPLOY.md` → "Falta": `DATABASE_URL` na Vercel, Redeploy, revogar tokens; depois testar `/admin/entrar` e o link de acesso de uma aluna teste.
