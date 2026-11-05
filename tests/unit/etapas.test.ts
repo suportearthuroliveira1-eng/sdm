@@ -24,6 +24,14 @@ describe("etapas da pasta (fluxo ideal)", () => {
     const ok = etapasDaPasta({ ...e, dados: { feito: { entenda: true }, afiliacao: { status: "aprovada" } } });
     expect(ok.find((x) => x.slug === "link")!.agora).toBe(true);
   });
+  it("afiliação em análise: a aluna segue pra conta e regras enquanto espera", () => {
+    const e = { ...base, tipo: "sdm" as const, dados: { feito: { entenda: true }, afiliacao: { status: "analise" } } };
+    const et = etapasDaPasta(e);
+    expect(et.find((x) => x.slug === "afiliacao")!.agora).toBe(false);
+    expect(et.find((x) => x.slug === "conta")!.travada).toBeNull();
+    expect(et.find((x) => x.slug === "conta")!.agora).toBe(true);
+    expect(et.find((x) => x.slug === "divulgar")!.travada).toContain("Falta");
+  });
   it("divulgação mostra pago e/ou orgânico conforme a escolha", () => {
     const pronto = { ...base, tipo: "sdm" as const, dados: { feito: { entenda: true, link: true, kit: true, conta: true, regras: true }, afiliacao: { status: "aprovada" } } };
     expect(etapasDaPasta({ ...pronto, divulgacao: "pago" }).some((x) => x.slug === "pixel")).toBe(true);

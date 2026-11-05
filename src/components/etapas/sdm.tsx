@@ -1,4 +1,5 @@
 import { asc, eq } from "drizzle-orm";
+import Link from "next/link";
 import { CopyButton } from "@/components/pasta/copy-button";
 import { db, schema } from "@/lib/db";
 import { adaptarPeca, pedirAfiliacao } from "@/lib/actions/caminhos";
@@ -59,11 +60,15 @@ export function SdmAfiliacao({ p, proxima }: { p: P; proxima: string }) {
     );
   }
   return (
-    <div className="cd gap-1.5" role="status">
-      <span className="kk">STATUS</span>
-      <span className="text-[17px] font-bold text-warn">Em análise</span>
-      <span className="mu">Pedido feito em {af.pedidoEm ? new Date(af.pedidoEm).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }) : "—"}. O time confere e aprova [prazo: regra do time].</span>
-    </div>
+    <>
+      <div className="cd gap-1.5" role="status">
+        <span className="kk">STATUS</span>
+        <span className="text-[17px] font-bold text-warn">Em análise</span>
+        <span className="mu">Pedido feito em {af.pedidoEm ? new Date(af.pedidoEm).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }) : "—"}. O time confere e aprova [prazo: regra do time].</span>
+      </div>
+      <p className="tx">Enquanto o time confere, você já pode abrir a conta pra receber e ler as regras.</p>
+      <Link href={`/app/p/${p.id}/conta`} className="b1">Seguir pra Conta pra receber</Link>
+    </>
   );
 }
 

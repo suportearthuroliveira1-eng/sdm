@@ -1,6 +1,6 @@
 # Estado do projeto
 
-> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-05 (9ª tarefa: fluxo ideal do PDF, IA ligada, movimento e retorno ao toque)** · branch `claude/intelligent-bohr-54teds`.
+> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-05 (10ª tarefa: correção da afiliação em análise e timeouts do banco, depois do teste em produção)** · branch `claude/intelligent-bohr-54teds`.
 
 ## Fase atual
 **O app agora segue `docs/App_SDM_Fluxo_Ideal.pdf`** (dois caminhos + divulgação). IA real ligada (OpenAI) e testada de ponta a ponta localmente. Em produção a IA liga quando `OPENAI_API_KEY` estiver na Vercel (pendência da dona).
@@ -65,6 +65,7 @@
 - Webhook Hubla: nomes de evento, caminhos do payload e header `x-hubla-token` **não conferidos** na doc da Hubla.
 
 ## Quebrado / bugs conhecidos
+- 2026-11-05: em produção, 2 travadas seguidas (pedido de afiliação e login presos esperando o servidor) que sumiram sozinhas. Pus timeouts na conexão do banco; se voltar, olhar os logs da Vercel (função `/app`) e o pooler do Supabase.
 - Fluxo completo testado em produção com conta de teste (cadastro → pasta → país → link → kit → 3 anúncios, ganchos, roteiros, bio → upload → PNG com imagem → biblioteca), conta apagada depois.
 - Produção OK desde 2026-11-05: `/api/health` com banco conectado (117 aulas); testado A01→A02 com e-mail sem cadastro, link falso recusado, /admin sem login → /admin/entrar. Falta a dona testar o login do admin pelo e-mail e o link de uma aluna teste. (A senha nova do banco levou alguns minutos pra valer no pooler.) Login por e-mail e por link de acesso ainda não testados de ponta a ponta no Supabase real.
 

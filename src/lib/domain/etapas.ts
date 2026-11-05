@@ -96,6 +96,9 @@ export function etapasDaPasta(e: EstadoPasta): EtapaStatus[] {
   ];
   const todas = [...estrutura, ...div];
   let agoraMarcado = false;
+  // Enquanto o time analisa a afiliação, link e kit esperam; conta e regras já dá pra fazer.
+  const esperaAfiliacao = (slug: string) => slug === "afiliacao" || ((slug === "link" || slug === "kit") && !pronta("afiliacao", e));
+  const emAnalise = (d(e, "afiliacao") as { status?: string } | undefined)?.status === "analise";
   return todas.map((def) => {
     const ok = pronta(def.slug, e);
     let travada: string | null = null;
@@ -109,10 +112,10 @@ export function etapasDaPasta(e: EstadoPasta): EtapaStatus[] {
       travada = "Abre quando o time aprovar a sua afiliação.";
     } else if (estrutura.includes(def) && def.slug !== "afiliacao") {
       // trava em cadeia: qualquer etapa anterior da estrutura que não esteja pronta
-      const falta = estrutura.slice(0, estrutura.indexOf(def)).find((x) => x.slug !== "afiliacao" && !pronta(x.slug, e));
+      const falta = estrutura.slice(0, estrutura.indexOf(def)).find((x) => !esperaAfiliacao(x.slug) && !pronta(x.slug, e));
       if (falta) travada = `Termine a etapa anterior: ${falta.nome}.`;
     }
-    const agora = !ok && !travada && !agoraMarcado;
+    const agora = !ok && !travada && !agoraMarcado && !(def.slug === "afiliacao" && emAnalise);
     if (agora) agoraMarcado = true;
     const st: EtapaStatus = { ...def, ok, agora, travada };
     return st;

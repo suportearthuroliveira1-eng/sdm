@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-05 · Afiliação em análise e conexão do banco
+- Teste em produção achou a tela presa em "Enviando o pedido..." (o pedido salvava, a resposta não voltava; login também travou 2 vezes seguidas e depois voltou ao normal). Causa provável: conexão morta com o pooler numa instância da Vercel que acordou. `src/lib/db/index.ts` ganhou `idle_timeout`, `max_lifetime` e `connect_timeout`.
+- `AcaoIa` mostra erro em vez de girar pra sempre se a ação falhar.
+- Afiliação em análise não segura mais a aluna: Início leva pra "Conta pra receber" (link e kit esperam a aprovação; conta e regras já abrem). A tela de afiliação ganhou "Seguir pra Conta pra receber". Teste novo (42).
+
 ## 2026-11-05 · Fluxo ideal (PDF), IA real e movimento
 - **UX**: `NavProgress` (barra no clique), `loading.tsx` com esqueleto, `template.tsx` com fade, botões/cartões que reagem ao toque, `SubmitButton`/`FormPending` com spinner, `Toaster`.
 - **Primeiro acesso** `src/app/app/(primeiro)/`: a04, a07, a05 (8 perguntas, salva a cada resposta), a06 (IA ou regras), caminho (cria a pasta).

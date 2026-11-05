@@ -13,7 +13,16 @@ const g = globalThis as unknown as { __sdmDb?: DB };
 
 export function db(): DB {
   if (!g.__sdmDb) {
-    const client = postgres(env().DATABASE_URL, { prepare: false, max: 5 });
+    // Serverless: o pooler do Supabase fecha conexões paradas e a instância da
+    // Vercel "congela" entre pedidos. Sem esses limites, uma conexão morta
+    // segura a consulta pra sempre (tela presa em "Enviando...").
+    const client = postgres(env().DATABASE_URL, {
+      prepare: false,
+      max: 5,
+      idle_timeout: 20,
+      max_lifetime: 60 * 5,
+      connect_timeout: 10,
+    });
     g.__sdmDb = drizzle(client, { schema });
   }
   return g.__sdmDb;

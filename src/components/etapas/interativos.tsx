@@ -92,7 +92,13 @@ export function AcaoIa({ acao, children, className = "b1", ok, carregando = "A I
         onClick={() =>
           start(async () => {
             setErro("");
-            const r = await acao();
+            let r: { ok?: boolean; erro?: string };
+            try {
+              r = await acao();
+            } catch {
+              setErro("Não deu certo agora. Confira a internet e toque de novo.");
+              return;
+            }
             if (r.erro) setErro(r.erro);
             else {
               if (ok) toast(ok);
