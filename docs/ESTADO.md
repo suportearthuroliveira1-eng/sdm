@@ -1,6 +1,6 @@
 # Estado do projeto
 
-> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-05 (5ª tarefa: deploy no Supabase e na Vercel)** · branch `claude/intelligent-bohr-54teds`.
+> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-05 (6ª tarefa: login com e-mail e senha)** · branch `claude/intelligent-bohr-54teds`.
 
 ## Fase atual
 **Fase 1 · Base: ~98%.** Banco no Supabase pronto (migrations + seed) e app na Vercel (`sdm-app`, deploy automático do GitHub). Falta a dona: `DATABASE_URL` na Vercel e testar o login. Endereço público: https://sdm-app.vercel.app (ver `docs/DEPLOY.md`).
@@ -22,13 +22,15 @@
 - **Produção bloqueada por 2 itens da dona**: `DATABASE_URL` (senha do banco nunca foi enviada; criar um usuário de banco novo foi barrado pelas permissões do ambiente). (`sdm-app.vercel.app` já é público; Supabase Site URL aponta pra ele.)
 
 ## Telas
-- **A01** ✓ visual e textos do protótipo; login por e-mail: o Supabase manda um link (`/auth/confirmar`, fluxo implicit, funciona em outro aparelho); se houver SMTP com `{{ .Token }}`, o código de 6 dígitos também vale; sem cadastro/sem SDM ativo → A02. Única diferença do protótipo: a nota "você entra direto" virou "a gente manda um código" (decisão do prompt, seção 3).
+- **A01** ✓ visual do protótipo; login com **e-mail e senha** (sem código, decisão do Fellipe em 2026-11-05) + botão "Criar conta".
+- **Cadastro** `/app/cadastro` ✓ nome, e-mail, senha (8+, letra e número); sem confirmação por e-mail; com `cadastro_aberto`=true já libera SDM. E-mail que já existe não pode ser cadastrado de novo (proteção contra tomar conta alheia).
+- **Senha** `/app/senha` ✓ criar/trocar senha logada; o link de acesso leva pra cá na 1ª vez.
 - **A02** ✓ protótipo: "Reenviar meu acesso" (e-mail + WhatsApp) e "Falar com o time". Reenvio manda link novo pro WhatsApp **cadastrado** se `whatsapp_auto_send` e o provedor existirem; senão vira ticket. Resposta igual nos dois casos (não revela cadastro).
 - **A03** ✓ protótipo (5 passos iPhone/Android, aviso iOS 16.4, "Já instalei" marca `instalado_em` e o "Agora faça" da aula 0.1). Print do passo: placeholder até o admin subir as imagens (AD10).
 - **Link de acesso** `/acesso/[token]` ✓ (botão "Entrar" protege o uso único contra a prévia do WhatsApp).
 - **/app** provisório: confirma acesso e leva pra A03. Vira A04/I01 na Fase 2.
 - **A04–A07, I*, FR*, B*, V*, EN*, F*, T*, DV*, PG*, OG*, N*, DN*, E*, EB*, L*, Q*, U01**: não começadas.
-- **Admin** (visual do Admin.dc.html): login do time ✓ · AD01 ✓ 6 KPIs + jornada de 10 passos com contagens reais do banco (abandono e dúvidas: placeholders até Fases 2/7) · AD02 ✓ (busca, filtros Todas/Sem acesso 7 dias/Sem funil/Com venda, colunas do protótipo; "Onde está" = [—] até as etapas existirem; nova aluna com link, importar CSV) · AD03 parcial (dados, acessos, gerar link, copiar mensagem WhatsApp, desativar; faltam conversas, pastas, impersonar) · AD08 ✓ (o que cada acesso libera, mapa produto→acesso, log de eventos, reprocessar) · AD11 parcial (editor JSON das settings) · AD04–AD07, AD09, AD10, AD12, AD13: não começadas.
+- **Admin** (visual do Admin.dc.html): login do time ✓ · AD01 ✓ 6 KPIs + jornada de 10 passos com contagens reais do banco (abandono e dúvidas: placeholders até Fases 2/7) · AD02 ✓ (busca, filtros Todas/Sem acesso 7 dias/Sem funil/Com venda, colunas do protótipo; "Onde está" = [—] até as etapas existirem; nova aluna com link, importar CSV) · AD03 parcial (dados, acessos, gerar link, copiar mensagem WhatsApp, desativar, **definir senha da aluna**; faltam conversas, pastas, impersonar) · AD08 ✓ (o que cada acesso libera, mapa produto→acesso, log de eventos, reprocessar) · AD11 parcial (editor JSON das settings) · AD04–AD07, AD09, AD10, AD12, AD13: não começadas.
 
 ## Pronto e testado
 - Schema completo (todas as tabelas da seção 4 + `access_links`, `favorites`, `content_blocks`, `knowledge_chunks` com pgvector, `rate_limits`), IDs legíveis ALN/PRD/VIT/GEN/EVT por sequência.
@@ -41,7 +43,7 @@
 - `supabase/migrations` + `supabase/seed.sql` testados num Postgres com cara de Supabase (schema `extensions`, aplicar 2x o seed não duplica).
 - Build passa sem nenhuma variável de ambiente (pronto pra Vercel).
 - `/api/health`: diz se as variáveis existem e se o banco conecta (só o tipo do erro, sem valores).
-- Testes: 25 unitários (Vitest, incluindo conferência do conteúdo contra o protótipo) + 5 e2e (Playwright). `typecheck`, `lint` e `build` limpos.
+- Testes: 27 unitários (Vitest, incluindo conferência do conteúdo contra o protótipo) + 5 e2e (Playwright). `typecheck`, `lint` e `build` limpos.
 
 ## Simulado ou provisório
 - Ícones do app (marca "SDM" gerada por script) até vir a arte oficial.
@@ -64,7 +66,8 @@
 | Desde | Pendência |
 |---|---|
 | 2026-11-05 | Subir `docs/SDM_contexto_completo_v6.md` (protótipos já chegaram) |
-| 2026-11-05 | Testar login do admin (https://sdm-app.vercel.app/admin/entrar, link "Sign in" no e-mail) e o link de acesso de uma aluna teste |
+| 2026-11-05 | Dona: criar conta em /app/cadastro com o ADMIN_EMAIL e entrar em /admin/entrar. Fellipe: abrir o link de acesso que foi gerado, criar a senha e entrar em /admin/entrar |
+| 2026-11-05 | Decidir quando desligar `cadastro_aberto` (hoje qualquer pessoa cria conta e ganha SDM) |
 | 2026-11-05 | Revogar os tokens Supabase/Vercel e rodar (roll) a chave secret do Supabase: foram colados no chat |
 | 2026-11-05 | SMTP próprio no Supabase (e-mail padrão: 2/hora; sem ele não dá pra pôr o código no e-mail) |
 | 2026-11-05 | Cadastrar na Vercel só 3 variáveis: `SUPABASE_SERVICE_ROLE_KEY` (secret), `DATABASE_URL` (pooler, com a senha do banco) e `ADMIN_EMAIL`. A senha do banco e a chave secret nunca foram enviadas (no chat veio `[YOUR-PASSWORD]`) e não vão pro código |
@@ -96,7 +99,7 @@
 - 1º admin nasce no 1º login com `ADMIN_EMAIL` (sem precisar de `pnpm seed:admin`).
 - URL e chave publishable do Supabase fixas no código (`src/lib/public-config.ts`), a pedido; env com o mesmo nome tem prioridade (ADR-009).
 - `ACCESS_LINK_SECRET` opcional (HMAC da chave secret); `APP_URL` opcional (domínio de produção da Vercel).
-- Login por e-mail via link (fluxo implicit) porque o plano grátis não deixa editar o template sem SMTP (ADR-010).
+- Login com e-mail e senha, cadastro livre controlado por `cadastro_aberto` (ADR-011, substitui ADR-010). Integração Hubla → e-mail de acesso: adiada a pedido (2026-11-05).
 - Produção: Supabase us-west-2, pooler `aws-1-us-west-2.pooler.supabase.com:6543`; Vercel projeto `sdm-app` (prod branch = `claude/intelligent-bohr-54teds`).
 
 ## Variáveis de ambiente em uso

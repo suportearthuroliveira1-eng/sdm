@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-05 · Login com e-mail e senha
+- A01 e /admin/entrar: e-mail + senha (`signInWithPassword`). Sem código, sem e-mail. Página `/auth/confirmar` removida.
+- `/app/cadastro`: criar conta livre (cria usuário confirmado pelo servidor + aluna + SDM), controlado por `settings.cadastro_aberto` (novo, padrão true, já criado em produção).
+- `/app/senha`: criar/trocar senha; o link de acesso redireciona pra cá na 1ª vez.
+- AD03: admin define a senha da aluna. ADMIN_EMAIL vira admin no 1º login (agora em `getAdmin`).
+- `src/lib/domain/password.ts` + testes (27 unitários, 6 e2e).
+- Quebra algo existente: o login por código/link no e-mail deixou de existir.
+
 ## 2026-11-05 · Rota de saúde
 - `src/app/api/health/route.ts`: variáveis presentes e conexão com o banco, sem expor valores. Produção: banco conectado depois do reset da senha (levou alguns minutos pra valer).
 

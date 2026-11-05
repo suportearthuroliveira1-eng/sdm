@@ -52,3 +52,9 @@
 - **Contexto:** o Supabase no plano grátis, sem SMTP próprio, não deixa trocar o template do e-mail, então `{{ .Token }}` não aparece; o e-mail padrão só traz o link.
 - **Decisão:** `signInWithOtp` com `flowType: "implicit"` e `emailRedirectTo=/auth/confirmar?to=...`. A sessão volta no fragmento da URL e a página chama `setSession` no navegador, então funciona mesmo abrindo o e-mail em outro aparelho (o PKCE exigiria o mesmo navegador). O campo de código continua: com SMTP próprio e `{{ .Token }}` no template, os dois caminhos valem.
 - **Consequência:** o e-mail padrão tem limite de 2 por hora no projeto. O caminho principal da aluna continua sendo o link de acesso do WhatsApp (não depende de e-mail).
+
+## ADR-011 · Login com e-mail e senha, cadastro livre (substitui ADR-010)
+- **Contexto:** pedido do Fellipe (2026-11-05): tirar o código por e-mail, "só e-mail e senha", deixar criar conta livre. O e-mail grátis do Supabase também limita a 2 por hora.
+- **Decisão:** `signInWithPassword` na A01 e no admin. Cadastro pelo servidor (`auth.admin.createUser` com `email_confirm: true`, cadastro público do Supabase continua desligado) e acesso SDM automático enquanto `cadastro_aberto` = true. E-mail já existente não pode se cadastrar de novo; quem foi criado pelo time entra pelo link de acesso e cria a senha em `/app/senha`, ou o admin define a senha na AD03.
+- **Alternativas:** manter código/link por e-mail (precisa de SMTP próprio); senha gerada e enviada por e-mail (adiado junto com a Hubla).
+- **Consequência:** muda a regra do prompt (seção 3: "sem senha" e "só entra quem comprou") enquanto `cadastro_aberto` estiver ligado. Sem e-mail, "esqueci a senha" é pelo time (AD03) ou pela A02. Quando a Hubla entrar, desligar `cadastro_aberto`.

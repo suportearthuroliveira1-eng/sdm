@@ -5,7 +5,7 @@ import { Brand } from "@/components/ui/screen";
 
 export const metadata: Metadata = { title: "Entrar" };
 
-// A01 · Login (textos do protótipo; o código de 6 dígitos é decisão do prompt, seção 3).
+// A01 · Login com e-mail e senha (decisão do Fellipe, 2026-11-05: sem código por e-mail).
 export default function A01() {
   return (
     <main data-screen="A01" className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col gap-[22px] px-5 pb-7 pt-[max(env(safe-area-inset-top),34px)]">

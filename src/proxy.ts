@@ -7,7 +7,7 @@ import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/lib/public-config";
  * A checagem de entitlement e de papel acontece no servidor (lib/auth),
  * aqui só barra quem não tem sessão.
  */
-const PUBLIC_APP = ["/app/a01", "/app/a02", "/app/a03"];
+const PUBLIC_APP = ["/app/a01", "/app/a02", "/app/a03", "/app/cadastro"];
 
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });

@@ -9,7 +9,7 @@ export default function AdminLogin() {
     <Screen id="AD-LOGIN">
       <div className="mt-10 mb-8">
         <h1 className="text-[26px] font-bold">Painel SDM</h1>
-        <p className="mt-2 text-muted">Acesso do time. Código de 6 dígitos no e-mail.</p>
+        <p className="mt-2 text-muted">Acesso do time com e-mail e senha. Primeira vez? Crie a conta em /app/cadastro com o mesmo e-mail ou entre pelo link de acesso.</p>
       </div>
       <LoginForm mode="admin" />
     </Screen>

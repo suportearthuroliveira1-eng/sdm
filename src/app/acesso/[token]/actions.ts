@@ -12,10 +12,10 @@ export type EnterState = { error?: string };
 export async function enterWithLink(token: string): Promise<EnterState> {
   const v = await verifyAccessToken(token, env().ACCESS_LINK_SECRET);
   if (!v.ok) {
-    return { error: v.reason === "expirado" ? "Esse link venceu. Peça um novo ao time ou entre com o código no e-mail." : "Link inválido." };
+    return { error: v.reason === "expirado" ? "Esse link venceu. Peça um novo ao time." : "Link inválido." };
   }
   const student = await consumeAccessLink(v.claims.jti, v.claims.sub);
-  if (!student) return { error: "Esse link já foi usado ou foi trocado por um novo. Entre com o código no e-mail." };
+  if (!student) return { error: "Esse link já foi usado ou foi trocado por um novo. Entre com e-mail e senha, ou peça um link novo ao time." };
   if (!student.ativo) redirect("/app/a02");
 
   try {
@@ -27,7 +27,7 @@ export async function enterWithLink(token: string): Promise<EnterState> {
     if (res.error) throw res.error;
   } catch (e) {
     log("error", "login por link falhou", { student: student.code, err: errMsg(e) });
-    return { error: "Não conseguimos entrar agora. Tente o código no e-mail." };
+    return { error: "Não conseguimos entrar agora. Tente de novo ou fale com o time." };
   }
-  redirect("/app");
+  redirect("/app/senha?primeiro=1");
 }

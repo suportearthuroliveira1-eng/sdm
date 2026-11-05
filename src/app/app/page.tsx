@@ -24,6 +24,7 @@ export default async function AppHome() {
       </div>
       <div className="flex flex-col gap-3">
         <Link href="/app/a03" className="b1">Instalar o app no celular</Link>
+        <Link href="/app/senha" className="b2 no-underline">Trocar senha</Link>
         <SignOutButton />
       </div>
     </Screen>

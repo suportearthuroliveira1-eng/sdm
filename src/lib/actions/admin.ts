@@ -8,7 +8,9 @@ import { db, schema } from "@/lib/db";
 import { parseStudentsCsv, studentInputSchema } from "@/lib/domain/csv";
 import { PRODUCTS, type Product } from "@/lib/domain/entitlements";
 import { audit } from "@/lib/server/audit";
-import { createStudent, issueAccessLink, upsertEntitlements } from "@/lib/server/students";
+import { createStudent, ensureAuthUser, issueAccessLink, upsertEntitlements } from "@/lib/server/students";
+import { passwordSchema } from "@/lib/domain/password";
+import { supabaseAdmin } from "@/lib/supabase/server";
 import { errMsg } from "@/lib/server/log";
 
 export type LinkResult = { ok: true; url: string; message: string; expiresAt: string; studentId: string } | { ok: false; error: string };
@@ -153,5 +155,25 @@ export async function saveSettingAction(_p: { ok: boolean; error?: string } | nu
   await db().update(schema.settings).set({ value: value as object, pendente: false }).where(and(eq(schema.settings.key, key)));
   await audit(admin.id, "config.salvar", { tipo: "setting", id: key }, { de: old.value, para: value });
   revalidatePath("/admin/config");
+  return { ok: true };
+}
+
+/** AD03 · Admin define a senha da aluna (ela entra com e-mail e essa senha). */
+export async function setStudentPasswordAction(studentId: string, _p: { ok?: boolean; error?: string } | null, form: FormData) {
+  const admin = await requireAdmin(["suporte"]);
+  const id = z.string().uuid().parse(studentId);
+  const senha = passwordSchema.safeParse(form.get("senha"));
+  if (!senha.success) return { error: senha.error.issues[0]?.message };
+  const student = await db().query.students.findFirst({ where: eq(schema.students.id, id) });
+  if (!student) return { error: "Aluna não encontrada." };
+  let authId = student.authUserId;
+  if (!authId) {
+    authId = await ensureAuthUser(student.email);
+    if (authId) await db().update(schema.students).set({ authUserId: authId }).where(eq(schema.students.id, id));
+  }
+  if (!authId) return { error: "Não deu pra criar o login dessa aluna agora." };
+  const { error } = await supabaseAdmin().auth.admin.updateUserById(authId, { password: senha.data, email_confirm: true });
+  if (error) return { error: "Não deu pra salvar a senha: " + error.message };
+  await audit(admin.id, "aluna.definir_senha", { tipo: "student", id: student.code }); // nunca grava a senha
   return { ok: true };
 }

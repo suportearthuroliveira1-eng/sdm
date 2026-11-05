@@ -3,6 +3,7 @@ import { and, eq, isNull, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 import { db, schema } from "@/lib/db";
+import { env } from "@/lib/env";
 import { getAuthUser } from "./session";
 
 export type AdminRole = "admin" | "suporte" | "conteudo";
@@ -18,6 +19,14 @@ export const getAdmin = cache(async () => {
       .where(and(sql`lower(${schema.adminUsers.email}) = ${user.email.toLowerCase()}`, isNull(schema.adminUsers.authUserId)))
       .returning();
     admin = linked;
+  }
+  // 1º acesso: o e-mail de ADMIN_EMAIL (variável do servidor) vira admin sozinho.
+  if (!admin && user.email.toLowerCase() === env().ADMIN_EMAIL?.trim().toLowerCase()) {
+    [admin] = await db()
+      .insert(schema.adminUsers)
+      .values({ email: user.email.toLowerCase(), papel: "admin", authUserId: user.id })
+      .onConflictDoNothing()
+      .returning();
   }
   return admin && admin.ativo ? admin : null;
 });

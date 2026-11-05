@@ -1,12 +1,23 @@
 import { expect, test } from "@playwright/test";
 
-test("A01 com e-mail sem cadastro leva pra A02", async ({ page }) => {
+test("A01 pede e-mail e senha, sem código", async ({ page }) => {
   await page.goto("/app/a01");
   await expect(page.getByRole("heading", { name: "Seu caminho pra ganhar em dólar, um passo por dia" })).toBeVisible();
-  await page.getByLabel("E-mail que você usou na compra").fill(`ninguem-${Date.now()}@exemplo.com`);
-  await page.getByRole("button", { name: "Entrar" }).click();
-  await expect(page).toHaveURL(/\/app\/a02$/);
-  await expect(page.getByRole("heading", { name: "Não recebi meu acesso" })).toBeVisible();
+  await expect(page.getByLabel("E-mail que você usou na compra")).toBeVisible();
+  await expect(page.getByLabel("Senha")).toBeVisible();
+  await expect(page.getByText(/código/i)).toHaveCount(0);
+  await page.getByRole("link", { name: "Criar conta" }).click();
+  await expect(page).toHaveURL(/\/app\/cadastro$/);
+});
+
+test("cadastro recusa senhas diferentes sem criar conta", async ({ page }) => {
+  await page.goto("/app/cadastro");
+  await page.getByLabel("Seu nome").fill("Teste");
+  await page.getByLabel("E-mail").fill(`x-${Date.now()}@exemplo.com`);
+  await page.getByLabel("Senha", { exact: true }).fill("abc12345");
+  await page.getByLabel("Repita a senha").fill("abc12399");
+  await page.getByRole("button", { name: "Criar conta e entrar" }).click();
+  await expect(page.getByRole("alert").filter({ hasText: "As duas senhas não são iguais." })).toBeVisible();
 });
 
 test("A02 reenviar acesso responde sem revelar cadastro", async ({ page }) => {

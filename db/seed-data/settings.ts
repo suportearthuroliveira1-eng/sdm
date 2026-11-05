@@ -13,6 +13,7 @@ export const SETTINGS: SeedSetting[] = [
   { key: "grupo_modo", value: null, grupo: "flags", descricao: "Grupo: interno | externo (tela I04).", pendente: true },
 
   // acesso
+  { key: "cadastro_aberto", value: true, grupo: "acesso", descricao: "Qualquer pessoa cria conta com e-mail e senha e já ganha acesso SDM. Desligue quando a Hubla liberar as compras." },
   { key: "access_link_hours", value: 72, grupo: "acesso", descricao: "Validade do link de acesso, em horas." },
   {
     key: "msg_acesso_whatsapp",
