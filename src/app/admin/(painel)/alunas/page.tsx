@@ -52,7 +52,7 @@ export default async function AD02({ searchParams }: PageProps<"/admin/alunas">)
       AND (${f} <> 'venda' OR EXISTS (SELECT 1 FROM sales v JOIN student_products x ON x.id = v.student_product_id WHERE x.student_id = s.id))
     ORDER BY s.criado_em DESC
     LIMIT 200
-  `)) as unknown as Linha[];
+  `)).rows as unknown as Linha[];
 
   const trilha = (r: Linha) => (r.trilha_pago && r.trilha_org ? "Pago + orgânico" : r.trilha_pago ? "Pago" : r.trilha_org ? "Orgânico" : "a escolher");
   const href = (k: Filtro) => `/admin/alunas?${new URLSearchParams({ ...(q ? { q } : {}), f: k })}`;

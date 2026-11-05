@@ -151,7 +151,7 @@ export function OfertaForm({ acao, nome, nomePt, promessa, promessaPt, preco, ap
       <textarea id="of-prom" name="promessa" defaultValue={promessa} className="ta min-h-16" />
       <span className="mu">{promessaPt}</span>
       <label htmlFor="of-preco" className="lb">Preço</label>
-      <input id="of-preco" name="preco" inputMode="decimal" defaultValue={preco} className="in w-40" />
+      <input id="of-preco" name="preco" inputMode="decimal" defaultValue={preco > 0 ? preco : ""} placeholder="ex.: 9" className="in w-40" />
       {st?.erro ? <span role="alert" className="text-sm text-danger">{st.erro}</span> : null}
       <SubmitButton pendente="Aprovando...">{aprovada ? "Salvar e seguir" : "Aprovar a oferta"}</SubmitButton>
     </form>

@@ -107,7 +107,7 @@ export function ProprioOferta({ p, proxima }: { p: P; proxima: string }) {
   return (
     <>
       <div className="grid gap-2.5 lg:grid-cols-2">
-        <div className="cd gap-1"><span className="kk">PREÇO SUGERIDO</span><span className="text-xl font-bold">{o.preco.moeda} {o.preco.valor}</span><span className="mu">{o.preco.porque}</span></div>
+        <div className="cd gap-1"><span className="kk">PREÇO SUGERIDO</span><span className="text-xl font-bold">{o.preco.valor > 0 ? `${o.preco.moeda} ${o.preco.valor}` : "[valor]"}</span><span className="mu">{o.preco.porque}</span></div>
         <div className="cd gap-1"><span className="kk">GARANTIA</span><span className="tx">{o.garantia.texto.x}</span><span className="mu">{o.garantia.texto.pt} · {o.garantia.porque}</span></div>
       </div>
       {o.bonus.length ? <div className="cd gap-1.5"><span className="kk">BÔNUS</span>{o.bonus.map((b) => <span key={b.titulo.x} className="tx">• <b>{b.titulo.x}</b> ({b.titulo.pt}): {b.o_que_e}</span>)}</div> : null}

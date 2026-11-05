@@ -23,8 +23,8 @@ export async function GET() {
     out.envErro = e instanceof Error ? e.message : String(e);
   }
   try {
-    const r = (await db().execute(sql`select count(*)::int as n from lessons`)) as unknown as { n: number }[];
-    out.db = { ok: true, aulas: r[0]?.n };
+    const r = (await db().execute(sql`select count(*)::int as n from lessons`)) as unknown as { rows: { n: number }[] };
+    out.db = { ok: true, aulas: r.rows[0]?.n };
   } catch (e) {
     const err = e as { code?: string; message?: string; cause?: { code?: string; message?: string } };
     // mensagem sem a URL de conexão

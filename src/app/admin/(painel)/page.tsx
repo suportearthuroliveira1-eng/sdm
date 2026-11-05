@@ -27,7 +27,7 @@ export default async function AD01() {
       (SELECT count(*) FROM s WHERE trilha_pago OR trilha_org)::int AS j_trilha,
       (SELECT count(DISTINCT p.student_id) FROM student_products p JOIN s ON s.id = p.student_id
         WHERE p.data_inicio_campanha IS NOT NULL OR EXISTS (SELECT 1 FROM metrics_entries m WHERE m.student_product_id = p.id))::int AS j_campanha
-  `)) as unknown as Row[];
+  `)).rows as unknown as Row[];
   const n = r ?? {};
 
   const kpis: [string, string, number][] = [

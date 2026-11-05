@@ -14,7 +14,7 @@ export async function rateLimit(key: string, limit: number, windowSec: number) {
       window_start = CASE WHEN rate_limits.window_start < now() - make_interval(secs => ${windowSec}) THEN now() ELSE rate_limits.window_start END
     RETURNING count, window_start
   `);
-  const row = rows[0];
+  const row = rows.rows[0];
   const count = Number(row?.count ?? 0);
   const start = row ? new Date(row.window_start) : new Date();
   return { ok: count <= limit, count, retryAt: new Date(start.getTime() + windowSec * 1000) };
