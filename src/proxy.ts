@@ -27,9 +27,9 @@ export async function proxy(request: NextRequest) {
     },
   });
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Confere o JWT localmente (ES256) e renova a sessão se venceu; sem chamada de rede no caso comum.
+  const { data } = await supabase.auth.getClaims();
+  const user = data?.claims?.sub ? data.claims : null;
 
   const path = request.nextUrl.pathname;
   const isPublicApp = PUBLIC_APP.some((p) => path === p || path.startsWith(`${p}/`));

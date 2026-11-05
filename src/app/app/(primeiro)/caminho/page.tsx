@@ -1,7 +1,7 @@
 import { desc, eq } from "drizzle-orm";
 import type { Metadata } from "next";
 import { Passos } from "@/components/app/passos";
-import { FormPending, SubmitButton } from "@/components/ux/submit-button";
+import { SubmitButton } from "@/components/ux/submit-button";
 import { escolherCaminho } from "@/lib/actions/onboarding";
 import { requireStudent } from "@/lib/auth/session";
 import { db, schema } from "@/lib/db";
@@ -36,7 +36,6 @@ export default async function Caminho() {
           <span className="mu"><b className="text-text-2">Dinheiro:</b> {o.dinheiro}</span>
           <span className="mu"><b className="text-text-2">Pra quem:</b> {o.quem}</span>
           <SubmitButton className={sugerido === o.k ? "b1 mt-1" : "b2 mt-1"} pendente="Criando a sua pasta...">Escolher</SubmitButton>
-          <FormPending label="Preparando..." />
         </form>
       ))}
       <form action={escolherCaminho.bind(null, "depois")}>

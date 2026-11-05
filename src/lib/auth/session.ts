@@ -6,10 +6,16 @@ import { db, schema } from "@/lib/db";
 import { canEnterApp } from "@/lib/domain/entitlements";
 import { supabaseServer } from "@/lib/supabase/server";
 
-export const getAuthUser = cache(async () => {
+/**
+ * Usuária da sessão. `getClaims()` confere a assinatura do JWT localmente
+ * (chaves ES256 do projeto, JWKS em cache), sem ir ao Supabase a cada pedido.
+ */
+export const getAuthUser = cache(async (): Promise<{ id: string; email: string | null } | null> => {
   const supabase = await supabaseServer();
-  const { data } = await supabase.auth.getUser();
-  return data.user ?? null;
+  const { data, error } = await supabase.auth.getClaims();
+  const c = data?.claims;
+  if (error || !c?.sub) return null;
+  return { id: c.sub, email: typeof c.email === "string" ? c.email : null };
 });
 
 /**
