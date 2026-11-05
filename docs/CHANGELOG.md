@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-05 · Deploy sem terminal
+- `.github/workflows/supabase.yml`: aplica migrations e seed no Supabase (manual ou quando `supabase/**` muda). Segredos: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`.
+- `.github/workflows/ci.yml`: typecheck, lint, testes e build.
+- `supabase/config.toml` mínimo.
+- 1º admin criado no 1º login com `ADMIN_EMAIL` (`src/lib/actions/auth.ts`).
+- `docs/DEPLOY.md`: passo a passo pelo navegador.
+- Quebra algo existente: não.
+
 ## 2026-11-05 · Protótipos, conteúdo e Supabase
 - Protótipos em `docs/prototipo/` (App e Admin). Extrator corrigido (só constantes de topo, stub de DCLogic) e novo `pnpm docs:conteudo` → `db/seed-data/conteudo.json` (19 módulos, 117 aulas, 39 termos, 6 produtos, 42 blocos).
 - Visual e textos do protótipo em A01, A02 (reenviar + falar com o time), A03 (passos, aviso iOS, "Já instalei"), link de acesso e admin (menu, AD01 com KPIs/jornada reais, AD02 com filtros e colunas, AD08 com o que cada acesso libera).

@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { db, schema } from "@/lib/db";
+import { env } from "@/lib/env";
 import { canEnterApp } from "@/lib/domain/entitlements";
 import { rateLimit } from "@/lib/server/rate-limit";
 import { errMsg, log } from "@/lib/server/log";
@@ -48,7 +49,13 @@ export async function requestCode(mode: "aluna" | "admin", _prev: AuthState, for
       if (id) await db().update(schema.students).set({ authUserId: id }).where(eq(schema.students.id, student.id));
     }
   } else {
-    const admin = await db().query.adminUsers.findFirst({ where: eq(schema.adminUsers.email, email) });
+    let admin = await db().query.adminUsers.findFirst({ where: eq(schema.adminUsers.email, email) });
+    // 1º acesso: o e-mail de ADMIN_EMAIL (variável do servidor) vira admin sozinho.
+    // Dispensa rodar `pnpm seed:admin` no deploy.
+    if (!admin && email === env().ADMIN_EMAIL?.trim().toLowerCase()) {
+      [admin] = await db().insert(schema.adminUsers).values({ email, papel: "admin" }).onConflictDoNothing().returning();
+      log("info", "admin inicial criado pelo ADMIN_EMAIL");
+    }
     // Resposta igual para não revelar quem é admin.
     if (!admin || !admin.ativo) return { step: "code", email, info: "Se o e-mail tiver acesso, o código chega em instantes." };
     await ensureAuthUser(email);

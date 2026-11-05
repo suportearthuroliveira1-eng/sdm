@@ -1,6 +1,6 @@
 # Estado do projeto
 
-> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-05 (2ª tarefa: protótipos + Supabase)** · branch `claude/intelligent-bohr-54teds`.
+> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-05 (3ª tarefa: deploy sem terminal)** · branch `claude/intelligent-bohr-54teds`.
 
 ## Fase atual
 **Fase 1 · Base: ~90%.** Falta só rodar no Supabase real (`supabase db push --include-seed` do seu computador) e testar o login por código e por link com o Auth de verdade. O container de dev não alcança *.supabase.co (política de rede).
@@ -39,6 +39,7 @@
 - PWA: manifest, service worker (shell offline + push), ícones provisórios, página offline.
 - **Conteúdo do protótipo no banco**: 19 módulos, 117 aulas (111 + B1 + PO.1–PO.5, PO libera com UP1 ou D1), 39 termos (32 oficiais + 7 do app), 6 produtos da vitrine (marcados `exemplo`, códigos VIT do protótipo), 42 blocos de texto (CKDEF, PASSOS, INFODEF, ENT, HEAD, DIAG, PAISES, LG).
 - `supabase/migrations` + `supabase/seed.sql` testados num Postgres com cara de Supabase (schema `extensions`, aplicar 2x o seed não duplica).
+- Build passa sem nenhuma variável de ambiente (pronto pra Vercel).
 - Testes: 22 unitários (Vitest, incluindo conferência do conteúdo contra o protótipo) + 5 e2e (Playwright). `typecheck`, `lint` e `build` limpos.
 
 ## Simulado ou provisório
@@ -54,7 +55,7 @@
 - Nada quebrado conhecido. Não testado com Supabase real: envio do código OTP, login por link (generateLink + verifyOtp), criação de usuário de Auth.
 
 ## Próximos 3 passos
-1. **Você**: `supabase db push --include-seed` + template de e-mail com `{{ .Token }}` + `.env.local`/Vercel com as chaves; depois `pnpm seed:admin` e testar login por código e por link.
+1. **Você**: seguir `docs/DEPLOY.md` (2 segredos no GitHub → rodar workflow "Supabase · banco" → importar na Vercel com as variáveis → template de e-mail com `{{ .Token }}`) e testar login por código e por link.
 2. Fase 2: casca do app (5 abas Início/Produtos/Aulas/Professora/Perfil, cabeçalho com histórico, A04–A07, I01–I05, L01–L06 com PO e cadeado, cartões, combinado, grupo, ferramentas FR01–FR04, base B01–B04, perfil U01, desbloqueios), seguindo o protótipo tela a tela.
 3. Quando o contexto v6 chegar: roteiros de 5 blocos, regras dos agentes (seção 10) e conferência das regras de desbloqueio (4.4).
 
@@ -62,7 +63,7 @@
 | Desde | Pendência |
 |---|---|
 | 2026-11-05 | Subir `docs/SDM_contexto_completo_v6.md` (protótipos já chegaram) |
-| 2026-11-05 | Rodar no seu computador: `supabase login` → `supabase init` → `supabase link --project-ref hcknrrgbmhnqtmenovmk` → `supabase db push --include-seed` |
+| 2026-11-05 | Deploy pelo navegador: `docs/DEPLOY.md` (segredos `SUPABASE_ACCESS_TOKEN` e `SUPABASE_DB_PASSWORD` no GitHub, workflow, Vercel) |
 | 2026-11-05 | Cadastrar na Vercel (ou `.env.local`) as chaves do Supabase: URL, publishable, **secret** e `DATABASE_URL` do pooler com a senha do banco. Nunca colar no chat |
 | 2026-11-05 | Liberar `hcknrrgbmhnqtmenovmk.supabase.co` na rede do ambiente cloud (opcional: aí eu testo o login daqui) |
 | 2026-11-05 | No Supabase: Auth → Email Templates → "Magic Link": incluir `{{ .Token }}` pra o código de 6 dígitos aparecer |
@@ -88,6 +89,8 @@
 - RLS sem FORCE: dono das tabelas/service role ignoram RLS, anon/authenticated não (migration 0005).
 - pgvector no schema `extensions` no Supabase.
 - A02 "Reenviar" nunca manda pro número digitado, só pro cadastrado.
+- Deploy do banco por GitHub Actions (`.github/workflows/supabase.yml`), porque o container de dev não alcança o Supabase e a dona do projeto prefere não usar terminal. CI (`ci.yml`) roda typecheck, lint, testes e build em todo push.
+- 1º admin nasce no 1º login com `ADMIN_EMAIL` (sem precisar de `pnpm seed:admin`).
 
 ## Variáveis de ambiente em uso
 `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `DATABASE_URL`, `ACCESS_LINK_SECRET`, `APP_URL`, `ADMIN_EMAIL`, `HUBLA_WEBHOOK_SECRET`, `HOTMART_WEBHOOK_SECRET`, `WHATSAPP_PROVIDER`, `INNGEST_EVENT_KEY`, `INNGEST_SIGNING_KEY`. Declaradas e ainda sem uso: `OPENAI_API_KEY`, `TRACKING_API_KEY`, `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `RESEND_API_KEY`, `WHATSAPP_API_KEY`.

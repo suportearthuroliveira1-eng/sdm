@@ -1,0 +1,10 @@
+# Config mínima pra CLI do Supabase (link + db push). O projeto remoto é o
+# hcknrrgbmhnqtmenovmk; nada aqui é segredo.
+project_id = "sdm"
+
+[db]
+major_version = 17
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql"]

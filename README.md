@@ -2,7 +2,10 @@
 
 PWA do Sistema Dólar Mundial. Veja `CLAUDE.md` (resumo e regras) e `docs/ESTADO.md` (onde o projeto está).
 
-## Subir o banco no Supabase (uma vez, do seu computador)
+## Deploy
+Passo a passo só pelo navegador (GitHub Actions + Vercel): **[docs/DEPLOY.md](docs/DEPLOY.md)**.
+
+## Subir o banco pela CLI (alternativa, do seu computador)
 Precisa da [CLI do Supabase](https://supabase.com/docs/guides/cli). Na pasta do projeto:
 ```bash
 supabase login
@@ -26,7 +29,7 @@ Depois, no painel do Supabase:
 ## Setup local
 1. Node 22 + pnpm 10. `pnpm install`.
 2. Copie `.env.example` para `.env.local` e preencha (nunca commite).
-3. Crie o 1º admin: `pnpm seed:admin` (usa `ADMIN_EMAIL`).
+3. 1º admin: entre em `/admin/entrar` com o `ADMIN_EMAIL` (vira admin no 1º login; `pnpm seed:admin` também funciona).
 4. `pnpm dev` e entre em `/admin/entrar` com o `ADMIN_EMAIL`.
 
 ### Mudou o schema?
