@@ -1,6 +1,7 @@
 /** pnpm seed:admin — cria o 1º admin com ADMIN_EMAIL (.env.local) no banco e no Supabase Auth. */
 import { createClient } from "@supabase/supabase-js";
 import { scriptDb } from "./lib/db";
+import { SUPABASE_URL } from "../src/lib/public-config";
 
 const { db, close, schema } = scriptDb();
 
@@ -8,7 +9,7 @@ async function main() {
   const email = process.env.ADMIN_EMAIL?.trim().toLowerCase();
   if (!email) throw new Error("ADMIN_EMAIL não definido em .env.local");
   let authUserId: string | null = null;
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const url = SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (url && key) {
     const sb = createClient(url, key, { auth: { persistSession: false } });

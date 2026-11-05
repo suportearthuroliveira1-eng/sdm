@@ -36,7 +36,7 @@ O container de dev NÃO alcança *.supabase.co nem openai.com (política de rede
 4. A IA não vende, não conversa com comprador e não publica nada sem a aluna aprovar.
 5. Toda resposta da aluna salva na hora e vai pra frente no fluxo. Nunca pedir duas vezes.
 6. **Nunca inventar número, depoimento, prova ou resultado.** Faltou dado: `[valor]`, `[—]` ou o que vier do admin.
-7. **Chaves só no `.env.local` / Vercel.** Nunca em código, commit, log ou mensagem. OpenAI só no servidor.
+7. **Chaves secretas só no `.env.local` / Vercel.** Nunca em código, commit, log ou mensagem. OpenAI só no servidor. Exceção pedida pela dona: URL e chave **publishable** do Supabase (públicas) ficam fixas em `src/lib/public-config.ts`.
 8. Visual do protótipo: fundo `#0E0C13`, superfície `#17141F`, destaque `#A98BFF`, Plus Jakarta Sans, toque ≥ 44px, sem emoji, AA, mobile-first 390px.
 9. Interface em pt-BR. Conteúdo pro comprador no idioma de venda, sempre com tradução pra aluna.
 10. Nomes de modelo de IA são configuração (settings `ai_models`), nunca fixos no código.

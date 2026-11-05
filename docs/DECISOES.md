@@ -41,3 +41,9 @@
 - **Contexto:** o container de dev não alcança o Supabase; a dona do projeto já usa a CLI.
 - **Decisão:** `drizzle/` continua a fonte (gerada do schema); `pnpm db:supabase` copia pra `supabase/migrations` (timestamps estáveis do journal) e `supabase/seed.sql` é gerado com `pg_dump --inserts --on-conflict-do-nothing`. Produção: `supabase db push --include-seed`. `pnpm db:migrate` fica só pro banco local de teste.
 - **Consequência:** nunca editar `supabase/migrations` à mão; não misturar `drizzle-kit migrate` em produção (controle de versão diferente).
+
+## ADR-009 · Supabase público fixo no código
+- **Contexto:** a dona pediu pra deixar fixos os dados do banco que enviou (URL e chave publishable). Senha do banco e chave secret não foram enviadas.
+- **Decisão:** URL e publishable em `src/lib/public-config.ts` (são públicas: vão pro navegador, quem protege é o RLS). Secret, senha do banco e demais chaves continuam só em variável de ambiente. `ACCESS_LINK_SECRET` passa a ter padrão derivado (HMAC da secret) e `APP_URL` cai pro domínio da Vercel.
+- **Alternativas:** commitar tudo (expõe o banco inteiro a quem vê o repositório); manter tudo em env (mais passos pra dona).
+- **Consequência:** trocar de projeto Supabase = editar esse arquivo ou definir as env. Trocar a chave secret invalida links de acesso pendentes.

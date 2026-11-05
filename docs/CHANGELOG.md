@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-05 · Supabase público fixo no código
+- `src/lib/public-config.ts`: URL e chave publishable do projeto `hcknrrgbmhnqtmenovmk` (env com o mesmo nome tem prioridade). Usado por `env()`, `proxy.ts` e `seed-admin`.
+- `ACCESS_LINK_SECRET` e `APP_URL` viraram opcionais (segredo derivado da chave secret; URL da Vercel).
+- Deploy na Vercel cai pra 3 variáveis. +3 testes (25).
+- Quebra algo existente: não.
+
 ## 2026-11-05 · Deploy sem terminal
 - `.github/workflows/supabase.yml`: aplica migrations e seed no Supabase (manual ou quando `supabase/**` muda). Segredos: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`.
 - `.github/workflows/ci.yml`: typecheck, lint, testes e build.
