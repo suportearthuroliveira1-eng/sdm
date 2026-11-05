@@ -36,7 +36,7 @@ export function db(): DB {
     // Serverless: o pooler do Supabase fecha conexões paradas e a instância da
     // Vercel "congela" entre pedidos. Sem esses limites, uma conexão morta
     // segura a consulta pra sempre.
-    const client = postgres(urlDoBanco(env().DATABASE_URL), {
+    const client = postgres(env().DATABASE_URL, {
       prepare: false,
       max: 4,
       idle_timeout: 20,
