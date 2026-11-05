@@ -6,12 +6,13 @@ import { db, schema } from "@/lib/db";
 import { getSetting } from "@/lib/server/settings";
 import { errMsg, log } from "@/lib/server/log";
 import { rateLimit } from "@/lib/server/rate-limit";
+import { segredo } from "@/lib/server/segredos";
 import { AGENTES, type AgenteKey, type Classe } from "./agentes";
 import { REGRAS_BASE } from "./regras";
 
 export class IaDesligada extends Error {
   constructor() {
-    super("IA desligada: falta a chave da OpenAI (OPENAI_API_KEY) ou o nome do modelo no AD11.");
+    super("IA desligada: falta a chave da OpenAI (admin → Chaves) ou o nome do modelo nas configurações.");
   }
 }
 export class IaLimite extends Error {}
@@ -27,7 +28,7 @@ const PRECOS_PADRAO: Precos = {
 };
 
 export async function modelo(classe: Classe | "image" | "embedding"): Promise<string | null> {
-  if (!process.env.OPENAI_API_KEY) return null;
+  if (!(await segredo("OPENAI_API_KEY"))) return null;
   const m = await getSetting<Modelos>("ai_models", {});
   const nome = m[classe];
   return nome && !nome.startsWith("[") ? nome : null;
@@ -37,14 +38,15 @@ export async function iaLigada(classe: Classe = "text_cheap") {
   return Boolean(await modelo(classe));
 }
 
-let cliente: import("openai").default | null = null;
+let cliente: { chave: string; c: import("openai").default } | null = null;
 export async function openai() {
-  if (!process.env.OPENAI_API_KEY) throw new IaDesligada();
-  if (!cliente) {
+  const chave = await segredo("OPENAI_API_KEY");
+  if (!chave) throw new IaDesligada();
+  if (!cliente || cliente.chave !== chave) {
     const { default: OpenAI } = await import("openai");
-    cliente = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, timeout: 90_000, maxRetries: 1 });
+    cliente = { chave, c: new OpenAI({ apiKey: chave, timeout: 90_000, maxRetries: 1 }) };
   }
-  return cliente;
+  return cliente.c;
 }
 
 /** Prompt de sistema: regras base (fixas) + tarefa do agente (versão ativa no banco, senão a do código). */

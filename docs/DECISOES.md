@@ -80,3 +80,8 @@
 - **Tentativa que não serviu:** modo sessão (5432). Resolveu a trava, mas o plano tem limite de 15 conexões no total e as instâncias da Vercel estouraram (`EMAXCONNSESSION`, site fora por alguns minutos). Voltei pra 6543 na hora.
 - **Decisão:** `src/lib/db/index.ts` usa `pg` (Pool, `max` 5, ociosa 20 s, vida máx. 5 min, conexão 10 s, consulta 25 s) com `drizzle-orm/node-postgres`, na 6543. `pg` não faz pipelining: a consulta espera na fila do Pool. Resultado de `db().execute()` agora vem em `.rows`. Clientes do Supabase (proxy, servidor, admin) com fetch de prazo 10 s.
 - **Consequência:** a `DATABASE_URL` na Vercel continua com 6543. Scripts (`scripts/*`) seguem com `postgres` (rodam fora da Vercel, contra banco local ou direto).
+
+## ADR-016 · Chave da OpenAI cadastrada no admin (tabela `app_secrets`)
+- **Contexto:** a dona pediu a OpenAI ligada com a chave "fixa no código". Chave em commit fica pra sempre no histórico e o GitHub/OpenAI bloqueiam ou revogam; o token da Vercel tinha expirado.
+- **Decisão:** tabela `app_secrets` (RLS ligado sem política, `REVOKE` de anon/authenticated); `segredo(k)` lê banco → variável de ambiente, cache de 30 s; tela **Admin → Chaves e variáveis** (só papel admin) salva testando na OpenAI, mostra só os 4 últimos caracteres; auditoria sem o valor. Variáveis que o app precisa pra ligar (banco, service role) continuam só na Vercel.
+- **Consequência:** a IA ligou em produção sem Redeploy. Trocar a chave = colar a nova no admin.

@@ -17,6 +17,7 @@ export const ADMIN_SCREENS: { id: string; label: string; href?: string; fase?: s
   { id: "AD09", label: "Relatório semanal", fase: "Fase 8" },
   { id: "AD10", label: "Conteúdo do app", fase: "Fase 8" },
   { id: "AD11", label: "Configurações", href: "/admin/config" },
+  { id: "CHAVES", label: "Chaves e variáveis", href: "/admin/chaves" },
   { id: "AD12", label: "Custos de IA", fase: "Fase 8" },
   { id: "AD13", label: "Suporte", fase: "Fase 7" },
 ];

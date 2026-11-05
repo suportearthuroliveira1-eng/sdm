@@ -541,6 +541,16 @@ export const notifications = pgTable("notifications", {
   createdAt: createdAt(),
 });
 
+/**
+ * Chaves de serviços (ex.: OPENAI_API_KEY) cadastradas pelo admin.
+ * Só o servidor lê (RLS ligado, sem política). Nunca vão pro navegador nem pro log.
+ */
+export const appSecrets = pgTable("app_secrets", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+  updatedAt: updatedAt(),
+});
+
 // ---------- admin ----------
 export const adminUsers = pgTable("admin_users", {
   id: uuid("id").primaryKey().defaultRandom(),
