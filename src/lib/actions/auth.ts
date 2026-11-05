@@ -9,6 +9,7 @@ import { canEnterApp } from "@/lib/domain/entitlements";
 import { rateLimit } from "@/lib/server/rate-limit";
 import { errMsg, log } from "@/lib/server/log";
 import { findStudentByEmail, ensureAuthUser } from "@/lib/server/students";
+import { createClient } from "@supabase/supabase-js";
 import { supabaseServer } from "@/lib/supabase/server";
 
 export type AuthState =
@@ -57,19 +58,29 @@ export async function requestCode(mode: "aluna" | "admin", _prev: AuthState, for
       log("info", "admin inicial criado pelo ADMIN_EMAIL");
     }
     // Resposta igual para não revelar quem é admin.
-    if (!admin || !admin.ativo) return { step: "code", email, info: "Se o e-mail tiver acesso, o código chega em instantes." };
+    if (!admin || !admin.ativo) return { step: "code", email, info: "Se o e-mail tiver acesso, o link de entrar chega em instantes." };
     await ensureAuthUser(email);
   }
 
   try {
-    const sb = await supabaseServer();
-    const { error } = await sb.auth.signInWithOtp({ email, options: { shouldCreateUser: false } });
+    // Fluxo "implicit": o link do e-mail volta com a sessão no fragmento da URL,
+    // então funciona mesmo se a aluna abrir o e-mail em outro aparelho/navegador.
+    // Se o template do e-mail tiver {{ .Token }} (SMTP próprio), o código também vale.
+    const e = env();
+    const sb = createClient(e.NEXT_PUBLIC_SUPABASE_URL, e.NEXT_PUBLIC_SUPABASE_ANON_KEY, {
+      auth: { flowType: "implicit", persistSession: false, autoRefreshToken: false },
+    });
+    const to = mode === "admin" ? "/admin" : "/app";
+    const { error } = await sb.auth.signInWithOtp({
+      email,
+      options: { shouldCreateUser: false, emailRedirectTo: `${e.APP_URL}/auth/confirmar?to=${encodeURIComponent(to)}` },
+    });
     if (error) throw error;
   } catch (e) {
     log("error", "signInWithOtp falhou", { mode, err: errMsg(e) });
-    return { step: "email", error: "Não conseguimos enviar o código agora. Tente de novo em instantes." };
+    return { step: "email", error: "Não conseguimos enviar o e-mail agora. Tente de novo em alguns minutos." };
   }
-  return { step: "code", email, info: `Mandamos um código de 6 dígitos para ${email}.` };
+  return { step: "code", email, info: `Mandamos um e-mail para ${email}. Abra e toque no link de entrar (pode estar em inglês: "Sign in"). Se o e-mail trouxer um código, digite aqui.` };
 }
 
 /** Passo 2: confere o código e cria a sessão. */

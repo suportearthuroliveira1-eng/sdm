@@ -47,3 +47,8 @@
 - **Decisão:** URL e publishable em `src/lib/public-config.ts` (são públicas: vão pro navegador, quem protege é o RLS). Secret, senha do banco e demais chaves continuam só em variável de ambiente. `ACCESS_LINK_SECRET` passa a ter padrão derivado (HMAC da secret) e `APP_URL` cai pro domínio da Vercel.
 - **Alternativas:** commitar tudo (expõe o banco inteiro a quem vê o repositório); manter tudo em env (mais passos pra dona).
 - **Consequência:** trocar de projeto Supabase = editar esse arquivo ou definir as env. Trocar a chave secret invalida links de acesso pendentes.
+
+## ADR-010 · Login por e-mail via link (fluxo implicit)
+- **Contexto:** o Supabase no plano grátis, sem SMTP próprio, não deixa trocar o template do e-mail, então `{{ .Token }}` não aparece; o e-mail padrão só traz o link.
+- **Decisão:** `signInWithOtp` com `flowType: "implicit"` e `emailRedirectTo=/auth/confirmar?to=...`. A sessão volta no fragmento da URL e a página chama `setSession` no navegador, então funciona mesmo abrindo o e-mail em outro aparelho (o PKCE exigiria o mesmo navegador). O campo de código continua: com SMTP próprio e `{{ .Token }}` no template, os dois caminhos valem.
+- **Consequência:** o e-mail padrão tem limite de 2 por hora no projeto. O caminho principal da aluna continua sendo o link de acesso do WhatsApp (não depende de e-mail).

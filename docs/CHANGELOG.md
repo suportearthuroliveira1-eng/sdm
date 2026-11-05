@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-05 · Deploy no Supabase e na Vercel
+- Supabase: migrations e seed aplicados pela API de gerenciamento e registrados em `supabase_migrations.schema_migrations`; Auth com Site URL, redirect, sem cadastro aberto, código de 6 dígitos.
+- Vercel: projeto `sdm-app` ligado ao GitHub, variáveis `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_EMAIL`, `WHATSAPP_PROVIDER`; primeiro deploy READY.
+- Login por e-mail agora usa o link do e-mail padrão (fluxo implicit) + página `/auth/confirmar`; o campo de código continua pra quando houver SMTP próprio.
+- `docs/DEPLOY.md` reescrito com a situação real e o que falta.
+- Quebra algo existente: textos do A01 mudaram de "código" pra "link".
+
 ## 2026-11-05 · Supabase público fixo no código
 - `src/lib/public-config.ts`: URL e chave publishable do projeto `hcknrrgbmhnqtmenovmk` (env com o mesmo nome tem prioridade). Usado por `env()`, `proxy.ts` e `seed-admin`.
 - `ACCESS_LINK_SECRET` e `APP_URL` viraram opcionais (segredo derivado da chave secret; URL da Vercel).

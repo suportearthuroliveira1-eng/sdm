@@ -19,10 +19,10 @@ export function LoginForm({ mode }: { mode: "aluna" | "admin" }) {
     return (
       <form action={action} className="flex flex-col gap-2.5">
         {state.info ? <Notice>{state.info}</Notice> : null}
-        <label htmlFor="code" className="lb text-sm">Código de 6 dígitos</label>
+        <label htmlFor="code" className="lb text-sm">Código do e-mail (se tiver)</label>
         <input id="code" name="code" inputMode="numeric" autoComplete="one-time-code" maxLength={7} required autoFocus className="in min-h-[52px] text-center text-2xl tracking-[0.5em]" placeholder="000000" />
         {state.error ? <Notice tone="danger">{state.error}</Notice> : null}
-        <button name="intent" value="verify" className={admin ? "ab1" : "b1"} disabled={pending}>{pending ? "Conferindo..." : "Entrar"}</button>
+        <button name="intent" value="verify" className={admin ? "ab1" : "b1"} disabled={pending}>{pending ? "Conferindo..." : "Entrar com o código"}</button>
         <button name="intent" value="reset" formNoValidate className="b3" disabled={pending}>Usar outro e-mail ou pedir novo código</button>
       </form>
     );
@@ -32,7 +32,7 @@ export function LoginForm({ mode }: { mode: "aluna" | "admin" }) {
     <form action={action} className="flex flex-col gap-2.5">
       <label htmlFor="email" className="lb text-sm">{admin ? "E-mail do time" : "E-mail que você usou na compra"}</label>
       <input id="email" name="email" type="email" inputMode="email" autoComplete="email" required className="in min-h-[52px]" placeholder="voce@email.com" />
-      <span className="mu text-[13px]">Não tem senha. A gente manda um código de 6 dígitos pro seu e-mail.</span>
+      <span className="mu text-[13px]">Não tem senha. A gente manda um link de entrar pro seu e-mail.</span>
       {state.step === "email" && state.error ? <Notice tone="danger">{state.error}</Notice> : null}
       <button name="intent" value="request" className={admin ? "ab1" : "b1"} disabled={pending}>{pending ? "Enviando..." : "Entrar"}</button>
     </form>

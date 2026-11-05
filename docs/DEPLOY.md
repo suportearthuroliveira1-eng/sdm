@@ -1,4 +1,28 @@
-# Deploy · passo a passo (sem terminal)
+# Deploy
+
+## Situação em 2026-11-05 (feito pelo Claude com tokens temporários)
+- **Supabase** (`hcknrrgbmhnqtmenovmk`, us-west-2): 6 migrations aplicadas e registradas em `supabase_migrations.schema_migrations` (o workflow do GitHub não repete); seed aplicado (19 módulos, 117 aulas, 39 termos, 6 produtos, 42 blocos, 25 configurações, 10 agentes); RLS em 32 tabelas.
+- **Auth**: Site URL = endereço da Vercel, cadastro aberto desligado, código com 6 dígitos. O texto do e-mail **não** pôde ser trocado (plano grátis sem SMTP próprio), então o e-mail manda um **link** ("Sign in"); o app recebe em `/auth/confirmar`.
+- **Vercel**: projeto `sdm-app`, ligado ao GitHub (branch `claude/intelligent-bohr-54teds`), deploy automático a cada push. Endereço: https://sdm-app-suportearthuroliveira1-4714s-projects.vercel.app
+- Variáveis já cadastradas: `SUPABASE_SERVICE_ROLE_KEY` (sensível), `ADMIN_EMAIL`, `WHATSAPP_PROVIDER`.
+
+## Falta (só a dona pode fazer)
+1. **`DATABASE_URL` na Vercel** (sem ela o login não funciona). Supabase → Project Settings → Database → *Reset database password* (anote a senha). Vercel → sdm-app → Settings → Environment Variables → `DATABASE_URL` =
+   `postgresql://postgres.hcknrrgbmhnqtmenovmk:SENHA@aws-1-us-west-2.pooler.supabase.com:6543/postgres`
+   (troque SENHA; se tiver caractere especial, use a versão "URL-encoded").
+2. **Deixar o site público**: Vercel → sdm-app → Settings → **Deployment Protection** → *Vercel Authentication* → **Disabled** → Save. Sem isso só quem tem login na Vercel abre o app.
+3. Vercel → Deployments → último → **Redeploy** (pra pegar a `DATABASE_URL`).
+4. **Revogar os tokens** usados no chat: supabase.com/dashboard/account/tokens e vercel.com/account/tokens. E trocar a chave secret do Supabase (Project Settings → API Keys → roll) e atualizar `SUPABASE_SERVICE_ROLE_KEY` na Vercel.
+5. Pra muitas alunas: configurar SMTP próprio (ex.: Resend) no Supabase → Authentication → Emails. O e-mail padrão manda **2 por hora** no projeto todo. Com SMTP dá pra pôr `{{ .Token }}` no template e voltar ao código de 6 dígitos.
+
+## Primeiro acesso
+1. Abra `/admin/entrar`, digite o `ADMIN_EMAIL`, abra o e-mail e toque em **Sign in**.
+2. Em **AD02 Alunas → Nova aluna**, crie uma aluna teste, **Copiar link**, abra no celular, toque em **Entrar no app** (esse caminho não depende de e-mail).
+
+---
+
+# Deploy do zero (outro projeto)
+
 
 Tudo pelo navegador. Ordem importa. Nunca cole senha ou chave secreta no chat.
 
