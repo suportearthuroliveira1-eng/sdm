@@ -1,41 +1,61 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
+import { BackButton } from "./back-button";
 
-/** Moldura das telas públicas e do app (mobile-first, 390px). */
+/**
+ * Moldura das telas da aluna (390px, igual ao protótipo).
+ * Com `head` mostra o cabeçalho do protótipo (voltar redondo + rótulo + título).
+ */
 export function Screen({
   id,
-  title,
+  head,
   back,
   children,
 }: {
   id: string;
-  title?: string;
+  head?: { k: string; t: string };
+  /** destino quando não há histórico (ex.: abriu direto pelo link) */
   back?: string;
   children: ReactNode;
 }) {
   return (
-    <main data-screen={id} className="mx-auto flex min-h-dvh w-full max-w-[480px] flex-col px-5 pb-10 pt-[max(env(safe-area-inset-top),16px)]">
-      <header className="flex min-h-12 items-center gap-2">
-        {back ? (
-          <Link href={back} aria-label="Voltar" className="-ml-2 inline-flex size-11 items-center justify-center rounded-xl text-muted hover:text-text">
-            <svg aria-hidden width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
-          </Link>
-        ) : (
-          <span className="text-sm font-bold tracking-[0.2em] text-accent">SDM</span>
-        )}
-        {title ? <h1 className="text-base font-semibold">{title}</h1> : null}
-      </header>
-      <div className="flex flex-1 flex-col">{children}</div>
+    <main data-screen={id} className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col pt-[env(safe-area-inset-top)]">
+      {head ? (
+        <header className="flex flex-none items-center gap-3 px-5 pb-1.5 pt-4">
+          <BackButton fallback={back ?? "/app"} />
+          <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+            <span className="mu">{head.k}</span>
+            <h1 className="m-0 text-[17px] font-bold leading-tight">{head.t}</h1>
+          </div>
+        </header>
+      ) : null}
+      <div className="flex flex-1 flex-col gap-3.5 px-5 pb-7 pt-2.5">{children}</div>
     </main>
   );
 }
 
 export function Notice({ tone = "info", children }: { tone?: "info" | "ok" | "warn" | "danger"; children: ReactNode }) {
   const c = {
-    info: "border-line bg-surface text-muted",
-    ok: "border-ok/40 bg-ok/10 text-ok",
-    warn: "border-warn/40 bg-warn/10 text-warn",
-    danger: "border-danger/40 bg-danger/10 text-danger",
+    info: "cd text-sm text-text-2",
+    ok: "good",
+    warn: "warn",
+    danger: "rounded-[14px] border border-danger/40 bg-danger/10 px-3.5 py-3 text-[13px] text-danger",
   }[tone];
-  return <p role={tone === "danger" ? "alert" : "status"} className={`rounded-xl border px-4 py-3 text-sm ${c}`}>{children}</p>;
+  return (
+    <p role={tone === "danger" ? "alert" : "status"} className={`m-0 ${c}`}>
+      {children}
+    </p>
+  );
+}
+
+/** Marca SDM (quadrado roxo) usada no A01 e no admin. */
+export function Brand({ size = 44 }: { size?: number }) {
+  return (
+    <span
+      aria-hidden
+      style={{ width: size, height: size }}
+      className="flex flex-none items-center justify-center rounded-[14px] bg-accent text-[15px] font-bold text-accent-ink"
+    >
+      SDM
+    </span>
+  );
 }

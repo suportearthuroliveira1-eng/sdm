@@ -1,18 +1,32 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { LoginForm } from "@/components/auth/login-form";
-import { Screen } from "@/components/ui/screen";
+import { Brand } from "@/components/ui/screen";
 
 export const metadata: Metadata = { title: "Entrar" };
 
-// A01 · Login. Textos finais: conferir com docs/prototipo/App.dc.html.
+// A01 · Login (textos do protótipo; o código de 6 dígitos é decisão do prompt, seção 3).
 export default function A01() {
   return (
-    <Screen id="A01">
-      <div className="mt-10 mb-8">
-        <h1 className="text-[28px] font-bold leading-tight">Entre no seu app</h1>
-        <p className="mt-2 text-muted">Use o e-mail da sua compra. A gente manda um código de 6 dígitos, sem senha.</p>
+    <main data-screen="A01" className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col gap-[22px] px-5 pb-7 pt-[max(env(safe-area-inset-top),34px)]">
+      <div className="flex items-center gap-3">
+        <Brand />
+        <div className="flex flex-col gap-0.5">
+          <span className="text-base font-bold">Sistema Dólar Mundial</span>
+          <span className="mu text-[13px]">com Amanda Gomes</span>
+        </div>
       </div>
-      <LoginForm mode="aluna" />
-    </Screen>
+      <div className="mt-[18px] flex flex-col gap-2.5">
+        <h1 className="m-0 text-[30px] font-bold leading-[1.15]">Seu caminho pra ganhar em dólar, um passo por dia</h1>
+        <p className="tx text-base text-muted">Você não precisa saber nada de internet. Aqui tudo é explicado antes, e você faz junto com a Amanda.</p>
+      </div>
+      <div className="mt-auto flex flex-col gap-2.5">
+        <LoginForm mode="aluna" />
+        <div className="grid grid-cols-2 gap-2">
+          <Link href="/app/a02" className="b3">Não recebi meu acesso</Link>
+          <Link href="/app/a03" className="b3">Instalar no celular</Link>
+        </div>
+      </div>
+    </main>
   );
 }

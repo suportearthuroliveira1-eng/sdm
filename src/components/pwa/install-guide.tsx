@@ -1,79 +1,85 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore } from "react";
 
 type BIPEvent = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: "accepted" | "dismissed" }> };
-type Platform = "ios" | "android" | "outro";
+type Dev = "iphone" | "android";
 
-function detect(): Platform {
+const noop = () => () => {};
+function detect(): Dev | null {
   const ua = navigator.userAgent;
-  if (/iphone|ipad|ipod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) return "ios";
+  if (/iphone|ipad|ipod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) return "iphone";
   if (/android/i.test(ua)) return "android";
-  return "outro";
+  return null;
 }
 
-const STEPS: Record<"ios" | "android", string[]> = {
-  ios: [
-    "Abra este link no Safari (no Chrome do iPhone não dá).",
-    "Toque no botão de compartilhar, o quadrado com a seta pra cima.",
+// Passos copiados do protótipo (A03).
+const STEPS: Record<Dev, string[]> = {
+  iphone: [
+    "Abra este link no Safari.",
+    "Toque no botão Compartilhar (o quadrado com a seta pra cima).",
     "Role e toque em \"Adicionar à Tela de Início\".",
-    "Toque em \"Adicionar\". O ícone do SDM aparece na sua tela.",
+    "Toque em \"Adicionar\".",
+    "Abra o SDM pelo ícone novo e entre com seu e-mail.",
   ],
   android: [
     "Abra este link no Chrome.",
-    "Toque nos três pontinhos no canto de cima.",
+    "Toque nos 3 pontinhos no canto de cima.",
     "Toque em \"Instalar app\" ou \"Adicionar à tela inicial\".",
-    "Confirme. O ícone do SDM aparece na sua tela.",
+    "Confirme.",
+    "Abra o SDM pelo ícone novo.",
   ],
 };
-
-const noop = () => () => {};
+const NOME: Record<Dev, string> = { iphone: "iPhone", android: "Android" };
 
 export function InstallGuide() {
-  const platform = useSyncExternalStore(noop, detect, () => "outro" as Platform);
-  const standalone = useSyncExternalStore(noop, () => window.matchMedia("(display-mode: standalone)").matches, () => false);
-  const [tabChoice, setTab] = useState<"ios" | "android" | null>(null);
-  const tab = tabChoice ?? (platform === "android" ? "android" : "ios");
+  const router = useRouter();
+  const detected = useSyncExternalStore(noop, detect, () => null);
+  const [choice, setChoice] = useState<Dev | null>(null);
+  const dev: Dev = choice ?? detected ?? "iphone";
   const [evt, setEvt] = useState<BIPEvent | null>(null);
-  const [justInstalled, setInstalled] = useState(false);
-  const installed = standalone || justInstalled;
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     const onPrompt = (e: Event) => {
       e.preventDefault();
       setEvt(e as BIPEvent);
     };
-    const onInstalled = () => {
-      setInstalled(true);
-      fetch("/api/app/installed", { method: "POST" }).catch(() => {});
-    };
     window.addEventListener("beforeinstallprompt", onPrompt);
-    window.addEventListener("appinstalled", onInstalled);
-    return () => {
-      window.removeEventListener("beforeinstallprompt", onPrompt);
-      window.removeEventListener("appinstalled", onInstalled);
-    };
+    return () => window.removeEventListener("beforeinstallprompt", onPrompt);
   }, []);
 
-  if (installed) {
-    return (
-      <div className="flex flex-col gap-4">
-        <p className="card text-ok">O app já está instalado neste aparelho.</p>
-        <Link href="/app" className="btn-primary">Continuar</Link>
-      </div>
-    );
-  }
+  const instalei = async () => {
+    setBusy(true);
+    const r = await fetch("/api/app/installed", { method: "POST" }).catch(() => null);
+    router.push(r?.ok ? "/app" : "/app/a01");
+  };
 
   return (
-    <div className="flex flex-col gap-5">
+    <>
+      <div role="radiogroup" aria-label="Seu celular" className="grid grid-cols-2 gap-2">
+        {(["iphone", "android"] as const).map((d) => (
+          <button
+            key={d}
+            type="button"
+            role="radio"
+            aria-checked={dev === d}
+            onClick={() => setChoice(d)}
+            className={`min-h-11 cursor-pointer rounded-[22px] border px-3.5 text-sm text-text ${dev === d ? "border-accent bg-sel font-bold" : "border-line-2 bg-surface"}`}
+          >
+            {NOME[d]}
+          </button>
+        ))}
+      </div>
+
       {evt ? (
         <button
-          className="btn-primary"
+          type="button"
+          className="b2"
           onClick={async () => {
             await evt.prompt();
-            const r = await evt.userChoice;
-            if (r.outcome === "accepted") setInstalled(true);
+            if ((await evt.userChoice).outcome === "accepted") await instalei();
             setEvt(null);
           }}
         >
@@ -81,30 +87,17 @@ export function InstallGuide() {
         </button>
       ) : null}
 
-      <div role="tablist" aria-label="Escolha seu celular" className="grid grid-cols-2 gap-2 rounded-xl bg-surface p-1">
-        {(["ios", "android"] as const).map((t) => (
-          <button
-            key={t}
-            role="tab"
-            aria-selected={tab === t}
-            onClick={() => setTab(t)}
-            className={`min-h-11 rounded-lg text-sm font-semibold ${tab === t ? "bg-accent text-accent-ink" : "text-muted"}`}
-          >
-            {t === "ios" ? "iPhone" : "Android"}
-          </button>
-        ))}
-      </div>
-
-      <ol className="flex flex-col gap-3" aria-label={`Passos no ${tab === "ios" ? "iPhone" : "Android"}`}>
-        {STEPS[tab].map((s, i) => (
-          <li key={s} className="card flex gap-4 p-4">
-            <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-accent/15 text-sm font-bold text-accent">{i + 1}</span>
-            <span className="pt-1">{s}</span>
+      <ol className="m-0 flex list-none flex-col gap-3.5 p-0" aria-label={`Passos no ${NOME[dev]}`}>
+        {STEPS[dev].map((t, i) => (
+          <li key={t} className="cd flex-row items-center gap-3">
+            <span className="dot bg-sel text-accent-2" aria-hidden>{i + 1}</span>
+            <span className="tx">{t}</span>
           </li>
         ))}
       </ol>
-      {platform === "outro" ? <p className="text-sm text-muted">Abra este endereço no celular para instalar.</p> : null}
-      <Link href="/app" className="btn-ghost">Fazer depois</Link>
-    </div>
+      <div className="mu flex h-[120px] items-center justify-center rounded-2xl border border-dashed border-[#4A4058]">[print do passo no {NOME[dev]}]</div>
+      {dev === "iphone" ? <div className="warn">No iPhone, instale antes de entrar. Aviso no celular (notificação) só funciona a partir do iOS 16.4.</div> : null}
+      <button type="button" className="b1" onClick={instalei} disabled={busy}>Já instalei</button>
+    </>
   );
 }

@@ -4,12 +4,12 @@ import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { signOut } from "@/lib/actions/auth";
 
-export function SignOutButton({ to = "/app/a01" }: { to?: string }) {
+export function SignOutButton({ to = "/app/a01", className = "b2" }: { to?: string; className?: string }) {
   const router = useRouter();
   const [pending, start] = useTransition();
   return (
     <button
-      className="btn-ghost"
+      className={className}
       disabled={pending}
       onClick={() =>
         start(async () => {

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Admin SDM</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.cd{padding:18px;border-radius:16px;background:#17141F;border:1px solid #2E2839;display:flex;flex-direction:column;gap:8px}
+.kk{font-size:11px;font-weight:700;color:#C9B6FF;letter-spacing:.5px}
+.mu{font-size:13px;color:#B3AAC2;line-height:1.45}
+.b1{min-height:44px;border-radius:12px;border:none;background:#A98BFF;color:#140F1F;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;padding:0 16px}
+.b2{min-height:44px;border-radius:12px;border:1px solid #3A3247;background:transparent;color:#F4F1F8;font-family:inherit;font-weight:600;font-size:13px;cursor:pointer;padding:0 14px}
+.in{min-height:44px;border-radius:12px;border:1px solid #3A3247;background:#0E0C13;color:#F4F1F8;padding:0 12px;font-family:inherit;font-size:14px;box-sizing:border-box}
+.tb{width:100%;border-collapse:collapse;font-size:13px}
+.tb th{text-align:left;color:#B3AAC2;font-weight:600;padding:10px 12px;border-bottom:1px solid #2E2839;white-space:nowrap}
+.tb td{padding:12px;border-bottom:1px solid #241F2E;vertical-align:top}
+.wrap{overflow-x:auto;border-radius:16px;border:1px solid #2E2839;background:#17141F}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:4px 8px;border-radius:10px}
+</style>
+</helmet>
+<div style="min-height: 960px; box-sizing: border-box; background: #0E0C13; color: #F4F1F8; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; display: flex; flex-wrap: wrap">
+  <nav aria-label="Menu do admin" style="flex: 1 1 220px; max-width: 260px; min-width: 200px; padding: 24px 16px; box-sizing: border-box; border-right: 1px solid #2E2839; background: #121018; display: flex; flex-direction: column; gap: 6px">
+    <div style="display: flex; align-items: center; gap: 10px; padding: 0 8px 18px"><span style="width: 36px; height: 36px; border-radius: 10px; background: #A98BFF; color: #140F1F; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px">SDM</span><span style="display: flex; flex-direction: column"><span style="font-weight: 700; font-size: 14px">Admin</span><span class="mu" style="font-size: 12px">Perfil: admin</span></span></div>
+    <sc-for list="{{ menu }}" as="it" hint-placeholder-count="9"><button type="button" onClick="{{ it.go }}" style="text-align: left; min-height: 44px; padding: 0 12px; border-radius: 10px; border: none; font-family: inherit; font-size: 14px; cursor: pointer; color: {{ it.c }}; background: {{ it.bg }}; font-weight: {{ it.fw }}">{{ it.label }}</button></sc-for>
+  </nav>
+  <main style="flex: 999 1 640px; min-width: 0; padding: 28px 32px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px"><div style="display: flex; flex-direction: column; gap: 4px"><span class="kk">{{ cab.k }}</span><h1 style="margin: 0; font-size: 28px; font-weight: 700">{{ cab.t }}</h1><span class="mu">{{ cab.d }}</span></div><sc-if value="{{ temToast }}" hint-placeholder-val="{{ false }}"><span role="status" style="padding: 10px 14px; border-radius: 12px; background: #F4F1F8; color: #140F1F; font-size: 13px; font-weight: 600">{{ toast }}</span></sc-if></div>
+
+    <sc-if value="{{ is.AD01 }}" hint-placeholder-val="{{ true }}">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px"><sc-for list="{{ kpis }}" as="it" hint-placeholder-count="6"><div class="cd"><span class="kk">{{ it.k }}</span><span style="font-size: 26px; font-weight: 700">[—]</span><span class="mu">{{ it.d }}</span></div></sc-for></div>
+      <div class="cd"><span style="font-size: 16px; font-weight: 700">Jornada das alunas</span><span class="mu">Quantas chegaram em cada passo (seção 12 do contexto).</span><sc-for list="{{ jornada }}" as="it" hint-placeholder-count="9"><div style="display: flex; align-items: center; gap: 12px"><span style="width: 260px; font-size: 13px">{{ it }}</span><div style="flex: 1; height: 10px; border-radius: 5px; background: #2E2839"></div><span class="mu" style="width: 60px; text-align: right">[—]</span></div></sc-for></div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px"><div class="cd"><span class="kk">AULAS COM MAIS ABANDONO</span><span class="mu">[as 3 aulas com menor % assistido na semana]</span></div><div class="cd"><span class="kk">DÚVIDAS DA SEMANA</span><span class="mu">[top 10 da professora, pago e orgânico separados]</span><button type="button" class="b2" onClick="{{ goAD09 }}" style="align-self: flex-start">Ver relatório</button></div></div>
+    </sc-if>
+
+    <sc-if value="{{ is.AD02 }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-wrap: wrap; gap: 10px"><label for="bs" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Buscar aluna</label><input id="bs" class="in" type="search" placeholder="Buscar por nome, e-mail ou ALN" style="flex: 1 1 260px"><sc-for list="{{ filtros }}" as="it" hint-placeholder-count="4"><button type="button" class="b2" onClick="{{ it.pick }}" style="border-color: {{ it.bd }}; background: {{ it.bg }}">{{ it.label }}</button></sc-for></div>
+      <div class="wrap"><table class="tb"><thead><tr><th>ID</th><th>Aluna</th><th>País</th><th>Trilha</th><th>Onde está</th><th>Funil</th><th>Acessos</th><th></th></tr></thead><tbody><sc-for list="{{ alunas }}" as="it" hint-placeholder-count="5"><tr><td class="mu">{{ it.id }}</td><td style="font-weight: 600">{{ it.nome }}</td><td>{{ it.pais }}</td><td>{{ it.trilha }}</td><td>{{ it.onde }}</td><td>{{ it.funil }}</td><td>{{ it.acessos }}</td><td><button type="button" class="b2" onClick="{{ it.abrir }}">Abrir</button></td></tr></sc-for></tbody></table></div>
+      <span class="mu">Linhas de exemplo. Os dados reais vêm do App.</span>
+    </sc-if>
+
+    <sc-if value="{{ is.AD03 }}" hint-placeholder-val="{{ false }}">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px">
+        <div class="cd"><span class="kk">DADOS</span><sc-for list="{{ ficha }}" as="it" hint-placeholder-count="6"><div style="display: flex; justify-content: space-between; gap: 12px; font-size: 13px; padding: 6px 0; border-bottom: 1px solid #241F2E"><span class="mu">{{ it.l }}</span><span style="text-align: right">{{ it.v }}</span></div></sc-for><button type="button" class="b1" onClick="{{ reenviar }}" style="margin-top: 6px">Reenviar acesso pelo WhatsApp</button></div>
+        <div class="cd"><span class="kk">PASTAS DE PRODUTO</span><div style="padding: 12px; border-radius: 12px; background: #0E0C13; display: flex; flex-direction: column; gap: 4px"><span style="font-weight: 700">PRD-000045 · Easy Weeknight Dinners</span><span class="mu">EUA · inglês · funil pré-venda no ar · etapa 3 Divulgação</span></div><span class="kk" style="margin-top: 8px">PROGRESSO</span><span class="mu">Aulas vistas: [—] de 111 · "Agora faça" feitos: [—] · Último acesso: [—]</span></div>
+        <div class="cd"><span class="kk">CONVERSAS COM A PROFESSORA</span><span class="mu">[últimas perguntas, com a aula de onde vieram]</span><span class="kk" style="margin-top: 8px">EVENTOS DE ACESSO</span><sc-for list="{{ eventos }}" as="it" hint-placeholder-count="3"><span class="mu">{{ it }}</span></sc-for></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ is.AD04 }}" hint-placeholder-val="{{ false }}">
+      <div class="wrap"><table class="tb"><thead><tr><th>Agente</th><th>O que entrega</th><th>Usado nas telas</th><th>Versão</th><th></th></tr></thead><tbody><sc-for list="{{ agentes }}" as="it" hint-placeholder-count="8"><tr><td style="font-weight: 600">{{ it.id }}</td><td>{{ it.d }}</td><td class="mu">{{ it.telas }}</td><td><span class="pill" style="background: #2A2240; color: #C9B6FF">v1 · rascunho</span></td><td><button type="button" class="b2" onClick="{{ it.testar }}">Testar com aluna exemplo</button></td></tr></sc-for></tbody></table></div>
+      <div class="cd"><span class="kk">BASE QUE TODO AGENTE LÊ</span><span class="mu">Glossário oficial · regras de voz e fé · lista do "nunca" · ficha do produto da aluna · aula atual</span></div>
+    </sc-if>
+
+    <sc-if value="{{ is.AD05 }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-wrap: wrap; gap: 10px"><button type="button" class="b1" onClick="{{ publicarPlantao }}">Publicar o Plantão da semana</button><button type="button" class="b2" onClick="{{ ok }}">Subir vídeo de aula</button></div>
+      <div class="wrap"><table class="tb"><thead><tr><th>Módulo</th><th>Parte</th><th>Aulas</th><th>Libera</th><th>Marcadas pra regravar</th></tr></thead><tbody><sc-for list="{{ mods }}" as="it" hint-placeholder-count="10"><tr><td style="font-weight: 600">{{ it.nome }}</td><td class="mu">{{ it.parte }}</td><td>{{ it.n }}</td><td>{{ it.lib }}</td><td class="mu">[—]</td></tr></sc-for></tbody></table></div>
+      <span class="mu">Cada aula guarda: vídeo, objetivo, tipo, materiais, "Agora faça" e a tela do App ligada a ele.</span>
+    </sc-if>
+
+    <sc-if value="{{ is.AD06 }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; gap: 10px"><button type="button" class="b1" onClick="{{ ok }}">Cadastrar produto na vitrine</button></div>
+      <div class="wrap"><table class="tb"><thead><tr><th>ID</th><th>Produto</th><th>Idioma</th><th>Assunto</th><th>Selos</th><th>Comissão</th><th>Status</th></tr></thead><tbody><sc-for list="{{ vitrine }}" as="it" hint-placeholder-count="6"><tr><td class="mu">{{ it.id }}</td><td style="font-weight: 600">{{ it.nome }}</td><td>{{ it.lang }}</td><td>{{ it.assunto }}</td><td>{{ it.selos }}</td><td>[valor]</td><td><button type="button" class="b2" onClick="{{ it.toggle }}" style="color: {{ it.c }}">{{ it.st }}</button></td></tr></sc-for></tbody></table></div>
+    </sc-if>
+
+    <sc-if value="{{ is.AD07 }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-wrap: wrap; gap: 8px"><sc-for list="{{ bancosTabs }}" as="it" hint-placeholder-count="4"><button type="button" class="b2" onClick="{{ it.pick }}" style="border-color: {{ it.bd }}; background: {{ it.bg }}">{{ it.label }}</button></sc-for></div>
+      <div class="cd"><span class="kk">{{ bancoNome }}</span><sc-for list="{{ bancoItens }}" as="it" hint-placeholder-count="4"><div style="display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid #241F2E; font-size: 14px"><span>{{ it }}</span><span class="mu">semana atual</span></div></sc-for>
+        <div style="display: flex; gap: 8px; margin-top: 6px"><label for="nb" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Novo item</label><input id="nb" class="in" type="text" value="{{ novoItem }}" onChange="{{ setNovo }}" placeholder="Adicionar item" style="flex: 1"><button type="button" class="b1" onClick="{{ addItem }}">Adicionar</button></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ is.AD08 }}" hint-placeholder-val="{{ false }}">
+      <div class="wrap"><table class="tb"><thead><tr><th>Produto na Hubla</th><th>Libera no App</th><th>Webhook</th></tr></thead><tbody><sc-for list="{{ ents }}" as="it" hint-placeholder-count="5"><tr><td style="font-weight: 600">{{ it.p }}</td><td>{{ it.l }}</td><td><span class="pill" style="background: #173326; color: #8FE3B8">configurado</span></td></tr></sc-for></tbody></table></div>
+      <div class="cd"><span class="kk">LOG DE EVENTOS</span><sc-for list="{{ eventos }}" as="it" hint-placeholder-count="3"><span class="mu">{{ it }}</span></sc-for><div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px"><button type="button" class="b2" onClick="{{ ok }}">Reprocessar evento</button><button type="button" class="b2" onClick="{{ ok }}">Liberar acesso manual</button></div></div>
+    </sc-if>
+
+    <sc-if value="{{ is.AD09 }}" hint-placeholder-val="{{ false }}">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px">
+        <div class="cd"><span class="kk">TOP 10 DÚVIDAS · PAGO</span><span class="mu">[exportado da professora]</span></div>
+        <div class="cd"><span class="kk">TOP 10 DÚVIDAS · ORGÂNICO</span><span class="mu">[exportado da professora]</span></div>
+        <div class="cd"><span class="kk">3 AULAS COM MAIS ABANDONO</span><span class="mu">[medido pelo App]</span></div>
+        <div class="cd"><span class="kk">MUDANÇAS QUE PEDEM REGRAVAÇÃO</span><span class="mu">Meta, TikTok, Instagram, rede, Wise e telas do App que mudaram.</span><span class="mu">[lista da semana]</span></div>
+      </div>
+      <div style="display: flex; gap: 10px"><button type="button" class="b1" onClick="{{ ok }}">Exportar relatório da semana</button></div>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"tela":{"editor":"enum","options":["AD01","AD02","AD03","AD04","AD05","AD06","AD07","AD08","AD09"],"default":"AD01"},"$preview":{"width":1440,"height":960}}'>
+const TELAS = [["AD01", "Visão geral", "Como as alunas estão andando"], ["AD02", "Alunas", "Busca e filtros"], ["AD03", "Ficha da aluna", "Juliana Souza · ALN-000123"], ["AD04", "Agentes de IA", "Os 8 agentes e as telas onde aparecem"], ["AD05", "Aulas", "Grade de 18 módulos, 111 aulas + B1"], ["AD06", "Vitrine", "Produtos que as alunas podem divulgar"], ["AD07", "Bancos da semana", "Ganchos, anúncios, áudios e trends"], ["AD08", "Acessos e webhooks", "Hubla → o que libera no App"], ["AD09", "Relatório semanal", "Rotina de 2h do time"]];
+const VITR = [["VIT-0012", "Easy Weeknight Dinners", "inglês", "Cozinha e receitas", "orgânico, anúncio"], ["VIT-0018", "Home Reset Plan", "inglês", "Casa e organização", "orgânico"], ["VIT-0021", "Bedtime Prayers for Little Ones", "inglês", "Fé e devocional", "orgânico"], ["VIT-0033", "Picky Eater Lunchbox Guide", "inglês", "Filhos e família", "anúncio"], ["VIT-0027", "Recetas Fáciles de Cada Día", "espanhol", "Cozinha e receitas", "orgânico, anúncio"], ["VIT-0040", "Inglés para el Trabajo", "espanhol", "Inglês e idiomas", "orgânico"]];
+const BANCOS = { ganchos: ["[gancho 1 da semana]", "[gancho 2 da semana]", "[gancho 3 da semana]"], anuncios: ["[anúncio de referência 1]", "[anúncio de referência 2]"], audios: ["[áudio em alta 1]", "[áudio em alta 2]", "[áudio em alta 3]"], trends: ["[trend 1]", "[trend 2]"] };
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { tela: (props && props.tela) || "AD01", filtro: "Todas", banco: "ganchos", bancos: JSON.parse(JSON.stringify(BANCOS)), novoItem: "", pausados: [], toast: null }; }
+  componentWillUnmount() { clearTimeout(this.tt); }
+  toast(m) { this.setState({ toast: m }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: null }), 2400); }
+  renderVals() {
+    const s = this.state; const self = this;
+    const t = TELAS.find(function (x) { return x[0] === s.tela; }) || TELAS[0];
+    const is = {}; TELAS.forEach(function (x) { is[x[0]] = s.tela === x[0]; });
+    const nav = function (k) { return function () { self.setState({ tela: k }); }; };
+    const sel = function (on) { return { bd: on ? "#A98BFF" : "#3A3247", bg: on ? "#2A2240" : "transparent" }; };
+    const ok = function () { self.toast("No admin real isso abre o formulário."); };
+    return {
+      is: is, cab: { k: t[0], t: t[1], d: t[2] }, temToast: !!s.toast, toast: s.toast, ok: ok, goAD09: nav("AD09"),
+      menu: TELAS.map(function (x) { const on = s.tela === x[0]; return { label: x[0] + " · " + x[1], go: nav(x[0]), c: on ? "#F4F1F8" : "#B3AAC2", bg: on ? "#2A2240" : "transparent", fw: on ? 700 : 400 }; }),
+      kpis: [["ALUNAS ATIVAS", "Entraram nos últimos 7 dias"], ["COM DIAGNÓSTICO", "Fizeram a aula 0.5"], ["FUNIL NO AR", "Etapa 2 pronta"], ["TRILHA PAGA", "Escolheram na 5.6"], ["TRILHA ORGÂNICA", "Escolheram na 5.6"], ["1ª VENDA", "Registrada no App"]].map(function (k) { return { k: k[0], d: k[1] }; }),
+      jornada: ["Compra", "Login", "Instalou na tela", "Diagnóstico", "1ª pasta de produto", "Link de afiliada testado", "Funil no ar", "Trilha escolhida", "Campanha ou 1º post", "1ª venda"],
+      filtros: ["Todas", "Sem acesso há 7 dias", "Sem funil", "Com venda"].map(function (f) { return Object.assign({ label: f, pick: function () { self.setState({ filtro: f }); } }, sel(s.filtro === f)); }),
+      alunas: [["ALN-000123", "Juliana Souza", "EUA", "Pago + orgânico", "Etapa 3 · Divulgação", "pré-venda no ar", "SDM"], ["ALN-000124", "Carla Mendes", "Portugal", "Orgânico", "Etapa 1 · Link", "—", "SDM, UP1"], ["ALN-000125", "Rosana Lima", "EUA", "a escolher", "M2 · Sua base", "—", "SDM"], ["ALN-000126", "Patrícia Alves", "Reino Unido", "Pago", "Etapa 4 · Números", "quiz no ar", "SDM, D1"], ["ALN-000127", "Daniela Costa", "Espanha", "Orgânico", "Etapa 5 · Dinheiro", "direto", "SDM"]].map(function (a) { return { id: a[0], nome: a[1], pais: a[2], trilha: a[3], onde: a[4], funil: a[5], acessos: a[6], abrir: nav("AD03") }; }),
+      ficha: [["E-mail", "juliana.souza@email.com"], ["WhatsApp", "[número]"], ["País", "Estados Unidos"], ["Trilha", "Pago + orgânico"], ["Acessos", "SDM"], ["Entrou em", "[data]"]].map(function (r) { return { l: r[0], v: r[1] }; }),
+      reenviar: function () { self.toast("Acesso reenviado pelo WhatsApp."); },
+      eventos: ["EVT-000981 · compra SDM aprovada (Hubla) · acesso liberado", "EVT-000982 · login com e-mail da compra", "EVT-000990 · [próximo evento]"],
+      agentes: [["AGT-diagnostico", "Perguntas e resultado do diagnóstico", "A05, A06"], ["AGT-recomendacao", "Escolhe da vitrine e explica o porquê", "V03, V04"], ["AGT-montador", "Kit da página ou do quiz, 3 anúncios e 10 roteiros no idioma do país", "F03, F04"], ["AGT-conferencia", "Lê a página que a aluna montou e confere título, botão, link, pixel e regras", "F06"], ["AGT-anuncios", "Ajusta gancho, imagem e texto", "PG01 a PG03"], ["AGT-roteiros", "Bio, roteiros, legenda e variações", "OG02, OG05, OG07, N04"], ["AGT-fichas", "Fichas \"esse produto vende?\" e \"desmontando um viral\"", "V03, OG04"], ["AGT-professora", "Responde com o glossário, lê print, cita a aula", "Q01"], ["AGT-diag-funil", "Fluxogramas \"não vendeu?\" e \"o vídeo não foi\"", "N02, N04"]].map(function (a) { return { id: a[0], d: a[1], telas: a[2], testar: function () { self.toast("Rodando " + a[0] + " com a aluna exemplo."); } }; }),
+      publicarPlantao: function () { self.toast("Plantão publicado. Push enviado pras alunas."); },
+      mods: [["M0 · Boas-vindas", "Tronco", 6, "compra"], ["M1 · O mundo digital", "Tronco", 7, "compra"], ["M2 · Sua base", "Tronco", 5, "compra"], ["M3 · Seu produto", "Tronco", 7, "compra"], ["M4 · Sua estrutura", "Tronco", 8, "compra"], ["M5 · Sua estratégia", "Tronco", 6, "compra"], ["P1 a P5 · Tráfego pago", "Trilha 1", 30, "escolha da trilha"], ["O1 a O5 · Orgânico", "Trilha 2", 29, "escolha da trilha"], ["M6 · Seu dinheiro", "Final", 5, "compra"], ["M7 · Escalar", "Final", 8, "1ª venda"], ["B1 · Verba Mínima", "Bônus", 1, "compra"], ["PO.1 a PO.5 · Países Ocultos", "Complementar", 5, "UP1 ou D1"]].map(function (m) { return { nome: m[0], parte: m[1], n: m[2], lib: m[3] }; }),
+      vitrine: VITR.map(function (x) { const p = s.pausados.indexOf(x[0]) >= 0; return { id: x[0], nome: x[1], lang: x[2], assunto: x[3], selos: x[4], st: p ? "Pausado" : "Ativo", c: p ? "#F2C26B" : "#8FE3B8", toggle: function () { self.setState({ pausados: p ? s.pausados.filter(function (z) { return z !== x[0]; }) : s.pausados.concat([x[0]]) }); } }; }),
+      bancosTabs: [["ganchos", "Ganchos"], ["anuncios", "Anúncios de referência"], ["audios", "Áudios em alta"], ["trends", "Trends"]].map(function (b) { return Object.assign({ label: b[1], pick: function () { self.setState({ banco: b[0] }); } }, sel(s.banco === b[0])); }),
+      bancoNome: s.banco.toUpperCase(), bancoItens: s.bancos[s.banco], novoItem: s.novoItem,
+      setNovo: function (e) { self.setState({ novoItem: e.target.value }); },
+      addItem: function () { if (!s.novoItem) return; const b = Object.assign({}, s.bancos); b[s.banco] = b[s.banco].concat([s.novoItem]); self.setState({ bancos: b, novoItem: "" }); self.toast("Adicionado ao banco da semana."); },
+      ents: [["SDM · front US$69", "App, tronco comum, trilhas, M6, professora, bônus"], ["UP1 · Países Ocultos feito pelo time", "Aulas PO.1 a PO.5"], ["D1 · Combinação pronta", "Aulas PO.1 a PO.5"], ["UP2 · Mentoria Private", "Mentoria em turma"], ["D2 · Gravações + grupo", "Gravações e grupo"]].map(function (e) { return { p: e[0], l: e[1] }; })
+    };
+  }
+}
+</script>
+</body>
+</html>

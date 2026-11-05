@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Screen } from "@/components/ui/screen";
+import { Brand } from "@/components/ui/screen";
 import { EnterButton } from "./enter-button";
 
 export const metadata: Metadata = { title: "Seu acesso", robots: { index: false } };
@@ -11,12 +11,21 @@ export const metadata: Metadata = { title: "Seu acesso", robots: { index: false 
 export default async function Acesso({ params }: PageProps<"/acesso/[token]">) {
   const { token } = await params;
   return (
-    <Screen id="ACESSO">
-      <div className="mt-10 mb-8">
-        <h1 className="text-[28px] font-bold leading-tight">Seu acesso chegou</h1>
-        <p className="mt-2 text-muted">Toque em entrar. Esse link funciona uma vez e vence em 72 horas.</p>
+    <main data-screen="ACESSO" className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col gap-[22px] px-5 pb-7 pt-[max(env(safe-area-inset-top),34px)]">
+      <div className="flex items-center gap-3">
+        <Brand />
+        <div className="flex flex-col gap-0.5">
+          <span className="text-base font-bold">Sistema Dólar Mundial</span>
+          <span className="mu text-[13px]">com Amanda Gomes</span>
+        </div>
       </div>
-      <EnterButton token={token} />
-    </Screen>
+      <div className="mt-[18px] flex flex-col gap-2.5">
+        <h1 className="m-0 text-[30px] font-bold leading-[1.15]">Seu acesso chegou</h1>
+        <p className="tx text-base text-muted">Toque em entrar. Esse link funciona uma vez e vale por 72 horas.</p>
+      </div>
+      <div className="mt-auto">
+        <EnterButton token={token} />
+      </div>
+    </main>
   );
 }

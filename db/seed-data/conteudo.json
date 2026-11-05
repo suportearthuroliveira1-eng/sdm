@@ -1,0 +1,4226 @@
+{
+  "fonte": "protótipo docs/prototipo/App.dc.html (roteiros de 5 blocos: pendentes, vêm do contexto v6)",
+  "modules": [
+    {
+      "id": "M0",
+      "nome": "Boas-vindas",
+      "parte": "Tronco comum",
+      "objetivo": "Ela chegar, se sentir em casa, se ver na Amanda e entender o propósito por trás de tudo.",
+      "regraLiberacao": "compra",
+      "materiais": [
+        {
+          "titulo": "Mapa do caminho"
+        },
+        {
+          "titulo": "O combinado (1 página)"
+        },
+        {
+          "titulo": "Cartão \"minha palavra da jornada\""
+        },
+        {
+          "titulo": "Regras do grupo"
+        }
+      ],
+      "ordem": 0
+    },
+    {
+      "id": "M1",
+      "nome": "O mundo digital",
+      "parte": "Tronco comum",
+      "objetivo": "Ela entender o que é vender pela internet, sem medo e sem palavra difícil.",
+      "regraLiberacao": "compra",
+      "materiais": [
+        {
+          "titulo": "Mapa do mundo digital"
+        },
+        {
+          "titulo": "10 exemplos de infoproduto"
+        },
+        {
+          "titulo": "Quadro \"quem faz o quê\""
+        },
+        {
+          "titulo": "Calculadora de lucro por venda"
+        },
+        {
+          "titulo": "Checklist \"isso é golpe?\""
+        }
+      ],
+      "ordem": 1
+    },
+    {
+      "id": "M2",
+      "nome": "Sua base",
+      "parte": "Tronco comum",
+      "objetivo": "Deixar prontas as contas que as duas trilhas usam: redes, rede de afiliação e conta em dólar.",
+      "regraLiberacao": "compra",
+      "materiais": [
+        {
+          "titulo": "Checklist da base"
+        },
+        {
+          "titulo": "Perfil seguro em 5 passos"
+        },
+        {
+          "titulo": "Passo a passo da rede"
+        },
+        {
+          "titulo": "Passo a passo Wise"
+        }
+      ],
+      "ordem": 2
+    },
+    {
+      "id": "M3",
+      "nome": "Seu produto",
+      "parte": "Tronco comum",
+      "objetivo": "A IA conhecer ela, escolher o produto certo com ela e ela assumir esse produto como seu.",
+      "regraLiberacao": "compra",
+      "materiais": [
+        {
+          "titulo": "Ficha \"esse produto vende?\""
+        },
+        {
+          "titulo": "Mapa idiomas e países"
+        },
+        {
+          "titulo": "Print \"onde está o seu link\""
+        },
+        {
+          "titulo": "Cartão \"meu produto\""
+        }
+      ],
+      "ordem": 3
+    },
+    {
+      "id": "M4",
+      "nome": "Sua estrutura",
+      "parte": "Tronco comum",
+      "objetivo": "Ela entender o caminho até a compra, receber o kit da IA, montar a página dela com o modelo e deixar o funil no ar.",
+      "regraLiberacao": "compra",
+      "materiais": [
+        {
+          "titulo": "Mapa do funil"
+        },
+        {
+          "titulo": "Comparativo dos 3 funis"
+        },
+        {
+          "titulo": "Anatomia da pré-venda"
+        },
+        {
+          "titulo": "Exemplo de quiz"
+        },
+        {
+          "titulo": "Checklist de teste do funil"
+        }
+      ],
+      "ordem": 4
+    },
+    {
+      "id": "M5",
+      "nome": "Sua estratégia",
+      "parte": "Tronco comum",
+      "objetivo": "Ela conhecer os dois caminhos por dentro, comparar com honestidade e decidir por qual seguir.",
+      "regraLiberacao": "compra",
+      "materiais": [
+        {
+          "titulo": "Desenho dos 2 caminhos"
+        },
+        {
+          "titulo": "Tabela de prós e contras"
+        },
+        {
+          "titulo": "Planilha de verba mínima"
+        },
+        {
+          "titulo": "As 3 histórias"
+        },
+        {
+          "titulo": "Teste \"qual é a minha trilha?\""
+        }
+      ],
+      "ordem": 5
+    },
+    {
+      "id": "P1",
+      "nome": "Base de anúncios",
+      "parte": "Trilha 1 · Tráfego pago",
+      "objetivo": "Deixar pronta a parte da Meta que só a trilha paga usa.",
+      "regraLiberacao": "trilha_pago",
+      "materiais": [
+        {
+          "titulo": "Mapa da trilha paga"
+        },
+        {
+          "titulo": "Prints do portfólio e da conta"
+        },
+        {
+          "titulo": "Forma de pagamento por país"
+        },
+        {
+          "titulo": "Checklist da base de anúncios"
+        }
+      ],
+      "ordem": 6
+    },
+    {
+      "id": "P2",
+      "nome": "Seus anúncios",
+      "parte": "Trilha 1 · Tráfego pago",
+      "objetivo": "Ela ler, ajustar e testar anúncios sem precisar aparecer.",
+      "regraLiberacao": "trilha_pago",
+      "materiais": [
+        {
+          "titulo": "Banco de anúncios"
+        },
+        {
+          "titulo": "Banco de ganchos"
+        },
+        {
+          "titulo": "Modelo das 3 partes"
+        },
+        {
+          "titulo": "Roteiro-modelo de 20 s"
+        },
+        {
+          "titulo": "Planilha do teste"
+        },
+        {
+          "titulo": "Checklist das regras da Meta"
+        }
+      ],
+      "ordem": 7
+    },
+    {
+      "id": "P3",
+      "nome": "Pixel",
+      "parte": "Trilha 1 · Tráfego pago",
+      "objetivo": "Ela ter o pixel criado, instalado e conferido.",
+      "regraLiberacao": "trilha_pago",
+      "materiais": [
+        {
+          "titulo": "Guia do pixel"
+        },
+        {
+          "titulo": "Prints do pixel"
+        },
+        {
+          "titulo": "Checklist \"meu pixel funciona?\""
+        }
+      ],
+      "ordem": 8
+    },
+    {
+      "id": "P4",
+      "nome": "Sua campanha",
+      "parte": "Trilha 1 · Tráfego pago",
+      "objetivo": "Ela subir a primeira campanha sozinha, com segurança.",
+      "regraLiberacao": "trilha_pago",
+      "materiais": [
+        {
+          "titulo": "Desenho \"os 3 andares\""
+        },
+        {
+          "titulo": "Cartão \"valor por dia\""
+        },
+        {
+          "titulo": "Checklist de subida"
+        },
+        {
+          "titulo": "Tabela \"aviso da Meta → o que fazer\""
+        }
+      ],
+      "ordem": 9
+    },
+    {
+      "id": "P5",
+      "nome": "Números do pago",
+      "parte": "Trilha 1 · Tráfego pago",
+      "objetivo": "Ela trocar o \"será que está dando certo?\" por decisão com número.",
+      "regraLiberacao": "trilha_pago",
+      "materiais": [
+        {
+          "titulo": "Cola das 5 métricas"
+        },
+        {
+          "titulo": "Print certo e errado"
+        },
+        {
+          "titulo": "Fluxograma \"não vendeu?\""
+        },
+        {
+          "titulo": "Cartão rotina dos 10 minutos"
+        }
+      ],
+      "ordem": 10
+    },
+    {
+      "id": "O1",
+      "nome": "Seu perfil que vende",
+      "parte": "Trilha 2 · Orgânico",
+      "objetivo": "Ela ter um perfil pronto pra atrair gente do mundo todo e levar até o funil.",
+      "regraLiberacao": "trilha_org",
+      "materiais": [
+        {
+          "titulo": "Mapa da trilha orgânica"
+        },
+        {
+          "titulo": "Mapa \"qual rede pra qual produto\""
+        },
+        {
+          "titulo": "Modelos de nome e bio por nicho"
+        },
+        {
+          "titulo": "Checklist do perfil pronto"
+        },
+        {
+          "titulo": "Roteiro dos 7 dias de aquecimento"
+        }
+      ],
+      "ordem": 11
+    },
+    {
+      "id": "O2",
+      "nome": "Conteúdo que viraliza",
+      "parte": "Trilha 2 · Orgânico",
+      "objetivo": "Ela entender por que um vídeo explode e saber fazer conteúdo que prende.",
+      "regraLiberacao": "trilha_org",
+      "materiais": [
+        {
+          "titulo": "Banco de ganchos do orgânico"
+        },
+        {
+          "titulo": "Os 4 tipos de conteúdo"
+        },
+        {
+          "titulo": "Galeria de formatos sem rosto"
+        },
+        {
+          "titulo": "Ficha \"desmontando um viral\""
+        }
+      ],
+      "ordem": 12
+    },
+    {
+      "id": "O3",
+      "nome": "Produção com IA",
+      "parte": "Trilha 2 · Orgânico",
+      "objetivo": "Ela produzir vídeos com rapidez, usando a IA do app pra ter ideia e roteiro todo dia.",
+      "regraLiberacao": "trilha_org",
+      "materiais": [
+        {
+          "titulo": "Template de edição no CapCut"
+        },
+        {
+          "titulo": "Checklist de gravação no celular"
+        },
+        {
+          "titulo": "Modelo de legenda"
+        },
+        {
+          "titulo": "Planner do dia de gravação"
+        }
+      ],
+      "ordem": 13
+    },
+    {
+      "id": "O4",
+      "nome": "Postar e vender",
+      "parte": "Trilha 2 · Orgânico",
+      "objetivo": "Ela postar com constância e transformar visualização em clique no link.",
+      "regraLiberacao": "trilha_org",
+      "materiais": [
+        {
+          "titulo": "Calendário de posts"
+        },
+        {
+          "titulo": "Modelos de chamada pro link"
+        },
+        {
+          "titulo": "Sequência de stories que vende"
+        },
+        {
+          "titulo": "Regras de cada rede"
+        }
+      ],
+      "ordem": 14
+    },
+    {
+      "id": "O5",
+      "nome": "Números do orgânico",
+      "parte": "Trilha 2 · Orgânico",
+      "objetivo": "Ela saber ler os números dos vídeos e repetir o que vende.",
+      "regraLiberacao": "trilha_org",
+      "materiais": [
+        {
+          "titulo": "Cola das métricas do orgânico"
+        },
+        {
+          "titulo": "Fluxograma \"o vídeo não foi\""
+        },
+        {
+          "titulo": "Cartão rotina do orgânico"
+        }
+      ],
+      "ordem": 15
+    },
+    {
+      "id": "M6",
+      "nome": "Seu dinheiro",
+      "parte": "Final · As duas trilhas",
+      "objetivo": "Ela entender quando e como o dinheiro chega, e quanto sobrou de verdade.",
+      "regraLiberacao": "compra",
+      "materiais": [
+        {
+          "titulo": "Linha do tempo \"da venda ao saque\""
+        },
+        {
+          "titulo": "Planilha de lucro"
+        },
+        {
+          "titulo": "5 perguntas pro contador"
+        }
+      ],
+      "ordem": 16
+    },
+    {
+      "id": "M7",
+      "nome": "Escalar",
+      "parte": "Final · As duas trilhas",
+      "objetivo": "Aumentar o que já dá lucro nas duas trilhas, com cuidado e sem colocar tudo em risco.",
+      "regraLiberacao": "primeira_venda",
+      "materiais": [
+        {
+          "titulo": "Checklist \"posso escalar?\""
+        },
+        {
+          "titulo": "Escada de escala do pago"
+        },
+        {
+          "titulo": "Plano de expansão do orgânico"
+        },
+        {
+          "titulo": "Checklist \"contas protegidas\""
+        }
+      ],
+      "ordem": 17
+    },
+    {
+      "id": "B1",
+      "nome": "Bônus · Verba Mínima",
+      "parte": "Bônus",
+      "objetivo": "Ela saber quanto investir por dia antes de anunciar.",
+      "regraLiberacao": "compra",
+      "materiais": [
+        {
+          "titulo": "Cartão \"valor por dia\""
+        }
+      ],
+      "ordem": 18
+    }
+  ],
+  "lessons": [
+    {
+      "id": "0.1",
+      "moduleId": "M0",
+      "titulo": "Bem-vinda: você chegou no lugar certo",
+      "tipo": "Conexão",
+      "minutos": 4,
+      "roteiro": [],
+      "agoraFacaTexto": "Instalar o app na tela do celular.",
+      "agoraFacaAlvo": "A03",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 0,
+      "publicada": true
+    },
+    {
+      "id": "0.2",
+      "moduleId": "M0",
+      "titulo": "Minha história",
+      "tipo": "Conexão",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Escrever numa frase por que ela entrou no SDM.",
+      "agoraFacaAlvo": "I03",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 1,
+      "publicada": true
+    },
+    {
+      "id": "0.3",
+      "moduleId": "M0",
+      "titulo": "Trabalho com propósito",
+      "tipo": "Conexão",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Escolher a palavra da jornada e colar no cartão.",
+      "agoraFacaAlvo": "I03",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 2,
+      "publicada": true
+    },
+    {
+      "id": "0.4",
+      "moduleId": "M0",
+      "titulo": "Você não está sozinha",
+      "tipo": "Conexão",
+      "minutos": 5,
+      "roteiro": [],
+      "agoraFacaTexto": "Entrar no grupo e se apresentar.",
+      "agoraFacaAlvo": "I04",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 3,
+      "publicada": true
+    },
+    {
+      "id": "0.5",
+      "moduleId": "M0",
+      "titulo": "Como usar o app",
+      "tipo": "Tela",
+      "minutos": 5,
+      "roteiro": [],
+      "agoraFacaTexto": "Fazer o diagnóstico no app.",
+      "agoraFacaAlvo": "A05",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 4,
+      "publicada": true
+    },
+    {
+      "id": "0.6",
+      "moduleId": "M0",
+      "titulo": "O nosso combinado",
+      "tipo": "Explicação",
+      "minutos": 5,
+      "roteiro": [],
+      "agoraFacaTexto": "Marcar no app: \"eu vou até o fim da minha trilha\".",
+      "agoraFacaAlvo": "A07",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 5,
+      "publicada": true
+    },
+    {
+      "id": "1.1",
+      "moduleId": "M1",
+      "titulo": "O que é vender pela internet",
+      "tipo": "Explicação",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Achar 3 anúncios ou vídeos de curso ou app no próprio feed.",
+      "agoraFacaAlvo": "fora",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 6,
+      "publicada": true
+    },
+    {
+      "id": "1.2",
+      "moduleId": "M1",
+      "titulo": "O que é infoproduto",
+      "tipo": "Explicação",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Abrir a vitrine e escolher um que chamou atenção.",
+      "agoraFacaAlvo": "V02",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 7,
+      "publicada": true
+    },
+    {
+      "id": "1.3",
+      "moduleId": "M1",
+      "titulo": "Produtor, afiliada e comprador",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Explicar no app, com as palavras dela, o que é afiliada.",
+      "agoraFacaAlvo": "Q01",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 8,
+      "publicada": true
+    },
+    {
+      "id": "1.4",
+      "moduleId": "M1",
+      "titulo": "Comissão e por que em dólar",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Fazer a conta de 1 venda na calculadora.",
+      "agoraFacaAlvo": "FR01",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 9,
+      "publicada": true
+    },
+    {
+      "id": "1.5",
+      "moduleId": "M1",
+      "titulo": "Os dois caminhos: pago e orgânico",
+      "tipo": "Explicação",
+      "minutos": 8,
+      "roteiro": [],
+      "agoraFacaTexto": "Marcar no app qual caminho chamou mais atenção.",
+      "agoraFacaAlvo": "pergunta",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 10,
+      "publicada": true
+    },
+    {
+      "id": "1.6",
+      "moduleId": "M1",
+      "titulo": "Como fugir de golpe",
+      "tipo": "Explicação",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Ativar a verificação em duas etapas do e-mail.",
+      "agoraFacaAlvo": "B01",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 11,
+      "publicada": true
+    },
+    {
+      "id": "1.7",
+      "moduleId": "M1",
+      "titulo": "O digital também é pra você",
+      "tipo": "Conexão",
+      "minutos": 5,
+      "roteiro": [],
+      "agoraFacaTexto": "Escrever qual era o medo dela e deixar pra trás.",
+      "agoraFacaAlvo": "I03",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 12,
+      "publicada": true
+    },
+    {
+      "id": "2.1",
+      "moduleId": "M2",
+      "titulo": "Seu kit de trabalho",
+      "tipo": "Prática",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Ticar o que ela já tem no checklist.",
+      "agoraFacaAlvo": "B01",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 13,
+      "publicada": true
+    },
+    {
+      "id": "2.2",
+      "moduleId": "M2",
+      "titulo": "Suas redes prontas e seguras",
+      "tipo": "Tela",
+      "minutos": 8,
+      "roteiro": [],
+      "agoraFacaTexto": "Ativar as duas etapas em todas as redes.",
+      "agoraFacaAlvo": "B01",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 14,
+      "publicada": true
+    },
+    {
+      "id": "2.3",
+      "moduleId": "M2",
+      "titulo": "Conta na rede de afiliação",
+      "tipo": "Tela",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Criar a conta na rede.",
+      "agoraFacaAlvo": "B01",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 15,
+      "publicada": true
+    },
+    {
+      "id": "2.4",
+      "moduleId": "M2",
+      "titulo": "Conta pra receber em dólar",
+      "tipo": "Tela",
+      "minutos": 8,
+      "roteiro": [],
+      "agoraFacaTexto": "Abrir a Wise.",
+      "agoraFacaAlvo": "B01",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 16,
+      "publicada": true
+    },
+    {
+      "id": "2.5",
+      "moduleId": "M2",
+      "titulo": "Checklist final",
+      "tipo": "Prática",
+      "minutos": 4,
+      "roteiro": [],
+      "agoraFacaTexto": "Marcar o checklist completo no app.",
+      "agoraFacaAlvo": "B01",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 17,
+      "publicada": true
+    },
+    {
+      "id": "3.1",
+      "moduleId": "M3",
+      "titulo": "O que faz um produto vender",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Passar 1 produto da vitrine pela ficha.",
+      "agoraFacaAlvo": "V03",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 18,
+      "publicada": true
+    },
+    {
+      "id": "3.2",
+      "moduleId": "M3",
+      "titulo": "O diagnóstico: a IA te conhece",
+      "tipo": "Tela",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Conferir o diagnóstico com calma.",
+      "agoraFacaAlvo": "A06",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 19,
+      "publicada": true
+    },
+    {
+      "id": "3.3",
+      "moduleId": "M3",
+      "titulo": "Lendo a vitrine",
+      "tipo": "Tela",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Salvar 3 produtos favoritos.",
+      "agoraFacaAlvo": "V02",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 20,
+      "publicada": true
+    },
+    {
+      "id": "3.4",
+      "moduleId": "M3",
+      "titulo": "País e idioma",
+      "tipo": "Explicação",
+      "minutos": 8,
+      "roteiro": [],
+      "agoraFacaTexto": "Confirmar o país do plano.",
+      "agoraFacaAlvo": "V07",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 21,
+      "publicada": true
+    },
+    {
+      "id": "PO.1",
+      "moduleId": "M3",
+      "titulo": "Países Ocultos · aula 1",
+      "tipo": "Explicação",
+      "roteiro": [],
+      "agoraFacaTexto": "Aplicar no seu plano.",
+      "agoraFacaAlvo": "fora",
+      "materiais": [],
+      "requerEntitlements": [
+        "up1",
+        "d1"
+      ],
+      "ordem": 22,
+      "publicada": true
+    },
+    {
+      "id": "3.5",
+      "moduleId": "M3",
+      "titulo": "Por que a IA escolheu esse produto",
+      "tipo": "Tela",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Ler o porquê do produto dela no app.",
+      "agoraFacaAlvo": "V04",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 23,
+      "publicada": true
+    },
+    {
+      "id": "PO.2",
+      "moduleId": "M3",
+      "titulo": "Países Ocultos · aula 2",
+      "tipo": "Explicação",
+      "roteiro": [],
+      "agoraFacaTexto": "Aplicar no seu plano.",
+      "agoraFacaAlvo": "fora",
+      "materiais": [],
+      "requerEntitlements": [
+        "up1",
+        "d1"
+      ],
+      "ordem": 24,
+      "publicada": true
+    },
+    {
+      "id": "3.6",
+      "moduleId": "M3",
+      "titulo": "Pegando seu link de afiliada",
+      "tipo": "Tela",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Copiar o link e colar no app.",
+      "agoraFacaAlvo": "V08",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 25,
+      "publicada": true
+    },
+    {
+      "id": "3.7",
+      "moduleId": "M3",
+      "titulo": "Esse produto é seu agora",
+      "tipo": "Conexão",
+      "minutos": 4,
+      "roteiro": [],
+      "agoraFacaTexto": "Preencher o cartão: \"esse produto ajuda quem...\".",
+      "agoraFacaAlvo": "V06",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 26,
+      "publicada": true
+    },
+    {
+      "id": "4.1",
+      "moduleId": "M4",
+      "titulo": "O que é um funil",
+      "tipo": "Explicação",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Ver o desenho do funil dela no app.",
+      "agoraFacaAlvo": "F01",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 27,
+      "publicada": true
+    },
+    {
+      "id": "4.2",
+      "moduleId": "M4",
+      "titulo": "Os 3 funis e qual escolher",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Escolher o funil no app.",
+      "agoraFacaAlvo": "F02",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 28,
+      "publicada": true
+    },
+    {
+      "id": "4.3",
+      "moduleId": "M4",
+      "titulo": "A IA monta sua estrutura",
+      "tipo": "Tela",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Gerar a estrutura no app.",
+      "agoraFacaAlvo": "F03",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 29,
+      "publicada": true
+    },
+    {
+      "id": "4.4",
+      "moduleId": "M4",
+      "titulo": "A pré-venda por dentro",
+      "tipo": "Tela",
+      "minutos": 8,
+      "roteiro": [],
+      "agoraFacaTexto": "Ler a pré-venda dela inteira no celular.",
+      "agoraFacaAlvo": "F04",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 30,
+      "publicada": true
+    },
+    {
+      "id": "4.5",
+      "moduleId": "M4",
+      "titulo": "O quiz por dentro",
+      "tipo": "Tela",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Responder o próprio quiz.",
+      "agoraFacaAlvo": "F04",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 31,
+      "publicada": true
+    },
+    {
+      "id": "4.6",
+      "moduleId": "M4",
+      "titulo": "Página do produtor e checkout",
+      "tipo": "Explicação",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Clicar no botão e ver se chega no checkout.",
+      "agoraFacaAlvo": "F07",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 32,
+      "publicada": true
+    },
+    {
+      "id": "4.7",
+      "moduleId": "M4",
+      "titulo": "Publicando e testando o funil",
+      "tipo": "Prática",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Publicar e passar o checklist de teste.",
+      "agoraFacaAlvo": "F05",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 33,
+      "publicada": true
+    },
+    {
+      "id": "PO.3",
+      "moduleId": "M4",
+      "titulo": "Países Ocultos · aula 3",
+      "tipo": "Explicação",
+      "roteiro": [],
+      "agoraFacaTexto": "Aplicar no seu plano.",
+      "agoraFacaAlvo": "fora",
+      "materiais": [],
+      "requerEntitlements": [
+        "up1",
+        "d1"
+      ],
+      "ordem": 34,
+      "publicada": true
+    },
+    {
+      "id": "4.8",
+      "moduleId": "M4",
+      "titulo": "Olha o que você construiu",
+      "tipo": "Conexão",
+      "minutos": 4,
+      "roteiro": [],
+      "agoraFacaTexto": "Postar no grupo um print do funil no ar.",
+      "agoraFacaAlvo": "F08",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 35,
+      "publicada": true
+    },
+    {
+      "id": "5.1",
+      "moduleId": "M5",
+      "titulo": "Os dois caminhos pra vender",
+      "tipo": "Explicação",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Anotar qual caminho ela imagina que combina mais com ela.",
+      "agoraFacaAlvo": "pergunta",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 36,
+      "publicada": true
+    },
+    {
+      "id": "5.2",
+      "moduleId": "M5",
+      "titulo": "Por dentro do tráfego pago",
+      "tipo": "Explicação",
+      "minutos": 8,
+      "roteiro": [],
+      "agoraFacaTexto": "Ver a planilha de verba mínima e pensar se cabe no mês.",
+      "agoraFacaAlvo": "FR02",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 37,
+      "publicada": true
+    },
+    {
+      "id": "5.3",
+      "moduleId": "M5",
+      "titulo": "Por dentro do orgânico",
+      "tipo": "Explicação",
+      "minutos": 8,
+      "roteiro": [],
+      "agoraFacaTexto": "Achar 2 perfis do assunto do produto dela.",
+      "agoraFacaAlvo": "fora",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 38,
+      "publicada": true
+    },
+    {
+      "id": "5.4",
+      "moduleId": "M5",
+      "titulo": "Prós e contras, lado a lado",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Marcar na tabela o que pesa mais pra ela.",
+      "agoraFacaAlvo": "T01",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 39,
+      "publicada": true
+    },
+    {
+      "id": "5.5",
+      "moduleId": "M5",
+      "titulo": "Três mulheres, três caminhos",
+      "tipo": "Conexão",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Marcar no app com qual das três ela se parece.",
+      "agoraFacaAlvo": "T02",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 40,
+      "publicada": true
+    },
+    {
+      "id": "5.6",
+      "moduleId": "M5",
+      "titulo": "Sua decisão",
+      "tipo": "Conexão",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Fazer o teste e escolher a trilha no app.",
+      "agoraFacaAlvo": "T03",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 41,
+      "publicada": true
+    },
+    {
+      "id": "P1.1",
+      "moduleId": "P1",
+      "titulo": "Bem-vinda à trilha do tráfego pago",
+      "tipo": "Conexão",
+      "minutos": 4,
+      "roteiro": [],
+      "agoraFacaTexto": "Ver o mapa da trilha no app.",
+      "agoraFacaAlvo": "I02",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 42,
+      "publicada": true
+    },
+    {
+      "id": "P1.2",
+      "moduleId": "P1",
+      "titulo": "Portfólio empresarial e conta de anúncios",
+      "tipo": "Tela",
+      "minutos": 8,
+      "roteiro": [],
+      "agoraFacaTexto": "Criar o portfólio e a conta de anúncios.",
+      "agoraFacaAlvo": "B03",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 43,
+      "publicada": true
+    },
+    {
+      "id": "P1.3",
+      "moduleId": "P1",
+      "titulo": "Como pagar os anúncios",
+      "tipo": "Tela",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Cadastrar o cartão e o limite.",
+      "agoraFacaAlvo": "B03",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 44,
+      "publicada": true
+    },
+    {
+      "id": "P1.4",
+      "moduleId": "P1",
+      "titulo": "Checklist da base de anúncios",
+      "tipo": "Prática",
+      "minutos": 4,
+      "roteiro": [],
+      "agoraFacaTexto": "Marcar o checklist no app.",
+      "agoraFacaAlvo": "B03",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 45,
+      "publicada": true
+    },
+    {
+      "id": "P2.1",
+      "moduleId": "P2",
+      "titulo": "O que é um criativo",
+      "tipo": "Explicação",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Abrir os 3 criativos que a IA fez pra ela.",
+      "agoraFacaAlvo": "PG01",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 46,
+      "publicada": true
+    },
+    {
+      "id": "P2.2",
+      "moduleId": "P2",
+      "titulo": "O gancho",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Escrever 3 ganchos novos.",
+      "agoraFacaAlvo": "PG02",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 47,
+      "publicada": true
+    },
+    {
+      "id": "P2.3",
+      "moduleId": "P2",
+      "titulo": "Anúncio de imagem",
+      "tipo": "Prática",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Ajustar 1 imagem.",
+      "agoraFacaAlvo": "PG02",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 48,
+      "publicada": true
+    },
+    {
+      "id": "P2.4",
+      "moduleId": "P2",
+      "titulo": "Vídeo de anúncio sem aparecer",
+      "tipo": "Prática",
+      "minutos": 8,
+      "roteiro": [],
+      "agoraFacaTexto": "Gravar 1 vídeo de 20 segundos.",
+      "agoraFacaAlvo": "PG03",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 49,
+      "publicada": true
+    },
+    {
+      "id": "P2.5",
+      "moduleId": "P2",
+      "titulo": "O texto do anúncio",
+      "tipo": "Prática",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Revisar o texto dos 3 anúncios.",
+      "agoraFacaAlvo": "PG02",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 50,
+      "publicada": true
+    },
+    {
+      "id": "P2.6",
+      "moduleId": "P2",
+      "titulo": "Testar uma coisa por vez",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Montar o 1º teste na planilha.",
+      "agoraFacaAlvo": "FR03",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 51,
+      "publicada": true
+    },
+    {
+      "id": "P2.7",
+      "moduleId": "P2",
+      "titulo": "Regras da Meta",
+      "tipo": "Explicação",
+      "minutos": 8,
+      "roteiro": [],
+      "agoraFacaTexto": "Passar os 3 anúncios no checklist.",
+      "agoraFacaAlvo": "PG04",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 52,
+      "publicada": true
+    },
+    {
+      "id": "P3.1",
+      "moduleId": "P3",
+      "titulo": "O que é pixel",
+      "tipo": "Explicação",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Explicar no app o que é pixel.",
+      "agoraFacaAlvo": "Q01",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 53,
+      "publicada": true
+    },
+    {
+      "id": "P3.2",
+      "moduleId": "P3",
+      "titulo": "Criando o seu pixel",
+      "tipo": "Tela",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Criar o pixel.",
+      "agoraFacaAlvo": "PG05",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 54,
+      "publicada": true
+    },
+    {
+      "id": "P3.3",
+      "moduleId": "P3",
+      "titulo": "O pixel no seu funil",
+      "tipo": "Tela",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Colar o pixel no funil.",
+      "agoraFacaAlvo": "PG05",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 55,
+      "publicada": true
+    },
+    {
+      "id": "P3.4",
+      "moduleId": "P3",
+      "titulo": "O pixel na rede de afiliação",
+      "tipo": "Tela",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Cadastrar o pixel na rede.",
+      "agoraFacaAlvo": "PG05",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 56,
+      "publicada": true
+    },
+    {
+      "id": "P3.5",
+      "moduleId": "P3",
+      "titulo": "Conferindo se funciona",
+      "tipo": "Prática",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Passar o checklist \"meu pixel funciona?\".",
+      "agoraFacaAlvo": "PG05",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 57,
+      "publicada": true
+    },
+    {
+      "id": "P4.1",
+      "moduleId": "P4",
+      "titulo": "Campanha, conjunto e anúncio",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Identificar os 3 andares no gerenciador.",
+      "agoraFacaAlvo": "PG06",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 58,
+      "publicada": true
+    },
+    {
+      "id": "P4.2",
+      "moduleId": "P4",
+      "titulo": "Criando a campanha de vendas",
+      "tipo": "Tela",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Criar a campanha (sem publicar).",
+      "agoraFacaAlvo": "PG06",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 59,
+      "publicada": true
+    },
+    {
+      "id": "P4.3",
+      "moduleId": "P4",
+      "titulo": "Valor por dia e país",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Preencher valor e país.",
+      "agoraFacaAlvo": "PG06",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 60,
+      "publicada": true
+    },
+    {
+      "id": "P4.4",
+      "moduleId": "P4",
+      "titulo": "Público aberto",
+      "tipo": "Explicação",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Deixar o público aberto.",
+      "agoraFacaAlvo": "PG06",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 61,
+      "publicada": true
+    },
+    {
+      "id": "P4.5",
+      "moduleId": "P4",
+      "titulo": "Onde o anúncio aparece",
+      "tipo": "Tela",
+      "minutos": 5,
+      "roteiro": [],
+      "agoraFacaTexto": "Conferir os posicionamentos.",
+      "agoraFacaAlvo": "PG06",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 62,
+      "publicada": true
+    },
+    {
+      "id": "P4.6",
+      "moduleId": "P4",
+      "titulo": "Subindo e revisando os anúncios",
+      "tipo": "Prática",
+      "minutos": 8,
+      "roteiro": [],
+      "agoraFacaTexto": "Publicar a 1ª campanha.",
+      "agoraFacaAlvo": "PG07",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 63,
+      "publicada": true
+    },
+    {
+      "id": "PO.4",
+      "moduleId": "P4",
+      "titulo": "Países Ocultos · aula 4",
+      "tipo": "Explicação",
+      "roteiro": [],
+      "agoraFacaTexto": "Aplicar no seu plano.",
+      "agoraFacaAlvo": "fora",
+      "materiais": [],
+      "requerEntitlements": [
+        "up1",
+        "d1"
+      ],
+      "ordem": 64,
+      "publicada": true
+    },
+    {
+      "id": "P4.7",
+      "moduleId": "P4",
+      "titulo": "Em análise ou reprovado",
+      "tipo": "Explicação",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Salvar a tabela de avisos.",
+      "agoraFacaAlvo": "PG08",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 65,
+      "publicada": true
+    },
+    {
+      "id": "P5.1",
+      "moduleId": "P5",
+      "titulo": "As 5 métricas que importam",
+      "tipo": "Explicação",
+      "minutos": 8,
+      "roteiro": [],
+      "agoraFacaTexto": "Achar as 5 métricas no gerenciador.",
+      "agoraFacaAlvo": "N01",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 66,
+      "publicada": true
+    },
+    {
+      "id": "P5.2",
+      "moduleId": "P5",
+      "titulo": "Onde ver no celular",
+      "tipo": "Tela",
+      "minutos": 5,
+      "roteiro": [],
+      "agoraFacaTexto": "Mandar o 1º print pra professora IA.",
+      "agoraFacaAlvo": "Q01",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 67,
+      "publicada": true
+    },
+    {
+      "id": "P5.3",
+      "moduleId": "P5",
+      "titulo": "Quando esperar",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Anotar a data de início no app.",
+      "agoraFacaAlvo": "PG07",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 68,
+      "publicada": true
+    },
+    {
+      "id": "P5.4",
+      "moduleId": "P5",
+      "titulo": "Quando pausar",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Ler as regras de pausa.",
+      "agoraFacaAlvo": "N01",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 69,
+      "publicada": true
+    },
+    {
+      "id": "P5.5",
+      "moduleId": "P5",
+      "titulo": "Diagnóstico do funil",
+      "tipo": "Prática",
+      "minutos": 8,
+      "roteiro": [],
+      "agoraFacaTexto": "Fazer o diagnóstico com o fluxograma.",
+      "agoraFacaAlvo": "N02",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 70,
+      "publicada": true
+    },
+    {
+      "id": "P5.6",
+      "moduleId": "P5",
+      "titulo": "Rotina dos 10 minutos",
+      "tipo": "Prática",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Colocar a rotina no alarme do celular.",
+      "agoraFacaAlvo": "FR04",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 71,
+      "publicada": true
+    },
+    {
+      "id": "P5.7",
+      "moduleId": "P5",
+      "titulo": "Quando o dinheiro sai e a venda não vem",
+      "tipo": "Conexão",
+      "minutos": 5,
+      "roteiro": [],
+      "agoraFacaTexto": "Contar no grupo como está e qual é o próximo ajuste.",
+      "agoraFacaAlvo": "I04",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 72,
+      "publicada": true
+    },
+    {
+      "id": "O1.1",
+      "moduleId": "O1",
+      "titulo": "Bem-vinda à trilha orgânica",
+      "tipo": "Conexão",
+      "minutos": 4,
+      "roteiro": [],
+      "agoraFacaTexto": "Ver o mapa da trilha no app.",
+      "agoraFacaAlvo": "I02",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 73,
+      "publicada": true
+    },
+    {
+      "id": "O1.2",
+      "moduleId": "O1",
+      "titulo": "Como o orgânico vende",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Achar 3 perfis do nicho dela que vendem pelo link da bio.",
+      "agoraFacaAlvo": "OG01",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 74,
+      "publicada": true
+    },
+    {
+      "id": "O1.3",
+      "moduleId": "O1",
+      "titulo": "Qual rede escolher",
+      "tipo": "Explicação",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Escolher a rede principal no app.",
+      "agoraFacaAlvo": "OG01",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 75,
+      "publicada": true
+    },
+    {
+      "id": "O1.4",
+      "moduleId": "O1",
+      "titulo": "Perfil do nicho sem aparecer",
+      "tipo": "Prática",
+      "minutos": 8,
+      "roteiro": [],
+      "agoraFacaTexto": "Criar o perfil com nome e foto.",
+      "agoraFacaAlvo": "OG02",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 76,
+      "publicada": true
+    },
+    {
+      "id": "O1.5",
+      "moduleId": "O1",
+      "titulo": "Bio e link que levam pro funil",
+      "tipo": "Prática",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Escrever a bio e colocar o link.",
+      "agoraFacaAlvo": "OG02",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 77,
+      "publicada": true
+    },
+    {
+      "id": "O1.6",
+      "moduleId": "O1",
+      "titulo": "Aquecendo o perfil",
+      "tipo": "Prática",
+      "minutos": 5,
+      "roteiro": [],
+      "agoraFacaTexto": "Começar o dia 1 do aquecimento.",
+      "agoraFacaAlvo": "OG03",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 78,
+      "publicada": true
+    },
+    {
+      "id": "O2.1",
+      "moduleId": "O2",
+      "titulo": "Por que um vídeo viraliza",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Assistir 10 vídeos do nicho e anotar o primeiro segundo de cada.",
+      "agoraFacaAlvo": "OG04",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 79,
+      "publicada": true
+    },
+    {
+      "id": "O2.2",
+      "moduleId": "O2",
+      "titulo": "O gancho no orgânico",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Escrever 5 ganchos pro nicho dela.",
+      "agoraFacaAlvo": "OG04",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 80,
+      "publicada": true
+    },
+    {
+      "id": "O2.3",
+      "moduleId": "O2",
+      "titulo": "Os 4 tipos de conteúdo",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Montar a 1ª semana de posts com os 4 tipos.",
+      "agoraFacaAlvo": "OG06",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 81,
+      "publicada": true
+    },
+    {
+      "id": "O2.4",
+      "moduleId": "O2",
+      "titulo": "Formatos sem aparecer",
+      "tipo": "Prática",
+      "minutos": 8,
+      "roteiro": [],
+      "agoraFacaTexto": "Escolher os 2 formatos dela.",
+      "agoraFacaAlvo": "OG05",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 82,
+      "publicada": true
+    },
+    {
+      "id": "O2.5",
+      "moduleId": "O2",
+      "titulo": "Modelando o que já viraliza",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Desmontar 3 virais na ficha.",
+      "agoraFacaAlvo": "OG04",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 83,
+      "publicada": true
+    },
+    {
+      "id": "O2.6",
+      "moduleId": "O2",
+      "titulo": "Tendências e áudios",
+      "tipo": "Tela",
+      "minutos": 5,
+      "roteiro": [],
+      "agoraFacaTexto": "Salvar 3 áudios em alta.",
+      "agoraFacaAlvo": "OG08",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 84,
+      "publicada": true
+    },
+    {
+      "id": "O3.1",
+      "moduleId": "O3",
+      "titulo": "A IA faz seus roteiros",
+      "tipo": "Tela",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Gerar 10 roteiros e salvar os 5 melhores.",
+      "agoraFacaAlvo": "OG05",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 85,
+      "publicada": true
+    },
+    {
+      "id": "O3.2",
+      "moduleId": "O3",
+      "titulo": "Gravando com o celular",
+      "tipo": "Prática",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Gravar 1 vídeo de teste seguindo o checklist.",
+      "agoraFacaAlvo": "fora",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 86,
+      "publicada": true
+    },
+    {
+      "id": "O3.3",
+      "moduleId": "O3",
+      "titulo": "Editando no CapCut",
+      "tipo": "Tela",
+      "minutos": 8,
+      "roteiro": [],
+      "agoraFacaTexto": "Editar o vídeo de teste no template.",
+      "agoraFacaAlvo": "fora",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 87,
+      "publicada": true
+    },
+    {
+      "id": "O3.4",
+      "moduleId": "O3",
+      "titulo": "Legenda e hashtags",
+      "tipo": "Prática",
+      "minutos": 5,
+      "roteiro": [],
+      "agoraFacaTexto": "Escrever a legenda do 1º vídeo.",
+      "agoraFacaAlvo": "OG07",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 88,
+      "publicada": true
+    },
+    {
+      "id": "O3.5",
+      "moduleId": "O3",
+      "titulo": "Gravando a semana em 1 dia",
+      "tipo": "Prática",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Marcar o dia de gravação na agenda.",
+      "agoraFacaAlvo": "OG06",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 89,
+      "publicada": true
+    },
+    {
+      "id": "O4.1",
+      "moduleId": "O4",
+      "titulo": "Frequência e calendário",
+      "tipo": "Explicação",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Preencher o calendário da semana.",
+      "agoraFacaAlvo": "OG06",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 90,
+      "publicada": true
+    },
+    {
+      "id": "O4.2",
+      "moduleId": "O4",
+      "titulo": "A chamada pro link",
+      "tipo": "Explicação",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Colocar chamada nos próximos 3 vídeos.",
+      "agoraFacaAlvo": "OG07",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 91,
+      "publicada": true
+    },
+    {
+      "id": "O4.3",
+      "moduleId": "O4",
+      "titulo": "Stories que vendem",
+      "tipo": "Prática",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Postar a 1ª sequência de stories.",
+      "agoraFacaAlvo": "fora",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 92,
+      "publicada": true
+    },
+    {
+      "id": "O4.4",
+      "moduleId": "O4",
+      "titulo": "Comentários e mensagens",
+      "tipo": "Prática",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Responder todos os comentários do último post.",
+      "agoraFacaAlvo": "fora",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 93,
+      "publicada": true
+    },
+    {
+      "id": "O4.5",
+      "moduleId": "O4",
+      "titulo": "Regras de cada rede",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Revisar os 3 últimos posts com as regras.",
+      "agoraFacaAlvo": "OG09",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 94,
+      "publicada": true
+    },
+    {
+      "id": "O4.6",
+      "moduleId": "O4",
+      "titulo": "Perfil travado ou sem alcance",
+      "tipo": "Explicação",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Fazer a revisão do perfil.",
+      "agoraFacaAlvo": "OG09",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 95,
+      "publicada": true
+    },
+    {
+      "id": "O5.1",
+      "moduleId": "O5",
+      "titulo": "As métricas do orgânico",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Achar as métricas do último vídeo.",
+      "agoraFacaAlvo": "N03",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 96,
+      "publicada": true
+    },
+    {
+      "id": "O5.2",
+      "moduleId": "O5",
+      "titulo": "Qual vídeo vendeu",
+      "tipo": "Tela",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Conferir os cliques da semana no app.",
+      "agoraFacaAlvo": "N03",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 97,
+      "publicada": true
+    },
+    {
+      "id": "O5.3",
+      "moduleId": "O5",
+      "titulo": "Lendo um vídeo que não foi",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Analisar o vídeo mais fraco da semana.",
+      "agoraFacaAlvo": "N04",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 98,
+      "publicada": true
+    },
+    {
+      "id": "O5.4",
+      "moduleId": "O5",
+      "titulo": "Repetindo o que deu certo",
+      "tipo": "Prática",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Gerar 3 variações do melhor vídeo.",
+      "agoraFacaAlvo": "N04",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 99,
+      "publicada": true
+    },
+    {
+      "id": "O5.5",
+      "moduleId": "O5",
+      "titulo": "Rotina do orgânico",
+      "tipo": "Explicação",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Colocar a rotina no alarme do celular.",
+      "agoraFacaAlvo": "FR04",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 100,
+      "publicada": true
+    },
+    {
+      "id": "O5.6",
+      "moduleId": "O5",
+      "titulo": "Quando ninguém vê seus vídeos",
+      "tipo": "Conexão",
+      "minutos": 5,
+      "roteiro": [],
+      "agoraFacaTexto": "Postar o próximo vídeo mesmo assim e contar no grupo.",
+      "agoraFacaAlvo": "I04",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 101,
+      "publicada": true
+    },
+    {
+      "id": "6.1",
+      "moduleId": "M6",
+      "titulo": "Sua primeira venda",
+      "tipo": "Conexão",
+      "minutos": 4,
+      "roteiro": [],
+      "agoraFacaTexto": "Postar o print da 1ª venda no grupo.",
+      "agoraFacaAlvo": "DN01",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 102,
+      "publicada": true
+    },
+    {
+      "id": "6.2",
+      "moduleId": "M6",
+      "titulo": "Quando a comissão libera",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Ver a linha do tempo da rede dela.",
+      "agoraFacaAlvo": "DN02",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 103,
+      "publicada": true
+    },
+    {
+      "id": "6.3",
+      "moduleId": "M6",
+      "titulo": "Sacando pra conta em dólar",
+      "tipo": "Prática",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Conferir os dados de saque.",
+      "agoraFacaAlvo": "DN03",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 104,
+      "publicada": true
+    },
+    {
+      "id": "6.4",
+      "moduleId": "M6",
+      "titulo": "Sua planilha de lucro",
+      "tipo": "Prática",
+      "minutos": 6,
+      "roteiro": [],
+      "agoraFacaTexto": "Preencher a planilha da semana.",
+      "agoraFacaAlvo": "DN04",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 105,
+      "publicada": true
+    },
+    {
+      "id": "6.5",
+      "moduleId": "M6",
+      "titulo": "Impostos: o que perguntar",
+      "tipo": "Explicação",
+      "minutos": 5,
+      "roteiro": [],
+      "agoraFacaTexto": "Salvar as 5 perguntas.",
+      "agoraFacaAlvo": "DN05",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 106,
+      "publicada": true
+    },
+    {
+      "id": "7.1",
+      "moduleId": "M7",
+      "titulo": "Quando dá pra escalar",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Passar o checklist \"posso escalar?\".",
+      "agoraFacaAlvo": "E01",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 107,
+      "publicada": true
+    },
+    {
+      "id": "7.2",
+      "moduleId": "M7",
+      "titulo": "Escalando no pago",
+      "tipo": "Prática",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Marcar o próximo degrau.",
+      "agoraFacaAlvo": "E02",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 108,
+      "publicada": true
+    },
+    {
+      "id": "7.3",
+      "moduleId": "M7",
+      "titulo": "Escalando no orgânico",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Escolher a 2ª rede.",
+      "agoraFacaAlvo": "E03",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 109,
+      "publicada": true
+    },
+    {
+      "id": "7.4",
+      "moduleId": "M7",
+      "titulo": "Juntando as duas trilhas",
+      "tipo": "Tela",
+      "minutos": 8,
+      "roteiro": [],
+      "agoraFacaTexto": "Separar o vídeo campeão pra virar anúncio.",
+      "agoraFacaAlvo": "E03",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 110,
+      "publicada": true
+    },
+    {
+      "id": "7.5",
+      "moduleId": "M7",
+      "titulo": "Mesmo produto, novo país",
+      "tipo": "Explicação",
+      "minutos": 8,
+      "roteiro": [],
+      "agoraFacaTexto": "Escolher o 2º país.",
+      "agoraFacaAlvo": "E04",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 111,
+      "publicada": true
+    },
+    {
+      "id": "PO.5",
+      "moduleId": "M7",
+      "titulo": "Países Ocultos · aula 5",
+      "tipo": "Explicação",
+      "roteiro": [],
+      "agoraFacaTexto": "Aplicar no seu plano.",
+      "agoraFacaAlvo": "fora",
+      "materiais": [],
+      "requerEntitlements": [
+        "up1",
+        "d1"
+      ],
+      "ordem": 112,
+      "publicada": true
+    },
+    {
+      "id": "7.6",
+      "moduleId": "M7",
+      "titulo": "Novo produto, mesmo funil",
+      "tipo": "Explicação",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Separar o 2º produto na vitrine.",
+      "agoraFacaAlvo": "E04",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 113,
+      "publicada": true
+    },
+    {
+      "id": "7.7",
+      "moduleId": "M7",
+      "titulo": "Protegendo suas contas",
+      "tipo": "Prática",
+      "minutos": 7,
+      "roteiro": [],
+      "agoraFacaTexto": "Passar o checklist das contas.",
+      "agoraFacaAlvo": "B04",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 114,
+      "publicada": true
+    },
+    {
+      "id": "7.8",
+      "moduleId": "M7",
+      "titulo": "Seu próximo capítulo",
+      "tipo": "Conexão",
+      "minutos": 5,
+      "roteiro": [],
+      "agoraFacaTexto": "Escrever no app o próximo objetivo dela.",
+      "agoraFacaAlvo": "I03",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 115,
+      "publicada": true
+    },
+    {
+      "id": "B1",
+      "moduleId": "B1",
+      "titulo": "Verba Mínima",
+      "tipo": "Explicação",
+      "minutos": 8,
+      "roteiro": [],
+      "agoraFacaTexto": "Confirmar o valor por dia no plano.",
+      "agoraFacaAlvo": "FR02",
+      "materiais": [],
+      "requerEntitlements": [],
+      "ordem": 116,
+      "publicada": true
+    }
+  ],
+  "glossary": [
+    {
+      "termo": "Afiliada",
+      "definicao": "Quem divulga o produto de outra pessoa e ganha parte de cada venda",
+      "oficial": true,
+      "aula": "1.3"
+    },
+    {
+      "termo": "Alcance",
+      "definicao": "Quantas pessoas diferentes viram o vídeo ou o anúncio",
+      "oficial": true
+    },
+    {
+      "termo": "Anúncio (criativo)",
+      "definicao": "A imagem ou vídeo, com texto, que aparece no feed como propaganda",
+      "oficial": true
+    },
+    {
+      "termo": "Aprendizado",
+      "definicao": "Os primeiros dias em que a Meta descobre pra quem mostrar o anúncio",
+      "oficial": true
+    },
+    {
+      "termo": "Áudio em alta",
+      "definicao": "Música ou som que muita gente está usando na semana",
+      "oficial": true
+    },
+    {
+      "termo": "Campanha",
+      "definicao": "O andar de cima: onde se escolhe o objetivo (vendas)",
+      "oficial": true,
+      "aula": "P4.1"
+    },
+    {
+      "termo": "Checkout",
+      "definicao": "A página onde a pessoa paga",
+      "oficial": true,
+      "aula": "4.6"
+    },
+    {
+      "termo": "Comissão",
+      "definicao": "A parte do preço que fica com ela em cada venda",
+      "oficial": true,
+      "aula": "1.4"
+    },
+    {
+      "termo": "Conjunto de anúncios",
+      "definicao": "O andar do meio: verba, país e onde aparece",
+      "oficial": true
+    },
+    {
+      "termo": "Conta de anúncios",
+      "definicao": "Onde ficam as campanhas e o cartão que paga",
+      "oficial": true
+    },
+    {
+      "termo": "CPC",
+      "definicao": "Quanto custou cada clique",
+      "oficial": true,
+      "aula": "P5.1"
+    },
+    {
+      "termo": "CPM",
+      "definicao": "Quanto custa mostrar o anúncio pra mil pessoas",
+      "oficial": true,
+      "aula": "P5.1"
+    },
+    {
+      "termo": "CTR",
+      "definicao": "De cada 100 que viram, quantos clicaram",
+      "oficial": true,
+      "aula": "P5.1"
+    },
+    {
+      "termo": "Custo por venda",
+      "definicao": "Quanto ela gastou em anúncio pra fazer uma venda",
+      "oficial": true,
+      "aula": "P5.1"
+    },
+    {
+      "termo": "Escalar",
+      "definicao": "Aumentar o que já dá lucro, com cuidado",
+      "oficial": true,
+      "aula": "7.1"
+    },
+    {
+      "termo": "Funil",
+      "definicao": "O caminho do anúncio ou vídeo até a compra",
+      "oficial": true,
+      "aula": "4.1"
+    },
+    {
+      "termo": "Gancho",
+      "definicao": "A primeira frase ou imagem, que faz parar de rolar",
+      "oficial": true,
+      "aula": "P2.2"
+    },
+    {
+      "termo": "Infoproduto",
+      "definicao": "Conhecimento empacotado: e-book, curso, app, guia",
+      "oficial": true
+    },
+    {
+      "termo": "Link da bio",
+      "definicao": "O link que fica no perfil e leva pro funil",
+      "oficial": true
+    },
+    {
+      "termo": "Link de afiliada",
+      "definicao": "O link que marca que a venda veio dela",
+      "oficial": true,
+      "aula": "3.6"
+    },
+    {
+      "termo": "Meta",
+      "definicao": "A empresa dona do Facebook e do Instagram",
+      "oficial": true
+    },
+    {
+      "termo": "Orgânico",
+      "definicao": "Vídeo ou post que alcança gente sem pagar anúncio",
+      "oficial": true,
+      "aula": "1.5"
+    },
+    {
+      "termo": "Perfil temático",
+      "definicao": "Perfil sobre um assunto (receitas, inglês...), que não precisa mostrar o rosto",
+      "oficial": true
+    },
+    {
+      "termo": "Pixel",
+      "definicao": "O \"olho\" da Meta na página",
+      "oficial": true,
+      "aula": "P3.1"
+    },
+    {
+      "termo": "Portfólio empresarial",
+      "definicao": "A \"empresa\" dela dentro da Meta",
+      "oficial": true
+    },
+    {
+      "termo": "Pré-venda",
+      "definicao": "Página curta dela que aquece antes da página do produto",
+      "oficial": true,
+      "aula": "4.4"
+    },
+    {
+      "termo": "Produtor",
+      "definicao": "Quem criou o produto e entrega",
+      "oficial": true
+    },
+    {
+      "termo": "Rede de afiliação",
+      "definicao": "Plataforma que junta produtor e afiliada e paga a comissão",
+      "oficial": true
+    },
+    {
+      "termo": "Retenção",
+      "definicao": "Quanto do vídeo as pessoas assistem antes de sair",
+      "oficial": true
+    },
+    {
+      "termo": "Tráfego direto",
+      "definicao": "Anúncio ou vídeo levando direto pra página, sem conversa no WhatsApp",
+      "oficial": true
+    },
+    {
+      "termo": "Trend",
+      "definicao": "Um formato ou assunto que está em alta e todo mundo está fazendo",
+      "oficial": true
+    },
+    {
+      "termo": "Viralizar",
+      "definicao": "Quando a rede mostra o vídeo pra muito mais gente do que segue o perfil",
+      "oficial": true
+    },
+    {
+      "termo": "Vitrine",
+      "definicao": "A lista de produtos que ela pode divulgar como afiliada",
+      "oficial": false
+    },
+    {
+      "termo": "Pasta do produto",
+      "definicao": "Onde fica tudo de um produto que ela divulga: funil, anúncios, vídeos e números",
+      "oficial": false
+    },
+    {
+      "termo": "Ficha do produto",
+      "definicao": "O resumo do produto dela, que a IA lê pra gerar tudo",
+      "oficial": false
+    },
+    {
+      "termo": "Diagnóstico",
+      "definicao": "As perguntas que a IA faz pra conhecer ela",
+      "oficial": false
+    },
+    {
+      "termo": "Trilha",
+      "definicao": "O caminho que ela escolheu: pago, orgânico ou os dois",
+      "oficial": false
+    },
+    {
+      "termo": "Kit da página",
+      "definicao": "O texto pronto, bloco por bloco, que ela cola no modelo pra montar a página dela",
+      "oficial": false
+    },
+    {
+      "termo": "Quiz",
+      "definicao": "Funil com perguntas, que aquece a pessoa antes da página do produto",
+      "oficial": false
+    }
+  ],
+  "vitrine": [
+    {
+      "code": "VIT-0012",
+      "nome": "Easy Weeknight Dinners",
+      "idioma": "en",
+      "paises": [
+        "EUA",
+        "Reino Unido"
+      ],
+      "assunto": "Cozinha e receitas",
+      "tipo": "Ebook de receitas",
+      "resumo": "Receitas de jantar simples, com ingredientes de mercado comum e lista de compras pronta.",
+      "publico": "mães que chegam cansadas em casa e ainda têm que cozinhar",
+      "dor": "não saber o que fazer pra janta depois de um dia puxado",
+      "oQueE": "um ebook simples de jantares do dia a dia, com lista de compras pronta",
+      "promessa": "Janta na mesa sem o desespero das 18h",
+      "ganchosBase": [
+        "It's 6pm. The kids are hungry and the fridge looks empty.",
+        "Ordering takeout again tonight?",
+        "The dinners I make when I'm too tired to think"
+      ],
+      "promptImagem": "Phone photo, tired mom in work clothes opening the fridge at 6pm, warm kitchen light, school backpacks on the counter, realistic, not staged",
+      "tags": [
+        "#easydinners",
+        "#weeknightmeals",
+        "#momlife",
+        "#dinnerideas"
+      ],
+      "seloOrg": true,
+      "seloAd": true,
+      "concorrencia": "média",
+      "funilIndicado": "pre",
+      "extra": {
+        "lang": "en",
+        "aX": "weeknight dinners",
+        "aPt": "os jantares da semana",
+        "quem": {
+          "x": "busy moms who get home tired and still have to cook",
+          "pt": "mães que chegam cansadas em casa e ainda têm que cozinhar"
+        },
+        "dor": {
+          "x": "not knowing what to cook after a long day",
+          "pt": "não saber o que fazer pra janta depois de um dia puxado"
+        },
+        "oque": {
+          "x": "a simple ebook of weeknight dinners with a ready-made shopping list",
+          "pt": "um ebook simples de jantares do dia a dia, com lista de compras pronta"
+        },
+        "prom": {
+          "x": "Dinner on the table without the 6pm panic",
+          "pt": "Janta na mesa sem o desespero das 18h"
+        },
+        "hooks": {
+          "x": [
+            "It's 6pm. The kids are hungry and the fridge looks empty.",
+            "Ordering takeout again tonight?",
+            "The dinners I make when I'm too tired to think"
+          ],
+          "pt": [
+            "São 18h. As crianças estão com fome e a geladeira parece vazia.",
+            "Pedindo delivery de novo hoje?",
+            "Os jantares que eu faço quando estou cansada demais pra pensar"
+          ]
+        }
+      },
+      "ordem": 0
+    },
+    {
+      "code": "VIT-0018",
+      "nome": "Home Reset Plan",
+      "idioma": "en",
+      "paises": [
+        "EUA",
+        "Reino Unido"
+      ],
+      "assunto": "Casa e organização",
+      "tipo": "Guia pra imprimir",
+      "resumo": "Um plano com uma tarefa pequena de casa por dia, pra não passar o fim de semana limpando.",
+      "publico": "mulheres que trabalham o dia todo e querem uma casa mais tranquila",
+      "dor": "uma casa que nunca fica arrumada, por mais que você limpe",
+      "oQueE": "um guia pra imprimir com uma tarefa pequena de casa pra cada dia",
+      "promessa": "Uma casa mais tranquila, uma tarefinha por dia",
+      "ganchosBase": [
+        "My house used to look like this every Sunday night.",
+        "Stop trying to clean everything on the weekend.",
+        "One small task a day, and the house stopped winning."
+      ],
+      "promptImagem": "Phone photo, tidy small kitchen counter in the morning with a printed checklist and a coffee mug, natural light, realistic",
+      "tags": [
+        "#homereset",
+        "#cleaningroutine",
+        "#tidyhome",
+        "#momlife"
+      ],
+      "seloOrg": true,
+      "seloAd": false,
+      "concorrencia": "baixa",
+      "funilIndicado": "quiz",
+      "extra": {
+        "lang": "en",
+        "aX": "keeping the house in order",
+        "aPt": "organizar a casa",
+        "quem": {
+          "x": "women who work all day and want a calmer home",
+          "pt": "mulheres que trabalham o dia todo e querem uma casa mais tranquila"
+        },
+        "dor": {
+          "x": "a house that never stays tidy no matter how much you clean",
+          "pt": "uma casa que nunca fica arrumada, por mais que você limpe"
+        },
+        "oque": {
+          "x": "a printable guide with one small home task for each day",
+          "pt": "um guia pra imprimir com uma tarefa pequena de casa pra cada dia"
+        },
+        "prom": {
+          "x": "A calmer home, one small task a day",
+          "pt": "Uma casa mais tranquila, uma tarefinha por dia"
+        },
+        "hooks": {
+          "x": [
+            "My house used to look like this every Sunday night.",
+            "Stop trying to clean everything on the weekend.",
+            "One small task a day, and the house stopped winning."
+          ],
+          "pt": [
+            "Minha casa ficava assim todo domingo à noite.",
+            "Pare de tentar limpar tudo no fim de semana.",
+            "Uma tarefinha por dia, e a casa parou de ganhar de mim."
+          ]
+        }
+      },
+      "ordem": 1
+    },
+    {
+      "code": "VIT-0021",
+      "nome": "Bedtime Prayers for Little Ones",
+      "idioma": "en",
+      "paises": [
+        "EUA"
+      ],
+      "assunto": "Fé e devocional",
+      "tipo": "Ebook ilustrado",
+      "resumo": "Orações curtas e ilustradas pra ler com os filhos antes de dormir.",
+      "publico": "mães cristãs que querem uma hora de dormir mais calma com os filhos",
+      "dor": "a hora de dormir virar briga em vez de um momento de calma",
+      "oQueE": "um ebook ilustrado com orações curtas pra ler com os filhos antes de dormir",
+      "promessa": "Uma hora de dormir em paz, com orações curtas pras crianças",
+      "ganchosBase": [
+        "Bedtime used to be chaos at our house.",
+        "The short prayer we say every night before the lights go off",
+        "What we started doing at bedtime"
+      ],
+      "promptImagem": "Phone photo, mom and small child sitting on a bed with a children's book, soft lamp light, cozy bedroom, realistic, faces not visible",
+      "tags": [
+        "#bedtimeroutine",
+        "#prayerforkids",
+        "#christianmom",
+        "#faithfamily"
+      ],
+      "seloOrg": true,
+      "seloAd": false,
+      "concorrencia": "baixa",
+      "funilIndicado": "direto",
+      "extra": {
+        "lang": "en",
+        "aX": "bedtime with kids",
+        "aPt": "a hora de dormir das crianças",
+        "quem": {
+          "x": "Christian moms who want a calmer bedtime with their kids",
+          "pt": "mães cristãs que querem uma hora de dormir mais calma com os filhos"
+        },
+        "dor": {
+          "x": "bedtime turning into a fight instead of a calm moment",
+          "pt": "a hora de dormir virar briga em vez de um momento de calma"
+        },
+        "oque": {
+          "x": "an illustrated ebook of short bedtime prayers to read with your kids",
+          "pt": "um ebook ilustrado com orações curtas pra ler com os filhos antes de dormir"
+        },
+        "prom": {
+          "x": "A peaceful bedtime with short prayers for kids",
+          "pt": "Uma hora de dormir em paz, com orações curtas pras crianças"
+        },
+        "hooks": {
+          "x": [
+            "Bedtime used to be chaos at our house.",
+            "The short prayer we say every night before the lights go off",
+            "What we started doing at bedtime"
+          ],
+          "pt": [
+            "A hora de dormir era um caos aqui em casa.",
+            "A oração curtinha que a gente faz toda noite antes de apagar a luz",
+            "O que a gente começou a fazer na hora de dormir"
+          ]
+        }
+      },
+      "ordem": 2
+    },
+    {
+      "code": "VIT-0033",
+      "nome": "Picky Eater Lunchbox Guide",
+      "idioma": "en",
+      "paises": [
+        "EUA"
+      ],
+      "assunto": "Filhos e família",
+      "tipo": "Guia em PDF",
+      "resumo": "Combinações de lancheira pra criança que recusa quase tudo, rápidas de montar de manhã.",
+      "publico": "mães de crianças em idade escolar que recusam quase tudo",
+      "dor": "a lancheira voltar cheia de novo",
+      "oQueE": "um guia com combinações de lancheira pra criança enjoada, rápidas de montar de manhã",
+      "promessa": "Ideias de lancheira pra criança enjoada, prontas na correria da manhã",
+      "ganchosBase": [
+        "The lunchbox came back full again?",
+        "What I pack when my kid refuses everything",
+        "5 lunchbox combos to try this week"
+      ],
+      "promptImagem": "Phone photo, colorful kid's lunchbox with small portions on a kitchen counter, school backpack beside it, morning light, realistic",
+      "tags": [
+        "#lunchboxideas",
+        "#pickyeater",
+        "#schoollunch",
+        "#momhacks"
+      ],
+      "seloOrg": false,
+      "seloAd": true,
+      "concorrencia": "média",
+      "funilIndicado": "pre",
+      "extra": {
+        "lang": "en",
+        "aX": "packing lunch for picky kids",
+        "aPt": "lancheira de criança enjoada",
+        "quem": {
+          "x": "moms of school-age kids who refuse almost everything",
+          "pt": "mães de crianças em idade escolar que recusam quase tudo"
+        },
+        "dor": {
+          "x": "the lunchbox coming back full again",
+          "pt": "a lancheira voltar cheia de novo"
+        },
+        "oque": {
+          "x": "a guide with lunchbox combos for picky eaters that are quick to pack in the morning",
+          "pt": "um guia com combinações de lancheira pra criança enjoada, rápidas de montar de manhã"
+        },
+        "prom": {
+          "x": "Lunchbox ideas for picky kids, ready in the morning rush",
+          "pt": "Ideias de lancheira pra criança enjoada, prontas na correria da manhã"
+        },
+        "hooks": {
+          "x": [
+            "The lunchbox came back full again?",
+            "What I pack when my kid refuses everything",
+            "5 lunchbox combos to try this week"
+          ],
+          "pt": [
+            "A lancheira voltou cheia de novo?",
+            "O que eu coloco quando meu filho recusa tudo",
+            "5 combinações de lancheira pra testar essa semana"
+          ]
+        }
+      },
+      "ordem": 3
+    },
+    {
+      "code": "VIT-0027",
+      "nome": "Recetas Fáciles de Cada Día",
+      "idioma": "es",
+      "paises": [
+        "Latinos nos EUA",
+        "Espanha"
+      ],
+      "assunto": "Cozinha e receitas",
+      "tipo": "Ebook de receitas",
+      "resumo": "Jantares simples em espanhol, com o que a pessoa já tem em casa e lista de compras pronta.",
+      "publico": "mães que trabalham e chegam cansadas em casa",
+      "dor": "não saber o que fazer pra janta depois de um dia puxado",
+      "oQueE": "um ebook de jantares simples com lista de compras pronta",
+      "promessa": "A janta pronta sem estresse, com o que você tem em casa",
+      "ganchosBase": [
+        "Son las 6. Los niños tienen hambre y la nevera parece vacía.",
+        "¿Otra vez pidiendo comida a domicilio?",
+        "Las cenas que hago cuando estoy demasiado cansada para pensar"
+      ],
+      "promptImagem": "Phone photo, latina mom in work uniform cooking a simple dinner in a small kitchen, warm evening light, realistic, not staged",
+      "tags": [
+        "#recetasfaciles",
+        "#cenasrapidas",
+        "#mamaslatinas",
+        "#comidacasera"
+      ],
+      "seloOrg": true,
+      "seloAd": true,
+      "concorrencia": "média",
+      "funilIndicado": "pre",
+      "extra": {
+        "lang": "es",
+        "aX": "las cenas de la semana",
+        "aPt": "os jantares da semana",
+        "quem": {
+          "x": "mamás que trabajan y llegan cansadas a casa",
+          "pt": "mães que trabalham e chegam cansadas em casa"
+        },
+        "dor": {
+          "x": "no saber qué cocinar después de un día largo",
+          "pt": "não saber o que fazer pra janta depois de um dia puxado"
+        },
+        "oque": {
+          "x": "un ebook de cenas sencillas con lista de compras lista",
+          "pt": "um ebook de jantares simples com lista de compras pronta"
+        },
+        "prom": {
+          "x": "La cena lista sin estrés, con lo que tienes en casa",
+          "pt": "A janta pronta sem estresse, com o que você tem em casa"
+        },
+        "hooks": {
+          "x": [
+            "Son las 6. Los niños tienen hambre y la nevera parece vacía.",
+            "¿Otra vez pidiendo comida a domicilio?",
+            "Las cenas que hago cuando estoy demasiado cansada para pensar"
+          ],
+          "pt": [
+            "São 18h. As crianças estão com fome e a geladeira parece vazia.",
+            "Pedindo delivery de novo?",
+            "Os jantares que eu faço quando estou cansada demais pra pensar"
+          ]
+        }
+      },
+      "ordem": 4
+    },
+    {
+      "code": "VIT-0040",
+      "nome": "Inglés para el Trabajo",
+      "idioma": "es",
+      "paises": [
+        "Latinos nos EUA"
+      ],
+      "assunto": "Inglês e idiomas",
+      "tipo": "Curso em app",
+      "resumo": "Frases de inglês pro trabalho, em espanhol, pra latinas que moram nos EUA.",
+      "publico": "latinas que trabalham nos Estados Unidos e querem falar com mais segurança",
+      "dor": "sentir vergonha de falar inglês no trabalho",
+      "oQueE": "um curso curto em app com frases de inglês pro trabalho, passo a passo",
+      "promessa": "Inglês pro trabalho, frase por frase",
+      "ganchosBase": [
+        "La frase en inglés que más usé en mi primer trabajo aquí",
+        "Si te da vergüenza hablar inglés en el trabajo, mira esto",
+        "3 frases para pedirle algo a tu jefe en inglés"
+      ],
+      "promptImagem": "Phone photo, woman in work uniform looking at her phone with an English phrase on screen, break room, natural light, realistic",
+      "tags": [
+        "#inglesparaeltrabajo",
+        "#inglesfacil",
+        "#latinasenusa",
+        "#aprendeingles"
+      ],
+      "seloOrg": true,
+      "seloAd": false,
+      "concorrencia": "baixa",
+      "funilIndicado": "quiz",
+      "extra": {
+        "lang": "es",
+        "aX": "el inglés en el trabajo",
+        "aPt": "inglês no trabalho",
+        "quem": {
+          "x": "latinas que trabajan en Estados Unidos y quieren hablar con más seguridad",
+          "pt": "latinas que trabalham nos Estados Unidos e querem falar com mais segurança"
+        },
+        "dor": {
+          "x": "sentir vergüenza de hablar inglés en el trabajo",
+          "pt": "sentir vergonha de falar inglês no trabalho"
+        },
+        "oque": {
+          "x": "un curso corto en app con frases de inglés para el trabajo, paso a paso",
+          "pt": "um curso curto em app com frases de inglês pro trabalho, passo a passo"
+        },
+        "prom": {
+          "x": "Inglés para el trabajo, frase por frase",
+          "pt": "Inglês pro trabalho, frase por frase"
+        },
+        "hooks": {
+          "x": [
+            "La frase en inglés que más usé en mi primer trabajo aquí",
+            "Si te da vergüenza hablar inglés en el trabajo, mira esto",
+            "3 frases para pedirle algo a tu jefe en inglés"
+          ],
+          "pt": [
+            "A frase em inglês que eu mais usei no meu primeiro trabalho aqui",
+            "Se você tem vergonha de falar inglês no trabalho, olha isso",
+            "3 frases pra pedir algo pro seu chefe em inglês"
+          ]
+        }
+      },
+      "ordem": 5
+    }
+  ],
+  "contentBlocks": [
+    {
+      "key": "checklist.B01",
+      "kind": "checklist",
+      "data": {
+        "lvl": "a",
+        "key": "base",
+        "titulo": "Sua base",
+        "intro": "São as contas que as duas trilhas usam. Faça uma por vez: cada item tem o passo a passo e a aula.",
+        "ctaL": "Minha base está pronta",
+        "items": [
+          {
+            "l": "E-mail com verificação em duas etapas",
+            "d": "Protege a conta principal: sem ela, quem descobrir sua senha entra.",
+            "como": "email",
+            "aula": "1.6"
+          },
+          {
+            "l": "Redes com verificação em duas etapas",
+            "d": "Instagram, Facebook e TikTok protegidos do mesmo jeito.",
+            "como": "redes",
+            "aula": "2.2"
+          },
+          {
+            "l": "Conta na rede de afiliação",
+            "d": "Onde você pega seu link e recebe a comissão. [rede de afiliação a definir]",
+            "como": "rede",
+            "aula": "2.3"
+          },
+          {
+            "l": "Conta Wise pra receber em dólar",
+            "d": "A rede manda o dinheiro pra cá. Você saca quando quiser.",
+            "como": "wise",
+            "aula": "2.4"
+          }
+        ]
+      }
+    },
+    {
+      "key": "checklist.B03",
+      "kind": "checklist",
+      "data": {
+        "lvl": "a",
+        "key": "anuncios",
+        "titulo": "Base de anúncios",
+        "intro": "Só pra trilha paga. É a parte da Meta onde ficam suas campanhas e o cartão que paga os anúncios.",
+        "ctaL": "Base de anúncios pronta",
+        "items": [
+          {
+            "l": "Portfólio empresarial criado",
+            "d": "A \"empresa\" sua dentro da Meta.",
+            "como": "portfolio",
+            "aula": "P1.2"
+          },
+          {
+            "l": "Conta de anúncios criada",
+            "d": "Onde ficam as campanhas.",
+            "como": "contaads",
+            "aula": "P1.2"
+          },
+          {
+            "l": "Cartão cadastrado e limite definido",
+            "d": "O limite protege você de gastar mais do que planejou.",
+            "como": "cartao",
+            "aula": "P1.3"
+          }
+        ]
+      }
+    },
+    {
+      "key": "checklist.B04",
+      "kind": "checklist",
+      "data": {
+        "lvl": "a",
+        "key": "contas",
+        "titulo": "Contas protegidas",
+        "intro": "Antes de crescer, proteja o que você construiu.",
+        "ctaL": "Minhas contas estão protegidas",
+        "items": [
+          {
+            "l": "Duas etapas ativas em todas as contas",
+            "d": "E-mail, redes, Meta, rede de afiliação e Wise.",
+            "aula": "7.7"
+          },
+          {
+            "l": "E-mail e telefone de recuperação atualizados",
+            "d": "Se perder o celular, você recupera."
+          },
+          {
+            "l": "Ninguém mais tem sua senha",
+            "d": "Nem quem promete ajudar."
+          },
+          {
+            "l": "Pagamentos da conta de anúncios em dia",
+            "d": "Conta com pagamento atrasado pode ser travada."
+          }
+        ]
+      }
+    },
+    {
+      "key": "checklist.PG04",
+      "kind": "checklist",
+      "data": {
+        "lvl": "p",
+        "key": "meta",
+        "titulo": "Regras da Meta",
+        "intro": "Passe os 3 anúncios por aqui antes de subir. Anúncio fora da regra é reprovado ou trava a conta.",
+        "ctaL": "Os 3 anúncios passaram",
+        "aula": "P2.7",
+        "items": [
+          {
+            "l": "Sem antes e depois",
+            "d": "Nem em foto, nem em frase."
+          },
+          {
+            "l": "Sem promessa de ganho, cura ou prazo",
+            "d": "Nada de \"resolve em 7 dias\"."
+          },
+          {
+            "l": "Não fala da pessoa",
+            "d": "Evite \"você está acima do peso?\" ou \"você é...\"."
+          },
+          {
+            "l": "O texto bate com o que o produto entrega",
+            "d": "Prometa só o que está no produto."
+          },
+          {
+            "l": "O link é o do seu funil",
+            "d": "Confira antes de publicar."
+          }
+        ]
+      }
+    },
+    {
+      "key": "checklist.PG05",
+      "kind": "checklist",
+      "data": {
+        "lvl": "p",
+        "key": "pixel",
+        "titulo": "Seu pixel",
+        "intro": "O pixel é o \"olho\" da Meta na sua página: ele avisa quando alguém compra, e a Meta aprende pra quem mostrar o anúncio.",
+        "ctaL": "Meu pixel funciona",
+        "field": {
+          "l": "ID do seu pixel",
+          "ph": "Cole aqui o número do pixel",
+          "d": "Fica no Gerenciador de Eventos da Meta. A aula P3.2 mostra onde."
+        },
+        "items": [
+          {
+            "l": "Pixel criado na Meta",
+            "d": "No Gerenciador de Eventos.",
+            "como": "pixelcriar",
+            "aula": "P3.2"
+          },
+          {
+            "l": "Pixel colado na sua página",
+            "d": "No campo de pixel da [ferramenta de página]. Funil direto: pule.",
+            "como": "pixelpagina",
+            "aula": "P3.3"
+          },
+          {
+            "l": "Pixel cadastrado na rede de afiliação",
+            "d": "Assim a venda na página do produtor também conta.",
+            "como": "pixelrede",
+            "aula": "P3.4"
+          },
+          {
+            "l": "Teste: abri a página e o evento apareceu",
+            "d": "Checklist \"meu pixel funciona?\".",
+            "aula": "P3.5"
+          }
+        ]
+      }
+    },
+    {
+      "key": "checklist.PG07",
+      "kind": "checklist",
+      "data": {
+        "lvl": "p",
+        "key": "subida",
+        "titulo": "Checklist de subida",
+        "intro": "Confira tudo antes de publicar. Depois de publicar, o app anota a data: nos primeiros dias a Meta está aprendendo e você não mexe.",
+        "ctaL": "Publiquei minha campanha",
+        "aula": "P4.6",
+        "items": [
+          {
+            "l": "Campanha com objetivo Vendas"
+          },
+          {
+            "l": "Valor por dia e país preenchidos",
+            "d": "Do seu plano de campanha."
+          },
+          {
+            "l": "Público aberto"
+          },
+          {
+            "l": "Posicionamentos conferidos"
+          },
+          {
+            "l": "3 anúncios com o link do seu funil"
+          },
+          {
+            "l": "Os 3 passaram nas regras da Meta"
+          }
+        ]
+      }
+    },
+    {
+      "key": "checklist.OG03",
+      "kind": "checklist",
+      "data": {
+        "lvl": "p",
+        "key": "aquec",
+        "titulo": "Aquecimento do perfil",
+        "intro": "Perfil novo precisa agir como gente de verdade antes de postar todo dia. Uma tarefa por dia. (Tarefas de exemplo: o time define o roteiro final.)",
+        "ctaL": "Aquecimento feito",
+        "aula": "O1.6",
+        "items": [
+          {
+            "l": "Dia 1 · Completar o perfil e assistir vídeos do seu assunto"
+          },
+          {
+            "l": "Dia 2 · Curtir e comentar em vídeos do nicho"
+          },
+          {
+            "l": "Dia 3 · Seguir perfis do nicho e salvar vídeos"
+          },
+          {
+            "l": "Dia 4 · Primeiro post"
+          },
+          {
+            "l": "Dia 5 · Responder comentários e interagir"
+          },
+          {
+            "l": "Dia 6 · Segundo post"
+          },
+          {
+            "l": "Dia 7 · Terceiro post e revisar a bio"
+          }
+        ]
+      }
+    },
+    {
+      "key": "checklist.OG09",
+      "kind": "checklist",
+      "data": {
+        "lvl": "p",
+        "key": "perfil",
+        "titulo": "Revisão do perfil",
+        "intro": "Passe os 3 últimos posts e o perfil por aqui. Se o alcance caiu, quase sempre é uma dessas coisas.",
+        "ctaL": "Perfil revisado",
+        "aula": "O4.5",
+        "items": [
+          {
+            "l": "Nenhum vídeo copiado ou repostado de outra pessoa"
+          },
+          {
+            "l": "Sem promessa de ganho, cura ou antes e depois"
+          },
+          {
+            "l": "A bio diz pra quem é e tem o link"
+          },
+          {
+            "l": "O link da bio abre e leva pro funil"
+          },
+          {
+            "l": "Postando na frequência do seu calendário"
+          },
+          {
+            "l": "Sem comprar seguidor nem usar robô"
+          }
+        ]
+      }
+    },
+    {
+      "key": "checklist.E01",
+      "kind": "checklist",
+      "data": {
+        "lvl": "p",
+        "key": "escalar",
+        "titulo": "Posso escalar?",
+        "intro": "Escalar é aumentar o que já dá lucro, com cuidado. Se algum item não estiver marcado, ainda não é hora: siga na rotina.",
+        "ctaL": "Tudo marcado, posso escalar",
+        "aula": "7.1",
+        "items": [
+          {
+            "l": "Vendi mais de uma vez em [período, regra do time]"
+          },
+          {
+            "l": "A planilha de lucro da semana fechou no positivo",
+            "d": "Etapa Dinheiro."
+          },
+          {
+            "l": "Funil e pixel funcionando"
+          },
+          {
+            "l": "Contas protegidas",
+            "d": "Checklist da aula 7.7."
+          }
+        ]
+      }
+    },
+    {
+      "key": "checklist.DN03",
+      "kind": "checklist",
+      "data": {
+        "lvl": "p",
+        "key": "saque",
+        "titulo": "Dados de saque",
+        "intro": "Antes do primeiro saque, confira se o dinheiro vai cair no lugar certo.",
+        "ctaL": "Dados de saque conferidos",
+        "aula": "6.3",
+        "items": [
+          {
+            "l": "A Wise está cadastrada na rede como conta de saque"
+          },
+          {
+            "l": "O nome na Wise é igual ao da rede"
+          },
+          {
+            "l": "A moeda do saque é a certa"
+          }
+        ]
+      }
+    },
+    {
+      "key": "checklist.F05pre",
+      "kind": "checklist",
+      "data": {
+        "lvl": "p",
+        "key": "monte",
+        "titulo": "Monte comigo",
+        "intro": "Você não cria página de vendas: a do produtor já existe e já vende. Aqui você monta uma página curta sua, com o texto pronto do kit, num modelo que já vem arrumado. Um passo por vez.",
+        "ctaL": "Já montei, conferir minha página",
+        "aula": "4.7",
+        "cta2L": "Abrir meu kit de novo",
+        "items": [
+          {
+            "l": "Criar sua conta grátis na [ferramenta de página]",
+            "d": "O time escolhe uma ferramenta simples, que funciona no celular.",
+            "como": "ferramenta"
+          },
+          {
+            "l": "Duplicar o modelo de pré-venda do SDM",
+            "d": "Um toque no link do modelo e ele vira seu.",
+            "como": "modelo"
+          },
+          {
+            "l": "Trocar o título pelo bloco 1 do kit",
+            "d": "Copie no kit e cole no lugar do título do modelo.",
+            "como": "colar"
+          },
+          {
+            "l": "Colar os blocos 2 a 6, na ordem",
+            "d": "Abertura, problema, virada, o que é e pra quem.",
+            "como": "colar"
+          },
+          {
+            "l": "Colocar a imagem",
+            "d": "Use o prompt do kit ou uma foto sua, sem rosto se preferir.",
+            "como": "imagem"
+          },
+          {
+            "l": "No botão, colar seu link de afiliada",
+            "d": "É isso que marca que a venda veio de você.",
+            "como": "botao"
+          },
+          {
+            "l": "Publicar e copiar o endereço da página",
+            "d": "Você cola esse endereço no próximo passo.",
+            "como": "publicar"
+          }
+        ]
+      }
+    },
+    {
+      "key": "checklist.F05quiz",
+      "kind": "checklist",
+      "data": {
+        "lvl": "p",
+        "key": "monte",
+        "titulo": "Monte comigo",
+        "intro": "Você não cria página de vendas: a do produtor já existe e já vende. Aqui você monta um quiz curto seu, com as perguntas prontas do kit, num modelo que já vem arrumado.",
+        "ctaL": "Já montei, conferir meu quiz",
+        "aula": "4.7",
+        "cta2L": "Abrir meu kit de novo",
+        "items": [
+          {
+            "l": "Criar sua conta grátis na [ferramenta de quiz]",
+            "d": "O time escolhe uma ferramenta simples, que funciona no celular.",
+            "como": "ferramenta"
+          },
+          {
+            "l": "Duplicar o modelo de quiz do SDM",
+            "d": "Um toque no link do modelo e ele vira seu.",
+            "como": "modelo"
+          },
+          {
+            "l": "Colar as 3 perguntas e as respostas",
+            "d": "Na ordem do kit.",
+            "como": "colar"
+          },
+          {
+            "l": "Colar o texto do resultado",
+            "como": "colar"
+          },
+          {
+            "l": "No botão do resultado, colar seu link de afiliada",
+            "d": "É isso que marca que a venda veio de você.",
+            "como": "botao"
+          },
+          {
+            "l": "Publicar e copiar o endereço do quiz",
+            "como": "publicar"
+          }
+        ]
+      }
+    },
+    {
+      "key": "checklist.F07",
+      "kind": "checklist",
+      "data": {
+        "lvl": "p",
+        "key": "teste",
+        "titulo": "Teste do caminho",
+        "intro": "Agora você faz o caminho do cliente, do começo ao fim. Não precisa comprar: só ver que chega.",
+        "ctaL": "Meu funil está no ar",
+        "aula": "4.6",
+        "items": [
+          {
+            "l": "Abri minha página no celular",
+            "d": "Do jeito que o cliente vai ver."
+          },
+          {
+            "l": "Toquei no botão",
+            "d": "Tem que abrir na hora."
+          },
+          {
+            "l": "Caí na página do produtor"
+          },
+          {
+            "l": "Cheguei no checkout do produtor",
+            "aula": "4.6"
+          },
+          {
+            "l": "O link é o meu",
+            "d": "O código de afiliada aparece no endereço ou a rede confirma."
+          }
+        ]
+      }
+    },
+    {
+      "key": "checklist.F07dir",
+      "kind": "checklist",
+      "data": {
+        "lvl": "p",
+        "key": "teste",
+        "titulo": "Teste do caminho",
+        "intro": "No funil direto, o anúncio ou o link da bio leva pro seu link de afiliada. Faça o caminho do cliente.",
+        "ctaL": "Meu funil está no ar",
+        "aula": "4.6",
+        "items": [
+          {
+            "l": "Abri meu link de afiliada no celular"
+          },
+          {
+            "l": "Caí na página do produtor"
+          },
+          {
+            "l": "Cheguei no checkout do produtor",
+            "aula": "4.6"
+          },
+          {
+            "l": "O código de afiliada é o meu"
+          }
+        ]
+      }
+    },
+    {
+      "key": "passos.email",
+      "kind": "passos",
+      "data": [
+        "Verificação em duas etapas no e-mail",
+        [
+          "Abra as configurações de segurança da sua conta de e-mail.",
+          "Toque em \"Verificação em duas etapas\".",
+          "Escolha receber o código por SMS ou por um app de autenticação.",
+          "Guarde os códigos reservas num lugar seguro."
+        ],
+        "1.6"
+      ]
+    },
+    {
+      "key": "passos.redes",
+      "kind": "passos",
+      "data": [
+        "Duas etapas nas redes",
+        [
+          "No Instagram, abra Configurações e procure \"Senha e segurança\".",
+          "Ative a autenticação de dois fatores.",
+          "Faça o mesmo no Facebook e no TikTok.",
+          "Teste: saia e entre de novo usando o código."
+        ],
+        "2.2"
+      ]
+    },
+    {
+      "key": "passos.rede",
+      "kind": "passos",
+      "data": [
+        "Conta na rede de afiliação",
+        [
+          "Abra o site da [rede de afiliação] e toque em criar conta.",
+          "Use seu nome verdadeiro e o e-mail com duas etapas.",
+          "Confirme o e-mail.",
+          "Complete o perfil de afiliada e os dados de pagamento (Wise)."
+        ],
+        "2.3"
+      ]
+    },
+    {
+      "key": "passos.wise",
+      "kind": "passos",
+      "data": [
+        "Conta Wise pra receber em dólar",
+        [
+          "Baixe o app Wise na loja do celular.",
+          "Crie a conta com seu e-mail e escolha conta pessoal.",
+          "Envie o documento e a selfie que o app pedir.",
+          "Abra os dados da conta em dólar: é isso que você cadastra na rede."
+        ],
+        "2.4"
+      ]
+    },
+    {
+      "key": "passos.portfolio",
+      "kind": "passos",
+      "data": [
+        "Portfólio empresarial",
+        [
+          "Entre no Meta Business com o seu Facebook.",
+          "Toque em criar portfólio empresarial.",
+          "Use seu nome e o e-mail de trabalho.",
+          "Confirme o e-mail."
+        ],
+        "P1.2"
+      ]
+    },
+    {
+      "key": "passos.contaads",
+      "kind": "passos",
+      "data": [
+        "Conta de anúncios",
+        [
+          "No portfólio, abra as configurações de contas de anúncios.",
+          "Toque em adicionar e criar uma conta nova.",
+          "Escolha o fuso horário e a moeda do país onde você mora.",
+          "Dê acesso total a você mesma."
+        ],
+        "P1.2"
+      ]
+    },
+    {
+      "key": "passos.cartao",
+      "kind": "passos",
+      "data": [
+        "Cartão e limite",
+        [
+          "Na conta de anúncios, abra Cobrança e pagamentos.",
+          "Adicione o cartão.",
+          "Defina o limite de gastos da conta.",
+          "Confira se a moeda está certa."
+        ],
+        "P1.3"
+      ]
+    },
+    {
+      "key": "passos.pixelcriar",
+      "kind": "passos",
+      "data": [
+        "Criar o pixel",
+        [
+          "Abra o Gerenciador de Eventos da Meta.",
+          "Toque em conectar dados e escolha Web.",
+          "Dê um nome ao pixel e crie.",
+          "Copie o ID do pixel e cole no app."
+        ],
+        "P3.2"
+      ]
+    },
+    {
+      "key": "passos.pixelpagina",
+      "kind": "passos",
+      "data": [
+        "Pixel na sua página",
+        [
+          "Abra sua página na [ferramenta de página].",
+          "Procure o campo de pixel ou de código da Meta.",
+          "Cole o ID do seu pixel.",
+          "Publique de novo."
+        ],
+        "P3.3"
+      ]
+    },
+    {
+      "key": "passos.pixelrede",
+      "kind": "passos",
+      "data": [
+        "Pixel na rede de afiliação",
+        [
+          "Na [rede de afiliação], abra o produto que você divulga.",
+          "Procure \"pixel\" ou \"rastreamento\".",
+          "Cole o ID do pixel e salve.",
+          "Faça o teste \"meu pixel funciona?\"."
+        ],
+        "P3.4"
+      ]
+    },
+    {
+      "key": "passos.ferramenta",
+      "kind": "passos",
+      "data": [
+        "Conta na ferramenta",
+        [
+          "Toque no link da ferramenta que está no app.",
+          "Crie a conta com seu e-mail.",
+          "Escolha o plano grátis.",
+          "Volte pro app e marque este passo."
+        ],
+        "4.7"
+      ]
+    },
+    {
+      "key": "passos.modelo",
+      "kind": "passos",
+      "data": [
+        "Duplicar o modelo do SDM",
+        [
+          "Toque em \"Abrir modelo do SDM\" no app.",
+          "Na ferramenta, toque em duplicar ou usar modelo.",
+          "O modelo vira uma página sua, já arrumada.",
+          "Dê um nome simples, tipo o nome do produto."
+        ],
+        "4.7"
+      ]
+    },
+    {
+      "key": "passos.colar",
+      "kind": "passos",
+      "data": [
+        "Colar o texto do kit",
+        [
+          "No app, abra o kit e toque em Copiar no bloco.",
+          "Na ferramenta, toque no texto do modelo e apague.",
+          "Cole o texto do kit.",
+          "Faça o mesmo com cada bloco, na ordem."
+        ],
+        "4.4"
+      ]
+    },
+    {
+      "key": "passos.imagem",
+      "kind": "passos",
+      "data": [
+        "Trocar a imagem",
+        [
+          "Copie o prompt de imagem do kit.",
+          "Gere a imagem na IA de imagem que o time indicar, ou use uma foto sua.",
+          "Na ferramenta, toque na imagem do modelo e troque.",
+          "Confira se aparece bem no celular."
+        ],
+        "4.7"
+      ]
+    },
+    {
+      "key": "passos.botao",
+      "kind": "passos",
+      "data": [
+        "Link no botão",
+        [
+          "Toque no botão do modelo.",
+          "Procure o campo \"link\" ou \"URL\".",
+          "Cole o seu link de afiliada, o mesmo que você testou no app.",
+          "Salve."
+        ],
+        "4.6"
+      ]
+    },
+    {
+      "key": "passos.publicar",
+      "kind": "passos",
+      "data": [
+        "Publicar",
+        [
+          "Toque em Publicar.",
+          "Copie o endereço da página.",
+          "Volte pro app e cole em \"Conferir minha página\".",
+          "O app confere tudo pra você."
+        ],
+        "4.7"
+      ]
+    },
+    {
+      "key": "info.PG08",
+      "kind": "info",
+      "data": {
+        "intro": "Quando a Meta mostrar um aviso, procure aqui o que fazer.",
+        "aulaId": "P4.7",
+        "ctaL": "Salvar a tabela",
+        "cards": [
+          [
+            "Em análise",
+            "A Meta está revisando. Espere: não edite nem apague o anúncio."
+          ],
+          [
+            "Reprovado",
+            "Leia o motivo. Ajuste o texto ou a imagem na tela de ajustar anúncio e peça nova revisão."
+          ],
+          [
+            "Aprendizado ou veiculação limitada",
+            "Normal no começo. Não mexa até passar o período de aprendizado."
+          ],
+          [
+            "Conta de anúncios restrita",
+            "Não crie outra conta. Fale com o time pelo suporte."
+          ],
+          [
+            "Pagamento recusado",
+            "Confira o cartão e o limite em Cobrança e pagamentos."
+          ]
+        ]
+      }
+    },
+    {
+      "key": "info.DN02",
+      "kind": "info",
+      "data": {
+        "intro": "A comissão não cai na hora. Esse é o caminho, do dia da venda até a sua conta.",
+        "aulaId": "6.2",
+        "ctaL": "Entendi",
+        "cards": [
+          [
+            "Venda feita",
+            "A rede registra sua comissão como pendente."
+          ],
+          [
+            "Prazo de garantia",
+            "O cliente pode pedir reembolso nesse período. [prazo da sua rede]"
+          ],
+          [
+            "Comissão liberada",
+            "Aparece como disponível na rede."
+          ],
+          [
+            "Saque pra Wise",
+            "Você pede o saque na rede."
+          ],
+          [
+            "Na sua conta",
+            "O dinheiro chega na Wise em dólar. [prazo da rede]"
+          ]
+        ]
+      }
+    },
+    {
+      "key": "info.DN05",
+      "kind": "info",
+      "data": {
+        "intro": "Imposto depende do país onde você mora. Leve estas 5 perguntas pra um contador de lá.",
+        "aulaId": "6.5",
+        "ctaL": "Salvar as 5 perguntas",
+        "nota": "Isso não é orientação fiscal. Quem responde é um contador do país onde você mora.",
+        "cards": [
+          [
+            "Preciso declarar o que recebo como afiliada no país onde moro?"
+          ],
+          [
+            "Como declaro dinheiro que vem de fora, em dólar?"
+          ],
+          [
+            "Preciso abrir empresa ou algum registro?"
+          ],
+          [
+            "Posso descontar o que gasto com anúncio?"
+          ],
+          [
+            "Quanto devo separar de cada saque pra imposto?"
+          ]
+        ]
+      }
+    },
+    {
+      "key": "entenda.EN0",
+      "kind": "entenda",
+      "data": {
+        "tag": "ENTENDA · ETAPA 0",
+        "titulo": "Pra quem você vai vender?",
+        "texto": "País e idioma de venda são de quem compra, não seus. Como você mora fora, pode vender pra gente de lá e ganhar em dólar, libra ou euro.",
+        "porque": "Cada país tem um idioma, uma moeda e mais ou menos gente vendendo a mesma coisa. Tudo que a IA gera depois sai nesse idioma.",
+        "passos": [
+          "Ver o país que a IA sugeriu pelo seu diagnóstico",
+          "Entender o motivo",
+          "Confirmar ou trocar (dá pra mudar depois)"
+        ],
+        "duvida": {
+          "q": "E se eu não falo inglês?",
+          "r": "A IA escreve tudo no idioma do cliente e mostra a tradução pra você entender."
+        },
+        "aulas": [
+          "3.4"
+        ],
+        "cta": "Ver o país sugerido",
+        "next": "V07"
+      }
+    },
+    {
+      "key": "entenda.EN1",
+      "kind": "entenda",
+      "data": {
+        "tag": "ENTENDA · ETAPA 1",
+        "titulo": "Você divulga o produto de outra pessoa",
+        "texto": "Como afiliada, você divulga um produto que já existe. Quem criou (o produtor) entrega e atende. Você ganha uma comissão por cada venda feita pelo seu link.",
+        "porque": "Produto bom resolve uma dor clara de um tipo de pessoa, no seu idioma de venda, e rende conteúdo. A IA escolhe com base no seu diagnóstico e explica o porquê.",
+        "passos": [
+          "Ver o produto que a IA escolheu pra você",
+          "Pegar seu link de afiliada na rede",
+          "Preencher o cartão \"esse produto ajuda quem...\""
+        ],
+        "duvida": {
+          "q": "Preciso comprar o produto?",
+          "r": "Não. Você só precisa entender pra quem ele é e o que ele resolve."
+        },
+        "aulas": [
+          "3.1",
+          "3.5",
+          "3.6"
+        ],
+        "cta": "Ver o produto escolhido",
+        "next": "V04"
+      }
+    },
+    {
+      "key": "entenda.EN4",
+      "kind": "entenda",
+      "data": {
+        "tag": "ENTENDA · ETAPA 4",
+        "titulo": "Número tira o \"será que está dando certo?\"",
+        "texto": "Você não precisa entender tudo do gerenciador ou do painel da rede. Precisa olhar poucos números, sempre os mesmos, e saber o que cada um diz.",
+        "porque": "Cada número aponta uma parte do funil: o anúncio ou o vídeo, a sua página, a página do produtor. Assim você ajusta a parte certa em vez de mudar tudo.",
+        "passos": [
+          "Anotar os números da semana",
+          "Fazer o diagnóstico guiado",
+          "Ir direto na parte que precisa de ajuste"
+        ],
+        "duvida": {
+          "q": "Gastei e não vendi. Errei?",
+          "r": "Ainda não dá pra saber. O diagnóstico mostra em que parte as pessoas estão parando."
+        },
+        "aulas": [
+          "P5.1",
+          "O5.1"
+        ],
+        "cta": "Ver meus números",
+        "next": "N00"
+      }
+    },
+    {
+      "key": "entenda.EN5",
+      "kind": "entenda",
+      "data": {
+        "tag": "ENTENDA · ETAPA 5",
+        "titulo": "Da venda até o dinheiro na sua conta",
+        "texto": "A comissão não cai na hora: ela passa por um prazo na rede de afiliação, depois você saca pra Wise.",
+        "porque": "Entender o caminho evita susto e mostra quanto sobrou de verdade depois do que você gastou.",
+        "passos": [
+          "Registrar sua 1ª venda",
+          "Ver quando a comissão libera e conferir o saque",
+          "Preencher a planilha de lucro"
+        ],
+        "duvida": {
+          "q": "Preciso pagar imposto?",
+          "r": "Depende do país onde você mora. A gente te dá as 5 perguntas pra levar a um contador."
+        },
+        "aulas": [
+          "6.1",
+          "6.2"
+        ],
+        "cta": "Registrar minha venda",
+        "next": "DN01"
+      }
+    },
+    {
+      "key": "entenda.EN6",
+      "kind": "entenda",
+      "data": {
+        "tag": "ENTENDA · ETAPA 6",
+        "titulo": "Crescer sem colocar tudo em risco",
+        "texto": "Escalar é aumentar o que já dá lucro: mais verba no que funciona, uma 2ª rede, um novo país ou um novo produto.",
+        "porque": "Quem aumenta rápido demais costuma perder o que funcionava. Por isso cada degrau tem um checklist.",
+        "passos": [
+          "Passar o checklist \"posso escalar?\"",
+          "Escolher o próximo degrau",
+          "Proteger suas contas"
+        ],
+        "duvida": {
+          "q": "Quando sei que é hora?",
+          "r": "Quando o checklist estiver todo marcado. Antes disso, continue na rotina."
+        },
+        "aulas": [
+          "7.1"
+        ],
+        "cta": "Passar o checklist",
+        "next": "E01"
+      }
+    },
+    {
+      "key": "app.head",
+      "kind": "texto",
+      "data": {
+        "A02": [
+          "Acesso",
+          "Não recebi meu acesso",
+          "A01"
+        ],
+        "A03": [
+          "Acesso",
+          "Instalar na tela do celular",
+          "A01"
+        ],
+        "A05": [
+          "Aula 0.5 · Diagnóstico",
+          "A IA quer te conhecer",
+          "I01"
+        ],
+        "A06": [
+          "Aula 3.2 · Diagnóstico",
+          "O que a IA entendeu",
+          "I01"
+        ],
+        "A07": [
+          "Início",
+          "Nosso combinado",
+          "I01"
+        ],
+        "I02": [
+          "Início",
+          "Mapa da sua trilha",
+          "I01"
+        ],
+        "I03": [
+          "Início",
+          "Seus cartões",
+          "I01"
+        ],
+        "I04": [
+          "Início",
+          "Grupo das alunas",
+          "I01"
+        ],
+        "I05": [
+          "Início",
+          "Ferramentas",
+          "I01"
+        ],
+        "B01": [
+          "Minha base · aulas 2.1 a 2.5",
+          "Checklist da base",
+          "I01"
+        ],
+        "B02": [
+          "Passo a passo",
+          "",
+          "B01"
+        ],
+        "B03": [
+          "Trilha paga · P1",
+          "Base de anúncios",
+          "DV01"
+        ],
+        "B04": [
+          "Escalar · aula 7.7",
+          "Contas protegidas",
+          "V05"
+        ],
+        "FR01": [
+          "Ferramenta · aula 1.4",
+          "Calculadora de lucro por venda",
+          "I05"
+        ],
+        "FR02": [
+          "Ferramenta · B1 e 5.2",
+          "Verba do 1º mês",
+          "I05"
+        ],
+        "FR03": [
+          "Ferramenta · aula P2.6",
+          "Teste de anúncio",
+          "I05"
+        ],
+        "FR04": [
+          "Ferramenta · P5.6 e O5.5",
+          "Rotina dos 10 minutos",
+          "I05"
+        ],
+        "V02": [
+          "Produtos",
+          "Vitrine",
+          "V01"
+        ],
+        "V03": [
+          "Vitrine · aula 3.1",
+          "",
+          "V02"
+        ],
+        "V04": [
+          "Etapa 1 · aula 3.5",
+          "Por que esse produto",
+          "V05"
+        ],
+        "V05": [
+          "Pasta do produto",
+          "",
+          "V01"
+        ],
+        "V06": [
+          "Pasta do produto",
+          "Ficha do produto",
+          "V05"
+        ],
+        "V07": [
+          "Etapa 0 · aula 3.4",
+          "País e idioma de venda",
+          "V05"
+        ],
+        "V08": [
+          "Etapa 1 · aula 3.6",
+          "Seu link de afiliada",
+          "V05"
+        ],
+        "V09": [
+          "Pasta do produto",
+          "Biblioteca",
+          "V05"
+        ],
+        "EN0": [
+          "Etapa 0",
+          "Entenda antes de escolher",
+          "V05"
+        ],
+        "EN1": [
+          "Etapa 1",
+          "Entenda antes de escolher",
+          "V05"
+        ],
+        "EN4": [
+          "Etapa 4",
+          "Entenda os números",
+          "V05"
+        ],
+        "EN5": [
+          "Etapa 5",
+          "Entenda o dinheiro",
+          "V05"
+        ],
+        "EN6": [
+          "Etapa 6",
+          "Entenda o escalar",
+          "V05"
+        ],
+        "F01": [
+          "Etapa 2 · aula 4.1",
+          "Seu funil",
+          "V05"
+        ],
+        "F02": [
+          "Etapa 2 · aula 4.2",
+          "Escolher o funil",
+          "F01"
+        ],
+        "F03": [
+          "Etapa 2 · aula 4.3",
+          "Preparando sua estrutura",
+          "V05"
+        ],
+        "F04": [
+          "Etapa 2 · aulas 4.4 e 4.5",
+          "Seu kit",
+          "V05"
+        ],
+        "F05": [
+          "Etapa 2 · aula 4.7",
+          "Montar com o modelo",
+          "F04"
+        ],
+        "F06": [
+          "Etapa 2 · aula 4.7",
+          "Conferir minha página",
+          "F05"
+        ],
+        "F07": [
+          "Etapa 2 · aula 4.6",
+          "Testar até o checkout",
+          "V05"
+        ],
+        "F08": [
+          "Etapa 2 · aula 4.8",
+          "Funil no ar",
+          "V05"
+        ],
+        "T01": [
+          "Estratégia · aula 5.4",
+          "Prós e contras",
+          "I01"
+        ],
+        "T02": [
+          "Estratégia · aula 5.5",
+          "Três mulheres, três caminhos",
+          "T01"
+        ],
+        "T03": [
+          "Estratégia · aula 5.6",
+          "Sua decisão",
+          "T02"
+        ],
+        "DV01": [
+          "Etapa 3",
+          "Sua divulgação",
+          "V05"
+        ],
+        "PG01": [
+          "Trilha paga · P2.1",
+          "Seus 3 anúncios",
+          "DV01"
+        ],
+        "PG02": [
+          "Trilha paga · P2.2 a P2.5",
+          "Ajustar anúncio",
+          "PG01"
+        ],
+        "PG03": [
+          "Trilha paga · P2.4",
+          "Vídeo de 20 segundos",
+          "PG01"
+        ],
+        "PG04": [
+          "Trilha paga · P2.7",
+          "Regras da Meta",
+          "DV01"
+        ],
+        "PG05": [
+          "Trilha paga · P3",
+          "Pixel",
+          "DV01"
+        ],
+        "PG06": [
+          "Trilha paga · P4.1 a P4.5",
+          "Plano de campanha",
+          "DV01"
+        ],
+        "PG07": [
+          "Trilha paga · P4.6",
+          "Subir a campanha",
+          "DV01"
+        ],
+        "PG08": [
+          "Trilha paga · P4.7",
+          "Avisos da Meta",
+          "DV01"
+        ],
+        "OG01": [
+          "Trilha orgânica · O1.2 e O1.3",
+          "Sua rede",
+          "DV01"
+        ],
+        "OG02": [
+          "Trilha orgânica · O1.4 e O1.5",
+          "Perfil temático",
+          "DV01"
+        ],
+        "OG03": [
+          "Trilha orgânica · O1.6",
+          "Aquecimento",
+          "DV01"
+        ],
+        "OG04": [
+          "Trilha orgânica · O2",
+          "Ganchos e virais",
+          "DV01"
+        ],
+        "OG05": [
+          "Trilha orgânica · O3.1",
+          "Roteiros com IA",
+          "DV01"
+        ],
+        "OG06": [
+          "Trilha orgânica · O4.1",
+          "Calendário",
+          "DV01"
+        ],
+        "OG07": [
+          "Trilha orgânica · O3.4 e O4.2",
+          "Legenda e chamada",
+          "DV01"
+        ],
+        "OG08": [
+          "Trilha orgânica · O2.6",
+          "Áudios e trends",
+          "DV01"
+        ],
+        "OG09": [
+          "Trilha orgânica · O4.5 e O4.6",
+          "Revisão do perfil",
+          "DV01"
+        ],
+        "N00": [
+          "Etapa 4",
+          "Seus números",
+          "V05"
+        ],
+        "N01": [
+          "Etapa 4 · P5",
+          "Números do pago",
+          "N00"
+        ],
+        "N02": [
+          "Etapa 4 · P5.5",
+          "Não vendeu?",
+          "N00"
+        ],
+        "N03": [
+          "Etapa 4 · O5",
+          "Números do orgânico",
+          "N00"
+        ],
+        "N04": [
+          "Etapa 4 · O5.3 e O5.4",
+          "O vídeo que não foi",
+          "N00"
+        ],
+        "DN01": [
+          "Etapa 5 · aula 6.1",
+          "Sua 1ª venda",
+          "V05"
+        ],
+        "DN02": [
+          "Etapa 5 · aula 6.2",
+          "Da venda ao saque",
+          "V05"
+        ],
+        "DN03": [
+          "Etapa 5 · aula 6.3",
+          "Dados de saque",
+          "V05"
+        ],
+        "DN04": [
+          "Etapa 5 · aula 6.4",
+          "Planilha de lucro",
+          "V05"
+        ],
+        "DN05": [
+          "Etapa 5 · aula 6.5",
+          "5 perguntas pro contador",
+          "V05"
+        ],
+        "E01": [
+          "Etapa 6 · aula 7.1",
+          "Posso escalar?",
+          "V05"
+        ],
+        "E02": [
+          "Etapa 6 · aula 7.2",
+          "Escada do pago",
+          "V05"
+        ],
+        "E03": [
+          "Etapa 6 · 7.3 e 7.4",
+          "Crescer no orgânico",
+          "V05"
+        ],
+        "E04": [
+          "Etapa 6 · 7.5 e 7.6",
+          "Novo país ou novo produto",
+          "V05"
+        ],
+        "L02": [
+          "Aula",
+          "",
+          "L01"
+        ],
+        "L03": [
+          "Material",
+          "",
+          "L02"
+        ],
+        "L04": [
+          "Aulas",
+          "Glossário",
+          "L01"
+        ],
+        "L05": [
+          "Aulas",
+          "Plantão da semana",
+          "L01"
+        ],
+        "L06": [
+          "Aulas",
+          "Aula do Países Ocultos",
+          "L01"
+        ],
+        "Q02": [
+          "Professora",
+          "Falar com o time",
+          "Q01"
+        ]
+      }
+    },
+    {
+      "key": "app.diagnostico",
+      "kind": "diagnostico",
+      "data": [
+        {
+          "k": "pais",
+          "q": "Em que país você mora?",
+          "p": "é de lá que você conhece o jeito das pessoas e, muitas vezes, o idioma.",
+          "o": [
+            "Estados Unidos",
+            "Portugal",
+            "Reino Unido",
+            "Irlanda",
+            "Espanha",
+            "Itália",
+            "Outro"
+          ]
+        },
+        {
+          "k": "idiomas",
+          "multi": true,
+          "q": "Quais idiomas você fala, mesmo que pouco?",
+          "p": "a IA escreve tudo no idioma do cliente, mas ajuda saber o que você entende.",
+          "o": [
+            "Português",
+            "Inglês",
+            "Espanhol",
+            "Italiano",
+            "Outro"
+          ]
+        },
+        {
+          "k": "trabalho",
+          "q": "Com o que você trabalha hoje?",
+          "p": "isso mostra seus horários livres e os assuntos que você conhece de perto.",
+          "o": [
+            "Limpeza",
+            "Babá ou cuidadora",
+            "Restaurante",
+            "Outro trabalho",
+            "Não estou trabalhando"
+          ]
+        },
+        {
+          "k": "tempo",
+          "q": "Quanto tempo por dia você consegue separar?",
+          "p": "o caminho certo depende do tempo que você tem de verdade.",
+          "o": [
+            "30 minutos",
+            "1 hora",
+            "2 horas ou mais"
+          ]
+        },
+        {
+          "k": "verba",
+          "q": "Dá pra investir em anúncio agora?",
+          "p": "anúncio é pago por você. Se não der agora, tem o caminho orgânico.",
+          "o": [
+            "Nada agora",
+            "Um valor pequeno",
+            "Um valor que não me aperta"
+          ]
+        },
+        {
+          "k": "assuntos",
+          "multi": true,
+          "q": "Sobre o que você gosta de falar ou entende?",
+          "p": "produto de um assunto que você gosta é mais fácil de divulgar.",
+          "o": [
+            "Cozinha e receitas",
+            "Casa e organização",
+            "Filhos e família",
+            "Fé e devocional",
+            "Inglês e idiomas",
+            "Beleza e cuidado"
+          ]
+        },
+        {
+          "k": "aparecer",
+          "q": "Você topa aparecer nos vídeos?",
+          "p": "não é obrigatório. Só muda o jeito de fazer conteúdo.",
+          "o": [
+            "Sim, mostro o rosto",
+            "Só voz e mãos",
+            "Não quero aparecer"
+          ]
+        },
+        {
+          "k": "exp",
+          "q": "Já vendeu alguma coisa pela internet?",
+          "p": "pra IA saber de onde começar a explicar.",
+          "o": [
+            "Nunca",
+            "Já tentei",
+            "Já vendo"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "app.paises",
+      "kind": "texto",
+      "data": [
+        {
+          "k": "eua",
+          "nome": "Estados Unidos · inglês",
+          "curto": "EUA · inglês",
+          "lang": "en",
+          "idioma": "Inglês",
+          "moeda": "dólar"
+        },
+        {
+          "k": "uk",
+          "nome": "Reino Unido · inglês",
+          "curto": "Reino Unido · inglês",
+          "lang": "en",
+          "idioma": "Inglês",
+          "moeda": "libra"
+        },
+        {
+          "k": "latam",
+          "nome": "Latinos nos EUA · espanhol",
+          "curto": "Latinos · espanhol",
+          "lang": "es",
+          "idioma": "Espanhol",
+          "moeda": "dólar"
+        },
+        {
+          "k": "esp",
+          "nome": "Espanha · espanhol",
+          "curto": "Espanha · espanhol",
+          "lang": "es",
+          "idioma": "Espanhol",
+          "moeda": "euro"
+        }
+      ]
+    },
+    {
+      "key": "app.lg",
+      "kind": "texto",
+      "data": {
+        "en": {
+          "virada": "There's a simpler way to handle this, and it doesn't take your whole weekend.",
+          "botao": "See how it works",
+          "adC": "Tap the link to see how it works.",
+          "call": "The full guide is in the link in my bio.",
+          "leg": "Save this so you don't lose it. The full guide is in the link in my bio.",
+          "q": [
+            null,
+            null,
+            null
+          ],
+          "o": [
+            [
+              "Almost every day",
+              "Sometimes",
+              "Rarely"
+            ],
+            [
+              "Searching online",
+              "Apps and videos",
+              "Nothing yet"
+            ],
+            [
+              "A simple step by step",
+              "A ready-made plan",
+              "Quick tips"
+            ]
+          ],
+          "banco": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "chamadas": [
+            "The full guide is in the link in my bio.",
+            "Want the whole list? Link in bio.",
+            "Follow for more, and the guide is in my bio."
+          ]
+        },
+        "es": {
+          "virada": "Hay una forma más simple de resolverlo, y no te lleva todo el fin de semana.",
+          "botao": "Ver cómo funciona",
+          "adC": "Toca el enlace para ver cómo funciona.",
+          "call": "La guía completa está en el enlace de mi perfil.",
+          "leg": "Guárdalo para no perderlo. La guía completa está en el enlace de mi perfil.",
+          "q": [
+            null,
+            null,
+            null
+          ],
+          "o": [
+            [
+              "Casi todos los días",
+              "A veces",
+              "Casi nunca"
+            ],
+            [
+              "Buscar en internet",
+              "Apps y videos",
+              "Nada todavía"
+            ],
+            [
+              "Un paso a paso simple",
+              "Un plan listo",
+              "Consejos rápidos"
+            ]
+          ],
+          "banco": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "chamadas": [
+            "La guía completa está en el enlace de mi perfil.",
+            "¿Quieres la lista completa? Enlace en el perfil.",
+            "Sígueme para más, y la guía está en mi perfil."
+          ]
+        }
+      }
+    }
+  ]
+}

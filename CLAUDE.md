@@ -16,14 +16,18 @@ pnpm install
 pnpm dev                 # http://localhost:3000
 pnpm typecheck && pnpm lint && pnpm test
 pnpm test:e2e            # app rodando; E2E_BASE_URL, PW_CHROMIUM=/opt/pw-browsers/chromium no container
-pnpm db:generate         # depois de mudar src/lib/db/schema.ts
-pnpm db:migrate          # aplica drizzle/*.sql no DATABASE_URL
-pnpm db:seed             # settings, agentes e (se existir) db/seed-data/conteudo.json
+pnpm db:generate         # depois de mudar src/lib/db/schema.ts (renomear coluna: gerar em 2 passos, sem TTY)
+pnpm db:supabase         # copia drizzle/*.sql -> supabase/migrations (produção: supabase db push)
+pnpm db:migrate          # aplica drizzle/*.sql no DATABASE_URL (banco LOCAL de teste)
+pnpm db:seed             # settings, agentes e db/seed-data/conteudo.json
+pnpm db:supabase-seed    # gera supabase/seed.sql a partir de um banco local semeado (SEED_DB_URL)
 pnpm seed:admin          # 1º admin com ADMIN_EMAIL
-pnpm docs:extract        # extrai dados do protótipo para db/seed-data/prototipo-raw.json
+pnpm docs:extract        # protótipo -> db/seed-data/prototipo-raw.json
+pnpm docs:conteudo       # prototipo-raw.json -> db/seed-data/conteudo.json
 pnpm inngest:dev         # jobs locais
 ```
-Deploy: Vercel (app) + Supabase (banco/storage) + Inngest Cloud. Ver README.
+Deploy: Vercel (app) + Supabase (banco/storage, projeto `hcknrrgbmhnqtmenovmk`, migrations via `supabase db push --include-seed`) + Inngest Cloud. Ver README.
+O container de dev NÃO alcança *.supabase.co nem openai.com (política de rede): teste com o Postgres local (`service postgresql start`, banco `sdm_test`, stub em scripts/test-db).
 
 ## Regras que nunca mudam
 1. A aluna é afiliada. Página de vendas e checkout são do produtor.
@@ -51,7 +55,8 @@ src/lib/server/          serviços de servidor (alunas, settings, auditoria, rat
 src/lib/actions/         server actions (auth, admin)
 src/lib/integrations/    webhooks, WhatsAppSender, TrackingProvider, MetricsProvider
 src/lib/inngest/         client e funções de job
-db/seed-data/            settings, agentes, schema do conteúdo (conteudo.json vem dos docs)
+db/seed-data/            settings, agentes, schema do conteúdo, conteudo.json (gerado do protótipo)
+supabase/                migrations (cópia gerada de drizzle/) e seed.sql — não editar à mão
 scripts/                 seeds, extrator do protótipo, ícones, stub do Supabase pra teste local
 tests/unit · e2e/        Vitest · Playwright
 docs/                    ESTADO, CHANGELOG, DECISOES, contexto e protótipo

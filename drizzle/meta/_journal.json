@@ -22,6 +22,27 @@
       "when": 1793841250520,
       "tag": "0002_settings_value_nullable",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793842699719,
+      "tag": "0003_prototipo_campos",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793842700534,
+      "tag": "0004_drop_requer_entitlement",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1793842991908,
+      "tag": "0005_rls_sem_force",
+      "breakpoints": true
     }
   ]
 }

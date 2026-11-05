@@ -1,0 +1,1 @@
+ALTER TABLE "lessons" DROP COLUMN "requer_entitlement";

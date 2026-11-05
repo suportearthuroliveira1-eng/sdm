@@ -1,17 +1,29 @@
 @import "tailwindcss";
 
-/* Tokens do protótipo SDM (prompt seção 10). Conferir contra docs/prototipo/App.dc.html quando chegar. */
+/* Tokens copiados de docs/prototipo/App.dc.html e Admin.dc.html */
 :root {
   --bg: #0e0c13;
   --surface: #17141f;
-  --surface-2: #201c2b;
-  --line: #2c2738;
-  --text: #f4f1fa;
-  --muted: #b3abc4; /* AA sobre --bg e --surface */
+  --surface-2: #1e1929;
+  --side: #121018;
+  --sel: #2a2240;
+  --line: #2e2839;
+  --line-2: #3a3247;
+  --line-3: #241f2e;
+  --text: #f4f1f8;
+  --text-2: #d6cde6;
+  --muted: #b3aac2;
   --accent: #a98bff;
-  --accent-ink: #0e0c13;
-  --ok: #6fd3a0;
-  --warn: #f2c46d;
+  --accent-2: #c9b6ff;
+  --accent-ink: #140f1f;
+  --ok: #8fe3b8;
+  --ok-bg: #173326;
+  --ok-line: #2f6b4e;
+  --ok-text: #cff3e0;
+  --warn: #f2c26b;
+  --warn-bg: #2b2416;
+  --warn-line: #5c4a22;
+  --warn-text: #f2ddb0;
   --danger: #ff8a8a;
 }
 
@@ -19,13 +31,25 @@
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
+  --color-side: var(--side);
+  --color-sel: var(--sel);
   --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-line-3: var(--line-3);
   --color-text: var(--text);
+  --color-text-2: var(--text-2);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
   --color-accent-ink: var(--accent-ink);
   --color-ok: var(--ok);
+  --color-ok-bg: var(--ok-bg);
+  --color-ok-line: var(--ok-line);
+  --color-ok-text: var(--ok-text);
   --color-warn: var(--warn);
+  --color-warn-bg: var(--warn-bg);
+  --color-warn-line: var(--warn-line);
+  --color-warn-text: var(--warn-text);
   --color-danger: var(--danger);
   --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
 }
@@ -41,30 +65,66 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+a {
+  color: var(--accent-2);
+}
+
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: 6px;
 }
 
-@utility btn {
-  @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-5 text-[15px] font-semibold transition disabled:opacity-50;
+/* Botões do protótipo: b1 principal, b2 contorno, b3 texto */
+@utility b1 {
+  @apply inline-flex min-h-[52px] w-full cursor-pointer items-center justify-center rounded-[14px] border-0 bg-accent px-4 text-base font-bold text-accent-ink hover:brightness-110 disabled:cursor-default disabled:opacity-50;
 }
-@utility btn-primary {
-  @apply btn bg-accent text-accent-ink hover:brightness-110;
+@utility b2 {
+  @apply inline-flex min-h-[46px] cursor-pointer items-center justify-center rounded-xl border border-line-2 bg-transparent px-3.5 text-sm font-semibold text-text hover:bg-surface-2 disabled:cursor-default disabled:opacity-50;
 }
-@utility btn-ghost {
-  @apply btn border border-line bg-surface text-text hover:bg-surface-2;
+@utility b3 {
+  @apply inline-flex min-h-11 cursor-pointer items-center justify-center border-0 bg-transparent px-2 text-sm font-semibold text-accent-2 hover:text-text disabled:opacity-50;
 }
-@utility btn-danger {
-  @apply btn border border-danger/40 bg-transparent text-danger hover:bg-danger/10;
+/* Admin: botões mais baixos (44px) */
+@utility ab1 {
+  @apply inline-flex min-h-11 cursor-pointer items-center justify-center rounded-xl border-0 bg-accent px-4 text-sm font-bold text-accent-ink hover:brightness-110 disabled:opacity-50;
 }
-@utility card {
-  @apply rounded-2xl border border-line bg-surface p-5;
+@utility ab2 {
+  @apply inline-flex min-h-11 cursor-pointer items-center justify-center rounded-xl border border-line-2 bg-transparent px-3.5 text-[13px] font-semibold text-text hover:bg-surface-2 disabled:opacity-50;
 }
-@utility field {
-  @apply block w-full min-h-11 rounded-xl border border-line bg-bg px-4 text-[15px] text-text placeholder:text-muted/70 focus:border-accent focus:outline-none;
+@utility cd {
+  @apply flex flex-col gap-1.5 rounded-2xl bg-surface p-3.5;
 }
-@utility label {
-  @apply mb-1.5 block text-sm font-medium text-muted;
+@utility acd {
+  @apply flex flex-col gap-2 rounded-2xl border border-line bg-surface p-[18px];
+}
+@utility kk {
+  @apply text-[11px] font-bold tracking-[0.5px] text-accent-2;
+}
+@utility tx {
+  @apply m-0 text-sm leading-normal text-text-2;
+}
+@utility mu {
+  @apply text-xs leading-[1.45] text-muted;
+}
+@utility lb {
+  @apply text-[13px] font-semibold;
+}
+@utility in {
+  @apply box-border block min-h-[46px] w-full rounded-xl border border-line-2 bg-surface px-3 text-[15px] text-text placeholder:text-muted/70 focus:border-accent focus:outline-none;
+}
+@utility ta {
+  @apply box-border block min-h-[84px] w-full resize-y rounded-xl border border-line-2 bg-surface px-3 py-2.5 text-sm leading-[1.45] text-text focus:border-accent focus:outline-none;
+}
+@utility warn {
+  @apply rounded-[14px] border border-warn-line bg-warn-bg px-3.5 py-3 text-[13px] leading-[1.45] text-warn-text;
+}
+@utility good {
+  @apply rounded-2xl border border-ok-line bg-ok-bg p-3.5 text-sm leading-[1.45] text-ok-text;
+}
+@utility dot {
+  @apply flex size-[26px] flex-none items-center justify-center rounded-full text-xs font-bold;
+}
+@utility ain {
+  @apply box-border block min-h-11 w-full rounded-xl border border-line-2 bg-bg px-3 text-sm text-text placeholder:text-muted/70 focus:border-accent focus:outline-none;
 }

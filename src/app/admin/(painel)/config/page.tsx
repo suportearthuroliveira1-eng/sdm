@@ -1,3 +1,4 @@
+import { AdminHead } from "../head";
 import { requireAdmin } from "@/lib/auth/admin";
 import { db, schema } from "@/lib/db";
 import { SettingRow } from "./setting-row";
@@ -11,9 +12,9 @@ export default async function AD11() {
   const groups = [...new Set(rows.map((r) => r.grupo))];
   return (
     <section className="flex max-w-4xl flex-col gap-8">
+      <AdminHead id="AD11" t="Configurações" />
       <div>
-        <h1 className="text-2xl font-bold">Configurações</h1>
-        <p className="mt-1 text-sm text-muted">Itens marcados como <span className="text-warn">pendente</span> ainda esperam decisão da dona do produto. Toda mudança fica na auditoria.</p>
+        <p className="mu text-[13px]">Itens marcados como <span className="text-warn">pendente</span> ainda esperam decisão da dona do produto. Toda mudança fica na auditoria.</p>
       </div>
       {groups.map((g) => (
         <div key={g} className="flex flex-col gap-3">

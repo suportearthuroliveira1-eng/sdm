@@ -1,33 +1,34 @@
 # Estado do projeto
 
-> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-05** · branch `claude/intelligent-bohr-54teds`.
+> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-05 (2ª tarefa: protótipos + Supabase)** · branch `claude/intelligent-bohr-54teds`.
 
 ## Fase atual
-**Fase 1 · Base: ~80%.** O que falta pra fechar a Fase 1 depende dos docs do produto (seeds de conteúdo) e de um projeto Supabase real (testar o OTP e o link com Auth de verdade).
+**Fase 1 · Base: ~90%.** Falta só rodar no Supabase real (`supabase db push --include-seed` do seu computador) e testar o login por código e por link com o Auth de verdade. O container de dev não alcança *.supabase.co (política de rede).
 
 | Fase | % | Nota |
 |---|---|---|
-| 1 Base | 80 | infra, banco, RLS, auth manual, admin inicial, PWA, webhook desligado ✓ · seeds de conteúdo bloqueados (sem docs) |
+| 1 Base | 90 | infra, banco, RLS, auth manual, admin inicial, PWA, webhook desligado, seeds do protótipo ✓ · falta validar no Supabase real |
 | 2 Casca do app | 0 | |
 | 3 Diagnóstico e produto | 0 | |
 | 4 Funil | 0 | |
 | 5 Divulgação e números | 0 | |
 | 6 Dinheiro, escalar, ebook | 0 | |
 | 7 Professora e suporte | 0 | tabela `support_tickets` já recebe pedidos da A02 |
-| 8 Admin completo | 10 | AD01 (contagens), AD02, AD03, AD08, AD11 iniciais |
+| 8 Admin completo | 15 | AD01 (KPIs e jornada reais), AD02 (filtros do protótipo), AD03, AD08, AD11 iniciais |
 | 9 Endurecimento | 0 | |
 
 ## Bloqueio principal
-**Os docs de referência não estão no repositório.** Faltam `docs/SDM_contexto_completo_v6.md`, `docs/prototipo/App.dc.html` e `docs/prototipo/Admin.dc.html` (no 1º chat veio só o prompt). Sem eles não dá pra semear as 111 aulas + B1 + PO, o glossário (32 + 7), a vitrine (6 exemplos), CKDEF/PASSOS/INFODEF, nem copiar textos e visual exatos das telas. Nada disso foi inventado.
+- **Contexto v6 ainda não chegou** (`docs/SDM_contexto_completo_v6.md`). Os protótipos chegaram em 2026-11-05 e já estão em `docs/prototipo/`. Do contexto ainda faltam: roteiro de 5 blocos de cada aula (seção 6), regras de conteúdo dos agentes (seção 10), regras de desbloqueio detalhadas (4.4), mapa de funil (3.1), campos (8), métricas (12) e pendências (13).
+- **Supabase inacessível daqui**: as migrations e o seed precisam ser aplicados do seu computador com a CLI (README).
 
 ## Telas
-- **A01** ✓ login por e-mail + código de 6 dígitos (Supabase OTP); e-mail sem cadastro/sem SDM ativo → A02. Textos provisórios (conferir com protótipo).
-- **A02** ✓ sem acesso + formulário de suporte (vira ticket). Textos provisórios.
-- **A03** ✓ instalar (iPhone/Android, botão nativo quando o navegador oferece, marca `instalado_em`). Textos provisórios.
+- **A01** ✓ visual e textos do protótipo; login por e-mail + código de 6 dígitos (Supabase OTP); sem cadastro/sem SDM ativo → A02. Única diferença do protótipo: a nota "você entra direto" virou "a gente manda um código" (decisão do prompt, seção 3).
+- **A02** ✓ protótipo: "Reenviar meu acesso" (e-mail + WhatsApp) e "Falar com o time". Reenvio manda link novo pro WhatsApp **cadastrado** se `whatsapp_auto_send` e o provedor existirem; senão vira ticket. Resposta igual nos dois casos (não revela cadastro).
+- **A03** ✓ protótipo (5 passos iPhone/Android, aviso iOS 16.4, "Já instalei" marca `instalado_em` e o "Agora faça" da aula 0.1). Print do passo: placeholder até o admin subir as imagens (AD10).
 - **Link de acesso** `/acesso/[token]` ✓ (botão "Entrar" protege o uso único contra a prévia do WhatsApp).
 - **/app** provisório: confirma acesso e leva pra A03. Vira A04/I01 na Fase 2.
 - **A04–A07, I*, FR*, B*, V*, EN*, F*, T*, DV*, PG*, OG*, N*, DN*, E*, EB*, L*, Q*, U01**: não começadas.
-- **Admin**: login do time ✓ · AD01 parcial (4 contagens) · AD02 ✓ (busca, nova aluna com link, importar CSV) · AD03 parcial (dados, acessos, gerar link, copiar mensagem WhatsApp, desativar; faltam conversas, pastas, impersonar) · AD08 ✓ (mapa produto→acesso, log de eventos, reprocessar) · AD11 parcial (editor JSON das settings) · AD04–AD07, AD09, AD10, AD12, AD13: não começadas.
+- **Admin** (visual do Admin.dc.html): login do time ✓ · AD01 ✓ 6 KPIs + jornada de 10 passos com contagens reais do banco (abandono e dúvidas: placeholders até Fases 2/7) · AD02 ✓ (busca, filtros Todas/Sem acesso 7 dias/Sem funil/Com venda, colunas do protótipo; "Onde está" = [—] até as etapas existirem; nova aluna com link, importar CSV) · AD03 parcial (dados, acessos, gerar link, copiar mensagem WhatsApp, desativar; faltam conversas, pastas, impersonar) · AD08 ✓ (o que cada acesso libera, mapa produto→acesso, log de eventos, reprocessar) · AD11 parcial (editor JSON das settings) · AD04–AD07, AD09, AD10, AD12, AD13: não começadas.
 
 ## Pronto e testado
 - Schema completo (todas as tabelas da seção 4 + `access_links`, `favorites`, `content_blocks`, `knowledge_chunks` com pgvector, `rate_limits`), IDs legíveis ALN/PRD/VIT/GEN/EVT por sequência.
@@ -36,11 +37,14 @@
 - Rate limit em Postgres (login por IP e por e-mail, conferência do código, tickets).
 - Auditoria (`audit_log`) em toda ação do admin.
 - PWA: manifest, service worker (shell offline + push), ícones provisórios, página offline.
-- Testes: 15 unitários (Vitest) + 4 e2e (Playwright) passando. `typecheck`, `lint` e `build` limpos.
+- **Conteúdo do protótipo no banco**: 19 módulos, 117 aulas (111 + B1 + PO.1–PO.5, PO libera com UP1 ou D1), 39 termos (32 oficiais + 7 do app), 6 produtos da vitrine (marcados `exemplo`, códigos VIT do protótipo), 42 blocos de texto (CKDEF, PASSOS, INFODEF, ENT, HEAD, DIAG, PAISES, LG).
+- `supabase/migrations` + `supabase/seed.sql` testados num Postgres com cara de Supabase (schema `extensions`, aplicar 2x o seed não duplica).
+- Testes: 22 unitários (Vitest, incluindo conferência do conteúdo contra o protótipo) + 5 e2e (Playwright). `typecheck`, `lint` e `build` limpos.
 
 ## Simulado ou provisório
 - Ícones do app (marca "SDM" gerada por script) até vir a arte oficial.
-- Textos das telas A01–A03 e do admin: escritos seguindo o prompt, conferir com o protótipo.
+- Roteiros de 5 blocos das aulas: vazios (vêm do contexto v6).
+- Comissão dos produtos da vitrine: vazia (`[valor]` no protótipo).
 - `WhatsAppSender`: só adaptador de log. `TrackingProvider`: vazio. `MetricsProvider`: manual.
 - Agentes de IA: 10 linhas em `agents`, inativas, prompt `[PENDENTE]`.
 - Settings `ai_models`: `[conferir]` (a doc da OpenAI estava bloqueada pela rede do ambiente de dev).
@@ -50,15 +54,17 @@
 - Nada quebrado conhecido. Não testado com Supabase real: envio do código OTP, login por link (generateLink + verifyOtp), criação de usuário de Auth.
 
 ## Próximos 3 passos
-1. Colocar os docs em `docs/` → rodar `pnpm docs:extract` → montar `db/seed-data/conteudo.json` (formato em `db/seed-data/content-schema.ts`) → `pnpm db:seed`. Conferir textos/visual de A01–A03 e admin com o protótipo.
-2. Criar o projeto Supabase, preencher `.env.local`, `pnpm db:migrate && pnpm db:seed && pnpm seed:admin`, ajustar o template de e-mail do Supabase pra mostrar `{{ .Token }}` e testar login por código e por link.
-3. Fase 2: casca do app (5 abas, histórico, I01–I05, aulas L01–L06 com PO, desbloqueios da seção 4.4).
+1. **Você**: `supabase db push --include-seed` + template de e-mail com `{{ .Token }}` + `.env.local`/Vercel com as chaves; depois `pnpm seed:admin` e testar login por código e por link.
+2. Fase 2: casca do app (5 abas Início/Produtos/Aulas/Professora/Perfil, cabeçalho com histórico, A04–A07, I01–I05, L01–L06 com PO e cadeado, cartões, combinado, grupo, ferramentas FR01–FR04, base B01–B04, perfil U01, desbloqueios), seguindo o protótipo tela a tela.
+3. Quando o contexto v6 chegar: roteiros de 5 blocos, regras dos agentes (seção 10) e conferência das regras de desbloqueio (4.4).
 
 ## Pendências que dependem de você
 | Desde | Pendência |
 |---|---|
-| 2026-11-05 | Subir `docs/SDM_contexto_completo_v6.md` e `docs/prototipo/App.dc.html` + `Admin.dc.html` |
-| 2026-11-05 | Criar projeto Supabase e preencher `.env.local` (lista em `.env.example`) |
+| 2026-11-05 | Subir `docs/SDM_contexto_completo_v6.md` (protótipos já chegaram) |
+| 2026-11-05 | Rodar no seu computador: `supabase login` → `supabase init` → `supabase link --project-ref hcknrrgbmhnqtmenovmk` → `supabase db push --include-seed` |
+| 2026-11-05 | Cadastrar na Vercel (ou `.env.local`) as chaves do Supabase: URL, publishable, **secret** e `DATABASE_URL` do pooler com a senha do banco. Nunca colar no chat |
+| 2026-11-05 | Liberar `hcknrrgbmhnqtmenovmk.supabase.co` na rede do ambiente cloud (opcional: aí eu testo o login daqui) |
 | 2026-11-05 | No Supabase: Auth → Email Templates → "Magic Link": incluir `{{ .Token }}` pra o código de 6 dígitos aparecer |
 | 2026-11-05 | Liberar acesso de rede a platform.openai.com (ou conferir você) pra fixar os modelos mais baratos e preços em `ai_models` |
 | 2026-11-05 | Doc/exemplo de payload do webhook da Hubla (nomes de evento e header de autenticação) |
@@ -76,6 +82,12 @@
 - Webhook com flag desligada responde 202 e guarda o evento (dá pra reprocessar quando ligar).
 - Rate limit no Postgres, sem serviço extra (ADR-005).
 - Settings com valor `null` = "ainda não definido" (pendência visível no AD11).
+- Conteúdo vem do protótipo por script (`docs:extract` → `docs:conteudo`), nunca digitado à mão (ADR-007).
+- Aulas PO: `requer_entitlements` é lista (UP1 **ou** D1).
+- Produção aplica migrations com a CLI do Supabase (`supabase/migrations`, cópia gerada de `drizzle/`) (ADR-008).
+- RLS sem FORCE: dono das tabelas/service role ignoram RLS, anon/authenticated não (migration 0005).
+- pgvector no schema `extensions` no Supabase.
+- A02 "Reenviar" nunca manda pro número digitado, só pro cadastrado.
 
 ## Variáveis de ambiente em uso
 `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `DATABASE_URL`, `ACCESS_LINK_SECRET`, `APP_URL`, `ADMIN_EMAIL`, `HUBLA_WEBHOOK_SECRET`, `HOTMART_WEBHOOK_SECRET`, `WHATSAPP_PROVIDER`, `INNGEST_EVENT_KEY`, `INNGEST_SIGNING_KEY`. Declaradas e ainda sem uso: `OPENAI_API_KEY`, `TRACKING_API_KEY`, `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `RESEND_API_KEY`, `WHATSAPP_API_KEY`.

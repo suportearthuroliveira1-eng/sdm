@@ -202,6 +202,8 @@ export const vitrineProducts = pgTable("vitrine_products", {
   comissaoValor: numeric("comissao_valor", { precision: 12, scale: 2 }),
   linkPaginaProdutor: text("link_pagina_produtor"),
   dominiosRede: text("dominios_rede").array().notNull().default(sql`'{}'::text[]`),
+  /** Versões no idioma de venda + pt: { quem, dor, oque, prom, hooks: {x, pt}, aX, aPt, lang } */
+  extra: jsonb("extra").notNull().default(sql`'{}'::jsonb`),
   exemplo: boolean("exemplo").notNull().default(false),
   ativo: boolean("ativo").notNull().default(true),
   ordem: integer("ordem").notNull().default(0),
@@ -339,7 +341,8 @@ export const lessons = pgTable("lessons", {
   agoraFacaAlvo: text("agora_faca_alvo"), // id da tela | fora | pergunta
   videoUrl: text("video_url"),
   materiais: jsonb("materiais").notNull().default(sql`'[]'::jsonb`),
-  requerEntitlement: entitlementProduct("requer_entitlement"),
+  /** Qualquer um destes libera (ex.: PO = UP1 ou D1). Vazio = só a compra do SDM. */
+  requerEntitlements: entitlementProduct("requer_entitlements").array().notNull().default(sql`'{}'::entitlement_product[]`),
   ordem: integer("ordem").notNull().default(0),
   publicada: boolean("publicada").notNull().default(false),
   regravar: boolean("regravar").notNull().default(false),

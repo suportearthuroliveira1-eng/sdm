@@ -30,3 +30,14 @@
 ## ADR-006 · Modelos de IA como configuração não conferida
 - **Contexto:** a doc da OpenAI estava inacessível pela rede do ambiente de dev.
 - **Decisão:** `settings.ai_models` com `[conferir]` e classes (`text_cheap`, `text_mid`, `image`, `embedding`); nenhum nome no código. Conferir na doc antes da Fase 3.
+
+## ADR-007 · Conteúdo semeado direto do protótipo
+- **Contexto:** o protótipo traz MODS, VIT, GLOSS, CKDEF, PASSOS, INFODEF, ENT, HEAD, DIAG, PAISES e LG como JS.
+- **Decisão:** avaliar as constantes num `vm` (`docs:extract`) e mapear por script (`docs:conteudo`) para `conteudo.json`, validado por Zod e por testes (111 + B1 + 5 PO, 32 + 7 termos, alvos do "Agora faça" = telas do app).
+- **Alternativas:** digitar à mão (erro e risco de inventar).
+- **Consequência:** mudou o protótipo → rodar os dois scripts e o seed de novo. O `vm` não é sandbox de segurança: só rodar com arquivos do próprio projeto.
+
+## ADR-008 · Migrations de produção pela CLI do Supabase
+- **Contexto:** o container de dev não alcança o Supabase; a dona do projeto já usa a CLI.
+- **Decisão:** `drizzle/` continua a fonte (gerada do schema); `pnpm db:supabase` copia pra `supabase/migrations` (timestamps estáveis do journal) e `supabase/seed.sql` é gerado com `pg_dump --inserts --on-conflict-do-nothing`. Produção: `supabase db push --include-seed`. `pnpm db:migrate` fica só pro banco local de teste.
+- **Consequência:** nunca editar `supabase/migrations` à mão; não misturar `drizzle-kit migrate` em produção (controle de versão diferente).

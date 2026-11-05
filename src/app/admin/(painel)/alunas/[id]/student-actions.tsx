@@ -21,7 +21,7 @@ export function StudentActions({
   const [link, setLink] = useState<LinkResult | null>(null);
   return (
     <>
-      <div className="card flex flex-col gap-4">
+      <div className="acd gap-4">
         <h2 className="font-semibold">Acessos</h2>
         <div className="flex flex-wrap gap-2">
           {(Object.keys(active) as Product[]).map((p) => (
@@ -40,12 +40,12 @@ export function StudentActions({
         <p className="text-xs text-muted">Marcar libera na hora (origem: manual). Desmarcar revoga.</p>
       </div>
 
-      <div className="card flex flex-col gap-4">
+      <div className="acd gap-4">
         <h2 className="font-semibold">Link de acesso</h2>
         <div className="flex flex-wrap gap-2">
-          <button className="btn-primary" disabled={pending || !ativo} onClick={() => start(async () => setLink(await newLinkAction(studentId)))}>Gerar novo link</button>
+          <button className="ab1" disabled={pending || !ativo} onClick={() => start(async () => setLink(await newLinkAction(studentId)))}>Gerar novo link</button>
           <button
-            className={ativo ? "btn-danger" : "btn-ghost"}
+            className={ativo ? "ab2 text-danger" : "ab2"}
             disabled={pending}
             onClick={() => {
               if (ativo && !confirm("Desativar a aluna? Ela perde o acesso e os links pendentes.")) return;

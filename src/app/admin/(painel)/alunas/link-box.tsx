@@ -14,8 +14,8 @@ export function LinkBox({ url, message, expiresAt }: { url: string; message: str
       <p className="mb-2 text-sm text-muted">Link de acesso (uso único, vence em {new Date(expiresAt).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })})</p>
       <p className="mb-3 break-all font-mono text-xs">{url}</p>
       <div className="flex flex-wrap gap-2">
-        <button type="button" className="btn-primary" onClick={() => copy("link")}>Copiar link</button>
-        <button type="button" className="btn-ghost" onClick={() => copy("msg")}>Copiar mensagem pronta pro WhatsApp</button>
+        <button type="button" className="ab1" onClick={() => copy("link")}>Copiar link</button>
+        <button type="button" className="ab2" onClick={() => copy("msg")}>Copiar mensagem pronta pro WhatsApp</button>
       </div>
       <p role="status" aria-live="polite" className="mt-2 h-5 text-sm text-ok">{copied ? "Copiado" : ""}</p>
     </div>

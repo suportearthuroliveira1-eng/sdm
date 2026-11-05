@@ -21,8 +21,8 @@ for (const f of files) {
   blocks.forEach((code, i) => {
     const key = `${f}#${i}`;
     try {
-      const names = [...code.matchAll(/(?:const|let|var)\s+([A-Z][A-Z0-9_]*)\s*=/g)].map((m) => m[1]!);
-      const ctx = vm.createContext({});
+      const names = [...code.matchAll(/^(?:const|let|var)\s+([A-Z][A-Z0-9_]*)\s*=/gm)].map((m) => m[1]!);
+      const ctx = vm.createContext({ DCLogic: class {}, console });
       vm.runInContext(`${code}\n;globalThis.__out = {${names.join(",")}}`, ctx, { timeout: 2000 });
       out[key] = (ctx as { __out?: unknown }).__out;
       console.log(`${key}: ${names.join(", ")}`);

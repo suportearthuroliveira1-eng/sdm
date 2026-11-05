@@ -1,0 +1,2 @@
+ALTER TABLE "lessons" ADD COLUMN "requer_entitlements" "entitlement_product"[] DEFAULT '{}'::entitlement_product[] NOT NULL;--> statement-breakpoint
+ALTER TABLE "vitrine_products" ADD COLUMN "extra" jsonb DEFAULT '{}'::jsonb NOT NULL;

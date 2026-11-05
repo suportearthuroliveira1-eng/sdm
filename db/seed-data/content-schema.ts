@@ -31,7 +31,7 @@ export const lessonSeed = z.object({
   agoraFacaAlvo: z.string().optional(),
   videoUrl: z.string().optional(),
   materiais: z.array(z.unknown()).default([]),
-  requerEntitlement: products.optional(),
+  requerEntitlements: z.array(products).default([]),
   ordem: z.number().int(),
   publicada: z.boolean().default(true),
 });
@@ -39,6 +39,7 @@ export const lessonSeed = z.object({
 export const glossarySeed = z.object({ termo: z.string(), definicao: z.string(), oficial: z.boolean(), aula: z.string().optional() });
 
 export const vitrineSeed = z.object({
+  code: z.string().regex(/^VIT-\d{4}$/),
   nome: z.string(),
   produtor: z.string().optional(),
   redeAfiliacao: z.string().optional(),
@@ -61,6 +62,7 @@ export const vitrineSeed = z.object({
   comissaoTipo: z.enum(["pct", "fixo"]).optional(),
   comissaoValor: z.string().optional(),
   linkPaginaProdutor: z.string().optional(),
+  extra: z.record(z.string(), z.unknown()).default({}),
   ordem: z.number().int().default(0),
 });
 

@@ -2,6 +2,7 @@ import { desc, eq } from "drizzle-orm";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { z } from "zod";
+import { AdminHead } from "../../head";
 import { requireAdmin } from "@/lib/auth/admin";
 import { db, schema } from "@/lib/db";
 import { isActive, PRODUCTS, PRODUCT_LABEL } from "@/lib/domain/entitlements";
@@ -26,13 +27,12 @@ export default async function AD03({ params }: PageProps<"/admin/alunas/[id]">) 
   return (
     <section className="flex max-w-4xl flex-col gap-6">
       <Link href="/admin/alunas" className="text-sm text-muted hover:text-text">← Alunas</Link>
+      <AdminHead id="AD03" t="Ficha da aluna" d={`${student.nome} · ${student.code}`} />
       <div>
-        <p className="text-sm text-muted">{student.code}</p>
-        <h1 className="text-2xl font-bold">{student.nome}</h1>
-        <p className="text-muted">{student.email}{student.whatsapp ? ` · ${student.whatsapp}` : ""}{student.paisMora ? ` · mora em ${student.paisMora}` : ""}</p>
+        <p className="mu text-[13px]">{student.email}{student.whatsapp ? ` · ${student.whatsapp}` : ""}{student.paisMora ? ` · mora em ${student.paisMora}` : ""}</p>
       </div>
 
-      <dl className="card grid grid-cols-2 gap-4 text-sm sm:grid-cols-4">
+      <dl className="acd grid grid-cols-2 gap-4 text-sm sm:grid-cols-4">
         <div><dt className="text-muted">Status</dt><dd>{student.ativo ? "ativa" : "desativada"}</dd></div>
         <div><dt className="text-muted">Criada</dt><dd>{fmt(student.criadoEm)}</dd></div>
         <div><dt className="text-muted">Último acesso</dt><dd>{fmt(student.ultimoAcesso)}</dd></div>
@@ -41,7 +41,7 @@ export default async function AD03({ params }: PageProps<"/admin/alunas/[id]">) 
 
       <StudentActions studentId={student.id} ativo={student.ativo} active={active} labels={PRODUCT_LABEL} />
 
-      <div className="card">
+      <div className="acd">
         <h2 className="mb-3 font-semibold">Links recentes</h2>
         {links.length === 0 ? <p className="text-sm text-muted">Nenhum link gerado.</p> : (
           <ul className="flex flex-col gap-2 text-sm">

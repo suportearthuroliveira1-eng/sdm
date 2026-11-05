@@ -23,7 +23,7 @@ export default async function AppHome() {
         <p className="mt-2 text-muted">Seu acesso está ativo: {ativos.join(", ")}.</p>
       </div>
       <div className="flex flex-col gap-3">
-        <Link href="/app/a03" className="btn-primary">Instalar o app no celular</Link>
+        <Link href="/app/a03" className="b1">Instalar o app no celular</Link>
         <SignOutButton />
       </div>
     </Screen>

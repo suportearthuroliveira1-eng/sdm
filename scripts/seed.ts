@@ -42,6 +42,8 @@ async function main() {
     const exemplo = await tx.select({ n: sql<number>`count(*)::int` }).from(schema.vitrineProducts);
     if ((exemplo[0]?.n ?? 0) === 0) {
       for (const v of c.vitrine) await tx.insert(schema.vitrineProducts).values({ ...v, exemplo: true });
+      // próximos produtos cadastrados no admin continuam a numeração depois dos do protótipo
+      await tx.execute(sql`SELECT setval('vit_seq', GREATEST((SELECT max(substring(code from 5)::int) FROM vitrine_products), 1))`);
     }
     for (const b of c.contentBlocks)
       await tx.insert(schema.contentBlocks).values({ key: b.key, kind: b.kind, data: b.data as object }).onConflictDoUpdate({ target: schema.contentBlocks.key, set: { kind: b.kind, data: b.data as object } });

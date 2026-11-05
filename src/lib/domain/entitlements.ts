@@ -44,3 +44,12 @@ export function statusForKind(kind: PurchaseKind): EntitlementLike["status"] | n
       return null;
   }
 }
+
+/** O que cada acesso libera (texto do protótipo Admin, AD08). */
+export const PRODUCT_DESC: Record<Product, { nome: string; libera: string }> = {
+  sdm: { nome: "SDM · front US$69", libera: "App, tronco comum, trilhas, M6, professora, bônus" },
+  up1: { nome: "UP1 · Países Ocultos feito pelo time", libera: "Aulas PO.1 a PO.5" },
+  d1: { nome: "D1 · Combinação pronta", libera: "Aulas PO.1 a PO.5" },
+  up2: { nome: "UP2 · Mentoria Private", libera: "Mentoria em turma" },
+  d2: { nome: "D2 · Gravações + grupo", libera: "Gravações e grupo" },
+};

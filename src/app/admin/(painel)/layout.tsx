@@ -1,40 +1,29 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { requireAdmin } from "@/lib/auth/admin";
 import { SignOutButton } from "@/components/auth/sign-out-button";
+import { AdminNav } from "./nav";
 
 export const metadata: Metadata = { title: { default: "Admin", template: "%s · Admin SDM" }, robots: { index: false } };
-
-const NAV = [
-  { href: "/admin", id: "AD01", label: "Visão geral" },
-  { href: "/admin/alunas", id: "AD02", label: "Alunas" },
-  { href: "/admin/acessos", id: "AD08", label: "Acessos e webhooks" },
-  { href: "/admin/config", id: "AD11", label: "Configurações" },
-];
 
 export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
   const admin = await requireAdmin();
   return (
-    <div className="min-h-dvh lg:grid lg:grid-cols-[240px_1fr]">
-      <aside className="border-b border-line bg-surface lg:min-h-dvh lg:border-b-0 lg:border-r">
-        <div className="flex items-center justify-between px-5 py-4">
-          <span className="text-sm font-bold tracking-[0.2em] text-accent">SDM ADMIN</span>
-          <span className="text-xs text-muted">{admin.papel}</span>
+    <div className="flex min-h-dvh flex-wrap bg-bg">
+      <nav aria-label="Menu do admin" className="box-border flex min-w-[200px] max-w-[260px] flex-[1_1_220px] flex-col gap-1.5 border-r border-line bg-side px-4 py-6 max-lg:max-w-none max-lg:flex-[1_1_100%] max-lg:flex-row max-lg:overflow-x-auto max-lg:border-b max-lg:border-r-0">
+        <div className="flex shrink-0 items-center gap-2.5 px-2 pb-[18px] max-lg:pb-0">
+          <span aria-hidden className="flex size-9 items-center justify-center rounded-[10px] bg-accent text-xs font-bold text-accent-ink">SDM</span>
+          <span className="flex flex-col">
+            <span className="text-sm font-bold">Admin</span>
+            <span className="mu">Perfil: {admin.papel}</span>
+          </span>
         </div>
-        <nav aria-label="Admin" className="flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-col">
-          {NAV.map((n) => (
-            <Link key={n.href} href={n.href} className="flex min-h-11 shrink-0 items-center gap-3 rounded-xl px-3 text-sm hover:bg-surface-2">
-              <span className="text-xs text-muted">{n.id}</span>
-              {n.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="hidden px-5 py-4 lg:block">
-          <p className="mb-3 truncate text-xs text-muted">{admin.email}</p>
-          <SignOutButton to="/admin/entrar" />
+        <AdminNav />
+        <div className="mt-auto flex shrink-0 flex-col gap-2 px-2 pt-6 max-lg:mt-0 max-lg:pt-0">
+          <span className="mu truncate max-lg:hidden">{admin.email}</span>
+          <SignOutButton to="/admin/entrar" className="ab2" />
         </div>
-      </aside>
-      <main className="px-5 py-6 lg:px-10">{children}</main>
+      </nav>
+      <main className="box-border flex min-w-0 flex-[999_1_640px] flex-col gap-5 px-8 pb-10 pt-7 max-sm:px-4">{children}</main>
     </div>
   );
 }
