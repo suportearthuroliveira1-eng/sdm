@@ -20,6 +20,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
         <AdminNav />
         <div className="mt-auto flex shrink-0 flex-col gap-2 px-2 pt-6 max-lg:mt-0 max-lg:pt-0">
           <span className="mu truncate max-lg:hidden">{admin.email}</span>
+          <a href="/app" className="ab2 no-underline">Ver o app da aluna</a>
           <SignOutButton to="/admin/entrar" className="ab2" />
         </div>
       </nav>
