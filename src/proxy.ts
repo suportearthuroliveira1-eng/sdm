@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/lib/public-config";
+import { fetchComPrazo } from "@/lib/supabase/fetch-com-prazo";
 
 /**
  * Renova a sessão do Supabase e protege /app e /admin.
@@ -15,6 +16,7 @@ export async function proxy(request: NextRequest) {
   const anon = SUPABASE_PUBLISHABLE_KEY;
 
   const supabase = createServerClient(url, anon, {
+    global: { fetch: fetchComPrazo },
     cookies: {
       getAll: () => request.cookies.getAll(),
       setAll: (list) => {

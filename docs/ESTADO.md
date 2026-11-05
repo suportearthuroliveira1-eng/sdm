@@ -1,6 +1,6 @@
 # Estado do projeto
 
-> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-05 (10ª tarefa: correção da afiliação em análise e timeouts do banco, depois do teste em produção)** · branch `claude/intelligent-bohr-54teds`.
+> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-05 (11ª tarefa: telas presas em produção — pooler em modo sessão, ADR-015)** · branch `claude/intelligent-bohr-54teds`.
 
 ## Fase atual
 **O app agora segue `docs/App_SDM_Fluxo_Ideal.pdf`** (dois caminhos + divulgação). IA real ligada (OpenAI) e testada de ponta a ponta localmente. Em produção a IA liga quando `OPENAI_API_KEY` estiver na Vercel (pendência da dona).
@@ -65,7 +65,7 @@
 - Webhook Hubla: nomes de evento, caminhos do payload e header `x-hubla-token` **não conferidos** na doc da Hubla.
 
 ## Quebrado / bugs conhecidos
-- 2026-11-05: em produção, 2 travadas seguidas (pedido de afiliação e login presos esperando o servidor) que sumiram sozinhas. Pus timeouts na conexão do banco; se voltar, olhar os logs da Vercel (função `/app`) e o pooler do Supabase.
+- Resolvido 2026-11-05: telas presas em produção (login, pedido de afiliação, navegação). Causa: pooler 6543 + pipelining (ADR-015). Se aparecer erro "max clients" do pooler, ver a consequência do ADR-015.
 - Fluxo completo testado em produção com conta de teste (cadastro → pasta → país → link → kit → 3 anúncios, ganchos, roteiros, bio → upload → PNG com imagem → biblioteca), conta apagada depois.
 - Produção OK desde 2026-11-05: `/api/health` com banco conectado (117 aulas); testado A01→A02 com e-mail sem cadastro, link falso recusado, /admin sem login → /admin/entrar. Falta a dona testar o login do admin pelo e-mail e o link de uma aluna teste. (A senha nova do banco levou alguns minutos pra valer no pooler.) Login por e-mail e por link de acesso ainda não testados de ponta a ponta no Supabase real.
 
@@ -123,7 +123,7 @@
 - URL e chave publishable do Supabase fixas no código (`src/lib/public-config.ts`), a pedido; env com o mesmo nome tem prioridade (ADR-009).
 - `ACCESS_LINK_SECRET` opcional (HMAC da chave secret); `APP_URL` opcional (domínio de produção da Vercel).
 - Login com e-mail e senha, cadastro livre controlado por `cadastro_aberto` (ADR-011, substitui ADR-010). Integração Hubla → e-mail de acesso: adiada a pedido (2026-11-05).
-- Produção: Supabase us-west-2, pooler `aws-1-us-west-2.pooler.supabase.com:6543`; Vercel projeto `sdm-app` (prod branch = `claude/intelligent-bohr-54teds`).
+- Produção: Supabase us-west-2, pooler `aws-1-us-west-2.pooler.supabase.com` (o app usa a 5432 mesmo com 6543 na `DATABASE_URL`, ADR-015); Vercel projeto `sdm-app` (prod branch = `claude/intelligent-bohr-54teds`).
 
 ## Variáveis de ambiente em uso
 Obrigatórias no deploy: `SUPABASE_SERVICE_ROLE_KEY`, `DATABASE_URL`, `ADMIN_EMAIL`. Com padrão: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (fixos no código), `ACCESS_LINK_SECRET` (derivado), `APP_URL` (Vercel), `WHATSAPP_PROVIDER` (`log`). Em uso se existirem: `HUBLA_WEBHOOK_SECRET`, `HOTMART_WEBHOOK_SECRET`, `INNGEST_EVENT_KEY`, `INNGEST_SIGNING_KEY`. Declaradas e ainda sem uso: `OPENAI_API_KEY`, `TRACKING_API_KEY`, `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `RESEND_API_KEY`, `WHATSAPP_API_KEY`. GitHub Actions: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`.

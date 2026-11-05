@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-05 · Telas presas em produção: causa achada e corrigida
+- Causa medida: pooler do Supabase na porta 6543 + pipelining do driver `postgres` = consultas que nunca voltam a partir de 6 em paralelo (ADR-015). O app agora usa a 5432 do mesmo pooler (`urlDoBanco`), com teste.
+- Clientes do Supabase com prazo de 10 s por chamada (`src/lib/supabase/fetch-com-prazo.ts`).
+
 ## 2026-11-05 · Afiliação em análise e conexão do banco
 - Teste em produção achou a tela presa em "Enviando o pedido..." (o pedido salvava, a resposta não voltava; login também travou 2 vezes seguidas e depois voltou ao normal). Causa provável: conexão morta com o pooler numa instância da Vercel que acordou. `src/lib/db/index.ts` ganhou `idle_timeout`, `max_lifetime` e `connect_timeout`.
 - `AcaoIa` mostra erro em vez de girar pra sempre se a ação falhar.
