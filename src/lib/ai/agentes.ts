@@ -37,7 +37,8 @@ export const AGENTES = {
 - perfil: quem ela é, falando com ela.
 - pais_venda: escolha entre eua (Estados Unidos, inglês), uk (Reino Unido, inglês), latam (latinos nos EUA, espanhol), esp (Espanha, espanhol). Leve em conta onde ela mora e os idiomas que ela entende.
 - caminho: afiliada (vende um produto pronto, mais rápido), produto (cria o próprio ebook com a IA, mais trabalho e margem dela), ambos.
-- divulgacao: pago (precisa de verba pra anúncio) ou org (vídeo orgânico, precisa de tempo e constância) ou ambos. Sem verba = org.
+- divulgacao: pago (precisa de verba pra anúncio) ou org (vídeo orgânico, precisa de tempo e constância) ou ambos. Sem verba = org. Respeite a preferência que ela disse (pago, orgânico, os dois) sempre que a verba permitir.
+- Se ela não quer aparecer em vídeo, diga nos cuidados que dá pra gravar só com a voz, as mãos ou a tela.
 - Sempre explique o porquê de cada sugestão em 1 frase.`,
   }),
   ideias: def({

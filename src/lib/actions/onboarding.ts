@@ -90,6 +90,7 @@ export async function concluirDiagnostico(): Promise<{ ok: boolean; erro?: strin
       idiomas: lista(r.idiomas),
       tempoDia: String(r.tempo ?? ""),
       verba: String(r.verba ?? ""),
+      aparecer: r.aparecer ? String(r.aparecer) : null,
       assuntos: lista(r.assuntos),
       experiencia: String(r.exp ?? ""),
     })

@@ -1,5 +1,5 @@
 /**
- * Diagnóstico do primeiro acesso: perguntas uma por tela, cada uma com "por que eu pergunto".
+ * Diagnóstico do primeiro acesso (padrão: 10 perguntas, incluindo verba, preferência pago/orgânico e se aparece em vídeo): perguntas uma por tela, cada uma com "por que eu pergunto".
  * As perguntas, as opções e as regras de decisão são editáveis no admin (setting `diagnostico`);
  * o que está aqui é o padrão (fluxo ideal do PDF + textos do protótipo).
  */
@@ -38,7 +38,9 @@ export const PERGUNTAS: Pergunta[] = [
   { k: "pais", q: "Em que país você mora?", p: "é de lá que você conhece o jeito das pessoas e, muitas vezes, o idioma.", o: ["Estados Unidos", "Portugal", "Reino Unido", "Irlanda", "Espanha", "Itália", "Brasil"], outro: true },
   { k: "idiomas", tipo: "multipla", q: "Quais idiomas você fala, mesmo que pouco?", p: "a IA escreve tudo no idioma do cliente, mas ajuda saber o que você entende.", o: ["Português", "Inglês", "Espanhol", "Italiano"], outro: true },
   { k: "tempo", q: "Quanto tempo por dia você consegue separar?", p: "o caminho certo depende do tempo que você tem de verdade.", o: ["30 minutos", "1 hora", "2 horas ou mais"], regras: { "2 horas ou mais": { caminho: "ambos", peso: 1 } } },
-  { k: "verba", q: "Dá pra investir em anúncio agora?", p: "anúncio é pago por você. Se não der agora, tem o caminho orgânico.", o: ["Nada agora", "Um valor pequeno", "Um valor que não me aperta"], regras: { "Nada agora": { divulgacao: "org", peso: 1 }, "Um valor pequeno": { divulgacao: "pago", peso: 1 }, "Um valor que não me aperta": { divulgacao: "ambos", peso: 1 } } },
+  { k: "verba", q: "Quanto você consegue investir em anúncio por mês, sem apertar?", p: "anúncio é pago por você, direto pra Meta. Se não der agora, tem o caminho orgânico, sem custo de anúncio.", o: ["Nada agora", "Até US$ 100 por mês", "De US$ 100 a US$ 300 por mês", "Mais de US$ 300 por mês"], regras: { "Nada agora": { divulgacao: "org", peso: 3 }, "Até US$ 100 por mês": { divulgacao: "pago", peso: 1 }, "De US$ 100 a US$ 300 por mês": { divulgacao: "pago", peso: 1 }, "Mais de US$ 300 por mês": { divulgacao: "pago", peso: 1 } } },
+  { k: "preferencia", q: "Como você prefere divulgar?", p: "anúncio pago traz resultado mais rápido e custa dinheiro; vídeo orgânico é grátis, mas pede tempo e constância.", o: ["Anúncio pago", "Vídeo orgânico (sem pagar anúncio)", "Os dois", "Não sei, quero a sugestão do app"], regras: { "Anúncio pago": { divulgacao: "pago", peso: 2 }, "Vídeo orgânico (sem pagar anúncio)": { divulgacao: "org", peso: 2 }, "Os dois": { divulgacao: "ambos", peso: 2 } } },
+  { k: "aparecer", q: "Você topa aparecer nos vídeos?", p: "dá pra fazer vídeo sem mostrar o rosto: só a voz, as mãos ou a tela. A IA escreve os roteiros do seu jeito.", o: ["Sim, apareço", "Só a voz ou as mãos", "Prefiro não aparecer"] },
   { k: "assuntos", tipo: "multipla", q: "Sobre o que você gosta de falar ou entende?", p: "produto de um assunto que você gosta é mais fácil de criar e de divulgar.", o: ["Cozinha e receitas", "Casa e organização", "Filhos e família", "Fé e devocional", "Inglês e idiomas", "Beleza e cuidado"], outro: true },
   { k: "exp", q: "Já vendeu alguma coisa pela internet?", p: "pra IA saber de onde começar a explicar.", o: ["Nunca", "Já tentei", "Já vendo"] },
   { k: "medo", q: "Qual é o seu maior medo agora?", p: "a gente explica antes justamente o que mais te preocupa.", o: ["Não saber mexer no celular e nas redes", "Não falar bem o idioma", "Perder dinheiro", "Não ter tempo", "Aparecer em vídeo"], outro: true },
@@ -132,9 +134,9 @@ const PORQUE_CAMINHO: Record<Caminho, string> = {
   afiliada: "Ser afiliada é o jeito mais rápido de começar: o produto e o kit já estão prontos.",
 };
 const PORQUE_DIV: Record<Divulgacao, string> = {
-  org: "Sem verba pra anúncio agora, o vídeo orgânico é o caminho: pede tempo e constância, não dinheiro.",
-  ambos: "Com verba e tempo, dá pra testar anúncio e vídeo orgânico ao mesmo tempo.",
-  pago: "Com um valor pequeno já dá pra testar anúncio, sempre dentro do que não aperta.",
+  org: "Vídeo orgânico: não gasta com anúncio, pede tempo e constância. Bom pra começar sem tirar dinheiro do bolso.",
+  ambos: "Anúncio e vídeo orgânico juntos: o anúncio traz os primeiros cliques e o orgânico cresce com o tempo.",
+  pago: "Anúncio pago: com o valor que não aperta, você já testa e tem os primeiros cliques mais rápido.",
 };
 
 /** Reserva sem IA (e decisão no modo "regras"): regras do admin, explicadas. */

@@ -16,18 +16,35 @@ type P = { id: string; dados: Record<string, unknown>; studentId: string; paisVe
 const feito = (p: P, k: string) => Boolean((p.dados.feito as Record<string, boolean> | undefined)?.[k]);
 const marcados = (p: P, k: string) => ((p.dados.checks as Record<string, number[]> | undefined)?.[k] ?? []);
 
-/** D0 · como você vai divulgar (2 cartões lado a lado + os dois). */
-export function Divulgar({ p }: { p: P }) {
+/** D0 · como você vai divulgar (2 cartões lado a lado + os dois), com a sugestão do diagnóstico. */
+export async function Divulgar({ p }: { p: P }) {
+  const diag = await db().query.diagnostics.findFirst({ where: eq(schema.diagnostics.studentId, p.studentId), orderBy: desc(schema.diagnostics.versao) });
+  const res = diag?.resultado as { divulgacao?: { valor?: string; porque?: string } } | null;
+  const resp = (diag?.respostas ?? {}) as Record<string, string>;
+  const sug = res?.divulgacao?.valor;
   const op = [
     { k: "pago", t: "Anúncio pago", custo: "Você paga a Meta por dia [verba mínima: regra do time].", tempo: "Uns 20 minutos por dia pra olhar os números.", vel: "Mais rápido pra ter os primeiros cliques.", quem: "Quem tem um valor pequeno que não aperta." },
     { k: "org", t: "Vídeo orgânico", custo: "Sem custo com anúncio.", tempo: "Mais tempo: gravar e postar com constância.", vel: "Mais devagar no começo, cresce com a frequência.", quem: "Quem tem tempo e não tem verba agora." },
   ];
   return (
     <>
+      {sug ? (
+        <div className="cd gap-1.5 border border-c-sky/40">
+          <span className="kk">SUGESTÃO DO SEU DIAGNÓSTICO</span>
+          <span className="text-[15px] font-bold">{sug === "pago" ? "Anúncio pago" : sug === "org" ? "Vídeo orgânico" : "Os dois"}</span>
+          {res?.divulgacao?.porque ? <span className="tx">{res.divulgacao.porque}</span> : null}
+          {resp.verba || resp.preferencia ? (
+            <span className="mu">
+              Você disse: {[resp.verba ? `verba "${resp.verba}"` : "", resp.preferencia ? `prefere "${resp.preferencia}"` : "", resp.aparecer ? `vídeo: "${resp.aparecer}"` : ""].filter(Boolean).join(" · ")}
+            </span>
+          ) : null}
+          <span className="mu">A escolha é sua: pode seguir a sugestão ou escolher outro jeito.</span>
+        </div>
+      ) : null}
       <div className="grid gap-3 sm:grid-cols-2">
         {op.map((o) => (
           <form key={o.k} action={escolherDivulgacao.bind(null, p.id, o.k)} className={`flex flex-col gap-2 rounded-2xl border-[1.5px] p-4 ${p.divulgacao === o.k ? "border-accent bg-sel" : "border-line bg-surface"}`}>
-            <span className="text-lg font-bold">{o.t}</span>
+            <span className="flex flex-wrap items-center gap-2 text-lg font-bold">{o.t}{sug === o.k ? <span className="rounded-lg bg-c-sky/15 px-2 py-0.5 text-[11px] font-bold text-c-sky">SUGERIDO</span> : null}</span>
             <span className="mu"><b className="text-text-2">Custo:</b> {o.custo}</span>
             <span className="mu"><b className="text-text-2">Tempo por dia:</b> {o.tempo}</span>
             <span className="mu"><b className="text-text-2">Velocidade:</b> {o.vel}</span>
@@ -37,7 +54,7 @@ export function Divulgar({ p }: { p: P }) {
         ))}
       </div>
       <form action={escolherDivulgacao.bind(null, p.id, "ambos")}>
-        <SubmitButton className={p.divulgacao === "ambos" ? "b1" : "b2 w-full"} pendente="Salvando...">{p.divulgacao === "ambos" ? "Os dois (escolhido)" : "Os dois"}</SubmitButton>
+        <SubmitButton className={p.divulgacao === "ambos" ? "b1" : "b2 w-full"} pendente="Salvando...">{p.divulgacao === "ambos" ? "Os dois (escolhido)" : sug === "ambos" ? "Os dois (sugerido)" : "Os dois"}</SubmitButton>
         <FormPending />
       </form>
     </>

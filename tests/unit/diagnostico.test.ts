@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 import { completo, PERGUNTAS, primeiraPendente, resultadoPorRegras } from "@/lib/domain/diagnostico";
 
 describe("diagnóstico", () => {
-  it("8 perguntas, cada uma com o porquê", () => {
-    expect(PERGUNTAS).toHaveLength(8);
+  it("10 perguntas, cada uma com o porquê", () => {
+    expect(PERGUNTAS).toHaveLength(10);
     expect(PERGUNTAS.every((p) => p.p && p.o.length >= 3)).toBe(true);
   });
   it("sabe onde parou", () => {
@@ -40,5 +40,19 @@ describe("decisão configurável", () => {
     const idi = PERGUNTAS.find((p) => p.k === "idiomas")!;
     expect(validarResposta(idi, ["Inglês", "Inglês", "Francês"])).toEqual(["Inglês", "Francês"]);
     expect(validarResposta(idi, [])).toBeNull();
+  });
+});
+
+describe("verba e preferência de divulgação", () => {
+  it("sem verba vai pro orgânico mesmo preferindo pago; preferência vence quando há verba", async () => {
+    const { decidir, CONFIG_PADRAO } = await import("@/lib/domain/diagnostico");
+    const d = (verba: string, preferencia: string) => decidir({ verba, preferencia }, CONFIG_PADRAO).divulgacao;
+    expect(d("Nada agora", "Anúncio pago")).toBe("org");
+    expect(d("Nada agora", "Os dois")).toBe("org");
+    expect(d("Mais de US$ 300 por mês", "Vídeo orgânico (sem pagar anúncio)")).toBe("org");
+    expect(d("Até US$ 100 por mês", "Os dois")).toBe("ambos");
+    expect(d("De US$ 100 a US$ 300 por mês", "Não sei, quero a sugestão do app")).toBe("pago");
+    expect(d("Nada agora", "Não sei, quero a sugestão do app")).toBe("org");
+    expect(d("Até US$ 100 por mês", "Anúncio pago")).toBe("pago");
   });
 });

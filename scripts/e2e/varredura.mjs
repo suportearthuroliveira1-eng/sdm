@@ -63,7 +63,7 @@ try {
   await p.getByRole("button", { name: "Criar conta e entrar" }).click(); await p.waitForURL(/a04/);
   await p.getByRole("button", { name: "Começar" }).click(); await p.waitForURL(/a07/);
   await p.getByRole("button", { name: "Combinado" }).click(); await p.waitForURL(/a05/);
-  for (const r of ["Estados Unidos", ["Português", "Inglês"], "2 horas ou mais", "Um valor pequeno", ["Casa e organização"], "Já tentei", "Perder dinheiro", "Ter uma renda extra em dólar"]) {
+  for (const r of ["Estados Unidos", ["Português", "Inglês"], "2 horas ou mais", "Até US$ 100 por mês", "Os dois", "Sim, apareço", ["Casa e organização"], "Já tentei", "Perder dinheiro", "Ter uma renda extra em dólar"]) {
     if (Array.isArray(r)) for (const o of r) await p.getByRole("checkbox", { name: o }).click(); else await p.getByRole("radio", { name: r }).click();
     await p.getByRole("button", { name: /^Confirmar/ }).click(); await p.waitForTimeout(300);
   }

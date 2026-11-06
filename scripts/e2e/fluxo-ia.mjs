@@ -20,7 +20,7 @@ try {
   await p.waitForURL(/\/app\/a04/); log("1 cadastro -> boas-vindas");
   await p.getByRole("button", { name: "Começar" }).click(); await p.waitForURL(/a07/);
   await p.getByRole("button", { name: "Combinado" }).click(); await p.waitForURL(/a05/); log("2 combinado -> diagnóstico");
-  const resp = ["Estados Unidos", ["Português", "Inglês"], "1 hora", "Nada agora", ["Cozinha e receitas"], "Nunca", "Não falar bem o idioma", "Ter o meu próprio produto"];
+  const resp = ["Estados Unidos", ["Português", "Inglês"], "1 hora", "Nada agora", "Vídeo orgânico (sem pagar anúncio)", "Prefiro não aparecer", ["Cozinha e receitas"], "Nunca", "Não falar bem o idioma", "Ter o meu próprio produto"];
   for (const r of resp) {
     if (Array.isArray(r)) { for (const o of r) await p.getByRole("checkbox", { name: o }).click(); }
     else await p.getByRole("radio", { name: r }).click();
