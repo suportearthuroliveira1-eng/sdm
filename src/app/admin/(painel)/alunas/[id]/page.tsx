@@ -1,12 +1,13 @@
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { z } from "zod";
 import { AdminHead } from "../../head";
-import { requireAdmin } from "@/lib/auth/admin";
+import { getAdmin, requireAdmin } from "@/lib/auth/admin";
 import { db, schema } from "@/lib/db";
 import { isActive, PRODUCTS, PRODUCT_LABEL } from "@/lib/domain/entitlements";
 import { StudentActions } from "./student-actions";
+import { ZerarAluna } from "./zerar";
 
 export const metadata = { title: "Ficha da aluna" };
 
@@ -17,9 +18,17 @@ export default async function AD03({ params }: PageProps<"/admin/alunas/[id]">) 
   if (!z.string().uuid().safeParse(id).success) notFound();
   const student = await db().query.students.findFirst({ where: eq(schema.students.id, id) });
   if (!student) notFound();
-  const [ents, links] = await Promise.all([
+  const [ents, links, admin, [cont]] = await Promise.all([
     db().query.entitlements.findMany({ where: eq(schema.entitlements.studentId, id) }),
     db().query.accessLinks.findMany({ where: eq(schema.accessLinks.studentId, id), orderBy: desc(schema.accessLinks.createdAt), limit: 5 }),
+    getAdmin(),
+    db()
+      .select({
+        pastas: sql<number>`(select count(*)::int from student_products where student_id = ${id})`,
+        aulas: sql<number>`(select count(*)::int from lesson_progress where student_id = ${id})`,
+        conversas: sql<number>`(select count(*)::int from chat_messages where student_id = ${id})`,
+      })
+      .from(sql`(select 1) as x`),
   ]);
   const active = Object.fromEntries(PRODUCTS.map((p) => [p, ents.some((e) => e.produto === p && isActive(e))])) as Record<(typeof PRODUCTS)[number], boolean>;
   const fmt = (d: Date | null) => (d ? d.toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" }) : "—");
@@ -41,6 +50,13 @@ export default async function AD03({ params }: PageProps<"/admin/alunas/[id]">) 
 
       <StudentActions studentId={student.id} ativo={student.ativo} active={active} labels={PRODUCT_LABEL} />
 
+      <dl className="acd grid grid-cols-2 gap-4 text-sm sm:grid-cols-4">
+        <div><dt className="text-muted">Primeiro acesso</dt><dd>{student.diagnosticoEm ? "feito" : student.boasVindasEm ? "em andamento" : "não começou"}</dd></div>
+        <div><dt className="text-muted">Caminho</dt><dd>{student.caminho ?? "—"}</dd></div>
+        <div><dt className="text-muted">Pastas</dt><dd>{cont?.pastas ?? 0}</dd></div>
+        <div><dt className="text-muted">Aulas vistas</dt><dd>{cont?.aulas ?? 0}</dd></div>
+      </dl>
+
       <div className="acd">
         <h2 className="mb-3 font-semibold">Links recentes</h2>
         {links.length === 0 ? <p className="text-sm text-muted">Nenhum link gerado.</p> : (
@@ -54,6 +70,14 @@ export default async function AD03({ params }: PageProps<"/admin/alunas/[id]">) 
           </ul>
         )}
       </div>
+
+      {admin?.papel === "admin" ? (
+        <ZerarAluna
+          studentId={student.id}
+          nome={student.nome}
+          resumo={`${cont?.pastas ?? 0} pasta(s), ${cont?.aulas ?? 0} aula(s) vista(s), ${cont?.conversas ?? 0} mensagem(ns) com a Professora, primeiro acesso ${student.diagnosticoEm ? "feito" : "não feito"}.`}
+        />
+      ) : null}
     </section>
   );
 }

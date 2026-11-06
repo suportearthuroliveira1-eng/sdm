@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-06 · Zerar aluna
+- `src/lib/server/zerar.ts` (`zerarAluna`): apaga pastas (e tudo dentro), diagnósticos, aulas vistas, conversas, ebooks, itens, imagens (banco + Storage), favoritos, avisos, semanas e chamados; volta os campos do primeiro acesso pra vazio. Mantém login, e-mail, nome, acessos, papel de admin e custo da IA.
+- Admin → Alunas → ficha (AD03): resumo do progresso e "Zerar a aluna" (só papel admin, digitando ZERAR, com auditoria `aluna.zerar`).
+- Conta da dona zerada em produção a pedido (a do Fellipe já estava sem progresso).
+
 ## 2026-11-06 · Produto mais explicado, IA que faz tudo, robô e Aparência
 - **Antes de criar** (Entenda do produto próprio): abertura, "tudo em português primeiro", **Como a IA pensa** (o que ela lê do diagnóstico, robô, o que sai, 4 passos do raciocínio), **fluxograma** animado e clicável (você faz / a IA faz / o que a IA olha) e a escolha: **A IA faz tudo pra mim** ou **passo a passo**. "+ Criar produto" abre direto nessa tela.
 - **A IA faz tudo** (`src/lib/actions/piloto.ts` + `components/etapas/piloto.tsx`): confirma, roda um passo por vez (ideias → escolha → rascunho → ficha → oferta → idioma e país → sumário → capítulos) com progresso real, tenta de novo do passo que falhou e para na Revisão (ela aprova). ~2 min no teste.

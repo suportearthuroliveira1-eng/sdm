@@ -12,6 +12,7 @@ import { createStudent, ensureAuthUser, issueAccessLink, upsertEntitlements } fr
 import { passwordSchema } from "@/lib/domain/password";
 import { supabaseAdmin } from "@/lib/supabase/server";
 import { errMsg } from "@/lib/server/log";
+import { zerarAluna } from "@/lib/server/zerar";
 
 export type LinkResult = { ok: true; url: string; message: string; expiresAt: string; studentId: string } | { ok: false; error: string };
 
@@ -176,4 +177,22 @@ export async function setStudentPasswordAction(studentId: string, _p: { ok?: boo
   if (error) return { error: "Não deu pra salvar a senha: " + error.message };
   await audit(admin.id, "aluna.definir_senha", { tipo: "student", id: student.code }); // nunca grava a senha
   return { ok: true };
+}
+
+/** AD03 · Zerar a aluna: apaga o progresso e volta pro primeiro acesso (mantém login e acessos). */
+export async function zerarAlunaAction(studentId: string, _p: { ok?: boolean; error?: string; msg?: string } | null, form: FormData) {
+  const admin = await requireAdmin(["admin"]);
+  const id = z.string().uuid().parse(studentId);
+  if (String(form.get("confirmar") ?? "").trim().toUpperCase() !== "ZERAR") return { error: 'Digite ZERAR pra confirmar.' };
+  const student = await db().query.students.findFirst({ where: eq(schema.students.id, id) });
+  if (!student) return { error: "Aluna não encontrada." };
+  try {
+    const n = await zerarAluna(id);
+    await audit(admin.id, "aluna.zerar", { tipo: "student", id: student.code }, n);
+    revalidatePath(`/admin/alunas/${id}`);
+    revalidatePath("/app", "layout");
+    return { ok: true, msg: `Zerada: ${n.pastas} pasta(s), ${n.diagnosticos} diagnóstico(s), ${n.aulas} aula(s) vista(s), ${n.conversas} mensagem(ns). No próximo acesso ela começa do primeiro acesso.` };
+  } catch (e) {
+    return { error: errMsg(e) };
+  }
 }
