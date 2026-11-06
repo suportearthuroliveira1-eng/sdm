@@ -296,11 +296,57 @@ body {
 @keyframes pulsa { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--cor, var(--accent)) 45%, transparent); } 50% { box-shadow: 0 0 0 8px transparent; } }
 .flutua { animation: robo-flutua 3s ease-in-out infinite; }
 
+
+/* ---------- País Oculto: castelo, portão, mapa, dossiê ---------- */
+.oc-ceu { background: radial-gradient(120% 80% at 50% 0%, color-mix(in srgb, var(--accent) 30%, #0b0814) 0%, #07050d 60%), #07050d; }
+.oc-estrela { position: absolute; width: 2px; height: 2px; border-radius: 9999px; background: #fff; animation: oc-pisca 3s ease-in-out infinite; }
+@keyframes oc-pisca { 0%, 100% { opacity: 0.15; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.4); } }
+.oc-lua { animation: oc-lua 6s ease-in-out infinite; }
+@keyframes oc-lua { 50% { filter: drop-shadow(0 0 22px color-mix(in srgb, var(--c-amber) 70%, transparent)); } }
+.oc-nevoa { background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent-2) 22%, transparent), transparent); animation: oc-nevoa 9s linear infinite; }
+@keyframes oc-nevoa { from { transform: translateX(-40%); } to { transform: translateX(40%); } }
+.oc-bandeira { transform-origin: left center; animation: oc-bandeira 1.6s ease-in-out infinite alternate; }
+@keyframes oc-bandeira { from { transform: skewY(-6deg) scaleX(0.9); } to { transform: skewY(6deg) scaleX(1.05); } }
+.oc-janela { animation: oc-janela 2.4s ease-in-out infinite; }
+@keyframes oc-janela { 50% { opacity: 0.45; } }
+.oc-portao { perspective: 700px; }
+.oc-folha { transition: transform 1.6s cubic-bezier(0.6, 0, 0.2, 1); backface-visibility: hidden; }
+.oc-folha-e { transform-origin: left center; }
+.oc-folha-d { transform-origin: right center; }
+.oc-aberto .oc-folha-e { transform: rotateY(-112deg); }
+.oc-aberto .oc-folha-d { transform: rotateY(112deg); }
+.oc-luz { opacity: 0; transform: scale(0.2); transition: opacity 1.2s ease-out 0.3s, transform 1.8s cubic-bezier(0.2, 0.9, 0.2, 1) 0.3s; }
+.oc-aberto .oc-luz { opacity: 1; transform: scale(1); }
+.oc-chave { transition: transform 0.7s cubic-bezier(0.5, 0, 0.3, 1.4); }
+.oc-girou .oc-chave { transform: rotate(90deg); }
+.oc-fechadura { animation: oc-brilho 1.8s ease-in-out infinite; }
+@keyframes oc-brilho { 50% { box-shadow: 0 0 0 10px color-mix(in srgb, var(--c-amber) 0%, transparent), 0 0 26px color-mix(in srgb, var(--c-amber) 80%, transparent); } }
+.oc-faisca { position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; border-radius: 9999px; background: var(--c-amber); opacity: 0; }
+.oc-aberto .oc-faisca { animation: oc-faisca 1.6s cubic-bezier(0.1, 0.8, 0.3, 1) var(--d, 0.4s) forwards; }
+@keyframes oc-faisca { 0% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 100% { opacity: 0; transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(0.2); } }
+.oc-titulo { background: linear-gradient(90deg, var(--c-amber), #fff4d6, var(--c-pink), var(--c-amber)); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: oc-ouro 4s linear infinite; }
+@keyframes oc-ouro { to { background-position: -300% 0; } }
+.oc-flip { perspective: 1000px; }
+.oc-flip-in { transform-style: preserve-3d; transition: transform 0.9s cubic-bezier(0.3, 1.3, 0.4, 1); }
+.oc-virou .oc-flip-in { transform: rotateY(180deg); }
+.oc-face { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.oc-verso { transform: rotateY(180deg); }
+.oc-selo { animation: oc-selo 0.7s cubic-bezier(0.3, 1.5, 0.4, 1) both; }
+@keyframes oc-selo { 0% { opacity: 0; transform: scale(0.4) rotate(-20deg); } 100% { opacity: 1; transform: none; } }
+.oc-revela { animation: oc-revela 0.8s cubic-bezier(0.2, 0.9, 0.3, 1) both; }
+@keyframes oc-revela { from { opacity: 0; transform: translateY(18px); filter: blur(8px); } }
+.oc-bussola { animation: oc-gira 14s linear infinite; }
+@keyframes oc-gira { to { transform: rotate(360deg); } }
+.oc-convite { position: relative; overflow: hidden; }
+.oc-convite::after { content: ""; position: absolute; inset: -50%; background: conic-gradient(from 0deg, transparent 0 70%, color-mix(in srgb, var(--c-amber) 40%, transparent) 80%, transparent 90%); animation: oc-gira 5s linear infinite; z-index: 0; }
+.oc-convite > * { position: relative; z-index: 1; }
+
 /* tema sem animações (Admin → Aparência) */
 :root[data-animacoes="off"] *, :root[data-animacoes="off"] *::before, :root[data-animacoes="off"] *::after { animation: none !important; transition-duration: 0ms !important; }
 
 @media (prefers-reduced-motion: reduce) {
   .robo-corpo, .robo-sombra, .robo-olhos, .robo-boca, .robo-antena, .robo-braco-e, .robo-braco-d, .robo-brilhos, .ia-barra, .fluxo-linha, .fluxo-traco, .surge, .pulsa, .flutua, .ia-cartao, .ia-msg { animation: none !important; }
+  .oc-estrela, .oc-lua, .oc-nevoa, .oc-bandeira, .oc-janela, .oc-fechadura, .oc-faisca, .oc-titulo, .oc-selo, .oc-revela, .oc-bussola, .oc-convite::after { animation: none !important; }
   .page-in, .toast-in, .skeleton, .nav-progress.is-on > div { animation: none !important; }
   .nav-progress.is-on > div { width: 60%; }
   * { transition-duration: 0ms !important; }

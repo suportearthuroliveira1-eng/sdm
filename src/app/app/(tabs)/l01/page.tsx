@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Bar, Item, LockIcon, PageTitle, PlayIcon } from "@/components/app/ui";
+import { AULAS_VISUAL_KEY, lerAulasVisual } from "@/lib/domain/aulas-visual";
 import { getJornada } from "@/lib/server/aluna";
+import { getSetting } from "@/lib/server/settings";
 
 export const metadata: Metadata = { title: "Aulas" };
 
 // L01 · Grade de aulas (protótipo): progresso, continuar, módulos por parte.
 export default async function L01() {
-  const j = await getJornada();
+  const [j, vRaw] = await Promise.all([getJornada(), getSetting<unknown>(AULAS_VISUAL_KEY, null)]);
+  const v = lerAulasVisual(vRaw);
   const pct = j.total ? Math.round((j.vistas / j.total) * 100) : 0;
   const partes = [...new Set(j.modulos.map((m) => m.parte ?? ""))];
   return (
@@ -42,14 +45,22 @@ export default async function L01() {
                 .map((m) => {
                   const vistas = m.aulas.filter((a) => a.vista && !a.po).length;
                   const reais = m.aulas.filter((a) => !a.po).length;
+                  const vis = v.modulos[m.id] ?? {};
+                  const topo = vis.banner ?? vis.capa;
                   return (
-                    <details key={m.id} className="group rounded-[14px] border border-line bg-surface open:bg-surface-2">
-                      <summary className="flex min-h-11 cursor-pointer list-none items-center gap-3 p-3 [&::-webkit-details-marker]:hidden">
+                    <details key={m.id} className="group overflow-hidden rounded-[14px] border border-line bg-surface open:bg-surface-2" style={vis.cor ? { borderColor: vis.cor } : undefined}>
+                      <summary className="flex min-h-11 cursor-pointer list-none flex-col [&::-webkit-details-marker]:hidden">
+                        {topo ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={topo} alt={`Trilha ${m.nome}`} loading="lazy" className={`aspect-[16/6] w-full object-cover ${m.lock.travado ? "opacity-50 grayscale" : ""}`} />
+                        ) : null}
+                        <span className="flex items-center gap-3 p-3">
                         <span className="flex flex-1 flex-col gap-0.5">
                           <span className={`text-[15px] font-bold ${m.lock.travado ? "text-muted" : ""}`}>{m.id} · {m.nome}</span>
                           <span className="mu">{m.lock.travado ? m.lock.motivo : `${vistas} de ${reais} aulas vistas`}</span>
                         </span>
                         <span className="mu text-base transition group-open:rotate-90" aria-hidden>›</span>
+                        </span>
                       </summary>
                       <ul className="m-0 flex list-none flex-col gap-1 px-2 pb-2">
                         {m.aulas.map((a) => (
@@ -67,6 +78,10 @@ export default async function L01() {
                                 <span className={`dot border-2 ${a.vista ? "border-ok bg-ok text-accent-ink" : "border-line-2 text-muted"}`} aria-label={a.vista ? "vista" : "não vista"}>
                                   {a.vista ? "✓" : ""}
                                 </span>
+                                {v.aulas[a.id]?.capa ? (
+                                  // eslint-disable-next-line @next/next/no-img-element
+                                  <img src={v.aulas[a.id]!.capa} alt="" loading="lazy" className="h-10 w-16 shrink-0 rounded-lg object-cover" />
+                                ) : null}
                                 <span className="flex flex-1 flex-col gap-0.5">
                                   <span className="text-sm font-semibold">{a.titulo}</span>
                                   <span className="mu">{a.id}{a.tipo ? ` · ${a.tipo}` : ""}{a.minutos ? ` · ${a.minutos} min` : ""}</span>

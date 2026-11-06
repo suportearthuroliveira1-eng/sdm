@@ -6,18 +6,26 @@ import { redirect } from "next/navigation";
 import { requireStudent } from "@/lib/auth/session";
 import { depoisDe } from "@/lib/domain/onboarding";
 import { configFluxo, textosApp } from "@/lib/server/config-app";
+import { marcaApp } from "@/lib/server/marca";
 
 export const metadata: Metadata = { title: "Boas-vindas" };
 
 // Tela 3 do fluxo ideal / A04 do protótipo: o primeiro contato é com a Amanda, não com formulário.
 export default async function A04() {
-  const [{ student }, fluxo, tx] = await Promise.all([requireStudent(), configFluxo(), textosApp()]);
+  const [{ student }, fluxo, tx, marca] = await Promise.all([requireStudent(), configFluxo(), textosApp(), marcaApp()]);
   if (fluxo.pularBoasVindas) redirect(depoisDe("a04", fluxo));
   const bv = tx.boasVindas;
   const nome = student.nome.split(/\s+/)[0] ?? "";
   return (
     <>
       <Passos atual={1} rotulo="Boas-vindas" />
+      {marca.fotoAmanda ? (
+        <div className="surge flex items-center gap-3">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={marca.fotoAmanda} alt={marca.nomeAmanda ?? "Amanda Gomes"} className="flutua size-16 rounded-full border-2 border-accent object-cover" />
+          <span className="flex flex-col"><span className="font-bold">{marca.nomeAmanda ?? "Amanda Gomes"}</span><span className="mu text-sm">{marca.recado || "Estou com você em cada passo."}</span></span>
+        </div>
+      ) : null}
       <h1 className="m-0 text-[26px] font-bold leading-tight">{bv.titulo ? bv.titulo.replace("{nome}", nome) : `Que bom que você chegou, ${nome}`}</h1>
       <p className="tx text-muted">{bv.texto || "Antes de tudo, um recado da Amanda pra você."}</p>
       {bv.videoUrl ? (

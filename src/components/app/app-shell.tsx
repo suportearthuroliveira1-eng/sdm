@@ -33,7 +33,7 @@ function tabAtiva(path: string) {
  *   subtelas mostram cabeçalho com voltar.
  * Computador (≥ lg): menu lateral fixo + cabeçalho com o título da tela e a aluna.
  */
-export function AppShell({ nome, isAdmin, children }: { nome: string; isAdmin: boolean; children: ReactNode }) {
+export function AppShell({ nome, isAdmin, marca = {}, children }: { nome: string; isAdmin: boolean; marca?: { fotoAmanda?: string; icone?: string; nomeAmanda?: string }; children: ReactNode }) {
   const path = usePathname();
   const ativa = tabAtiva(path);
   const raiz = TABS.some((t) => t.href === path);
@@ -44,10 +44,19 @@ export function AppShell({ nome, isAdmin, children }: { nome: string; isAdmin: b
       {/* menu lateral (computador) */}
       <aside className="sticky top-0 hidden h-dvh flex-col gap-1.5 border-r border-line bg-side px-4 py-6 lg:flex">
         <Link href="/app" className="mb-5 flex items-center gap-2.5 px-2 no-underline">
-          <span aria-hidden className="flex size-10 items-center justify-center rounded-xl bg-accent text-[13px] font-bold text-accent-ink">SDM</span>
+          {marca.icone ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={marca.icone} alt="" aria-hidden className="size-10 rounded-xl object-cover" />
+          ) : (
+            <span aria-hidden className="flex size-10 items-center justify-center rounded-xl bg-accent text-[13px] font-bold text-accent-ink">SDM</span>
+          )}
           <span className="flex flex-col">
             <span className="text-sm font-bold text-text">Sistema Dólar Mundial</span>
-            <span className="mu">com Amanda Gomes</span>
+            <span className="mu flex items-center gap-1.5">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              {marca.fotoAmanda ? <img src={marca.fotoAmanda} alt="" aria-hidden className="size-5 rounded-full object-cover" /> : null}
+              com {marca.nomeAmanda ?? "Amanda Gomes"}
+            </span>
           </span>
         </Link>
         <nav aria-label="Menu principal" className="flex flex-col gap-1">

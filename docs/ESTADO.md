@@ -1,6 +1,6 @@
 # Estado do projeto
 
-> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-06 (18ª tarefa: diagnóstico pergunta verba/preferência/aparecer, Entenda em 4 fases, ficha com um botão só, "O que é?" em toda etapa)** · branch `claude/intelligent-bohr-54teds`.
+> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-06 (19ª tarefa: País Oculto com castelo animado, Admin → Aulas e trilhas, Marca e foto da Amanda, Time do admin, nova aluna com senha provisória)** · branch `claude/intelligent-bohr-54teds`.
 
 ## Fase atual
 **O app segue `docs/App_SDM_Fluxo_Ideal.pdf`** (dois caminhos + divulgação). **IA ligada em produção** (chave da OpenAI em Admin → Chaves e variáveis, tabela `app_secrets`). Quase tudo do app é configurável no admin, sem deploy: perguntas do diagnóstico e regras de decisão, regras do primeiro acesso, textos, IA (modelos, limites, regras base, Professora, prompt de cada agente com versões).
@@ -16,7 +16,7 @@
 | Aulas (L1–L7) | ✓ grade, player com "Agora faça", "Tenho dúvida" → Professora, glossário · ✗ L1 "só minha rota", plantão, PO com oferta, conquistas |
 | Professora (Q1–Q3) | ✓ chat com IA em streaming (glossário + aulas no prompt, cita aula com link, lê print reduzido), histórico, sugestões pela etapa, chamado pro time |
 | Perfil (U1–U6) | ✓ dados, meu caminho (somar/trocar/refazer diagnóstico), acessos, ajuda, trocar senha · ✗ editar dados, contas, avisos |
-| Admin | ✓ + Pedidos de afiliação, Kit do SDM, ficha da aluna com **Zerar a aluna**, **Personalizar**: Fluxo e textos, Diagnóstico e decisão, Inteligência artificial (AD04), Aparência, Chaves e variáveis · ✗ AD05–AD07, AD09, AD12, AD13 |
+| Admin | ✓ + Pedidos de afiliação, Kit do SDM, ficha da aluna com **Zerar a aluna**, **Personalizar**: Fluxo e textos, Diagnóstico e decisão, Inteligência artificial (AD04), Aparência, Chaves e variáveis · **Aulas e trilhas** (AD05: criar, mover, capa e banner), **País Oculto** (quem tem acesso, países, convite), **Marca** (foto da Amanda, ícone), **Time do admin**, nova aluna com senha provisória · ✗ AD06, AD07, AD09, AD12, AD13 |
 | Movimento / retorno ao toque | ✓ passos do produto (Passo X de N, trilha clicável, anterior/próxima, painel com Continuar e fases), barra de progresso no clique, esqueleto de carregamento, fade de tela, botões que afundam, spinners em formulários, toasts |
 
 ## Bloqueio principal

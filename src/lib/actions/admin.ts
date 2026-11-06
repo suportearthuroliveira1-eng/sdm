@@ -16,7 +16,7 @@ import { zerarAluna } from "@/lib/server/zerar";
 import { definirSenhaProvisoria, textoAcesso } from "@/lib/server/senha-provisoria";
 import { enviarEmail } from "@/lib/integrations/email";
 
-export type LinkResult = { ok: true; url: string; message: string; expiresAt: string; studentId: string } | { ok: false; error: string };
+export type LinkResult = { ok: true; url: string; message: string; expiresAt: string; studentId: string; senha?: string; mensagemSenha?: string; email?: string; oculto?: boolean } | { ok: false; error: string };
 
 const acessosFrom = (form: FormData) => PRODUCTS.filter((p) => form.get(`acesso_${p}`) === "on");
 
@@ -34,9 +34,25 @@ export async function createStudentAction(_p: LinkResult | null, form: FormData)
   try {
     const { student, created } = await createStudent(parsed.data);
     const link = await issueAccessLink(student.id, admin.id);
-    await audit(admin.id, created ? "aluna.criar" : "aluna.atualizar_acessos", { tipo: "student", id: student.code }, { acessos: parsed.data.acessos });
+    // conta nova: senha provisória (ela cria a definitiva no 1º acesso), como na compra pela Hubla. Conta que já existia: só o link (não mexe na senha dela).
+    let senha: string | undefined;
+    let mensagemSenha: string | undefined;
+    if (created && form.get("entrega") !== "link" && student.authUserId) {
+      senha = await definirSenhaProvisoria(student.authUserId);
+      mensagemSenha = textoAcesso(student.nome, student.email, senha).texto;
+    }
+    const oculto = form.get("oculto") === "on";
+    if (oculto) {
+      const { configOculto } = await import("@/lib/server/pais-oculto");
+      const cfg = await configOculto();
+      if (!cfg.alunas.includes(student.id)) {
+        const valor = { ...cfg, alunas: [...cfg.alunas, student.id] };
+        await db().insert(schema.settings).values({ key: "pais_oculto", value: valor, grupo: "acesso", descricao: "País Oculto: quem tem acesso e quais países aparecem (Admin → País Oculto).", pendente: false }).onConflictDoUpdate({ target: schema.settings.key, set: { value: valor } });
+      }
+    }
+    await audit(admin.id, created ? "aluna.criar" : "aluna.atualizar_acessos", { tipo: "student", id: student.code }, { acessos: parsed.data.acessos, senhaProvisoria: Boolean(senha), oculto });
     revalidatePath("/admin/alunas");
-    return { ok: true, url: link.url, message: link.message, expiresAt: link.expiresAt.toISOString(), studentId: student.id };
+    return { ok: true, url: link.url, message: link.message, expiresAt: link.expiresAt.toISOString(), studentId: student.id, senha, mensagemSenha, email: student.email, oculto };
   } catch (e) {
     return { ok: false, error: errMsg(e) };
   }

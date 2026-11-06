@@ -156,6 +156,36 @@ export const AGENTES = {
     schema: S.adaptarOut,
     tarefa: `Tarefa: adaptar uma peça pronta do time do SDM pro idioma e o jeito do país de venda da aluna. NÃO mude a promessa nem acrescente nada que não estava na peça. Se pedirem variação, mude só o gancho/abertura.`,
   }),
+  oculto_mapa: def({
+    id: "AGT-oculto-mapa",
+    nome: "País Oculto · mapa secreto",
+    classe: "text_cheap",
+    maxTokens: 1400,
+    schema: S.ocultoMapaOut,
+    tarefa: `Tarefa: escolher 3 "países ocultos" pra aluna: mercados pouco olhados por quem vende do Brasil, onde ela pode vender um ebook próprio.
+- Escolha SÓ entre as chaves do catálogo recebido (campo catalogo). Devolva exatamente 3, a melhor primeiro.
+- Leve em conta os idiomas que ela entende (português conta: há países ocultos em português), onde ela mora, os assuntos, o tempo e a verba.
+- Tudo em português do Brasil, simples, falando com ela (você). Tom de descoberta, mas honesto.
+- Nunca invente número (tamanho de mercado, faturamento, CPM, porcentagem). Explique por qualidade, não por número.`,
+  }),
+  oculto_estrategia: def({
+    id: "AGT-oculto-estrategia",
+    nome: "País Oculto · estratégia secreta",
+    classe: "text_cheap",
+    maxTokens: 3200,
+    schema: S.ocultoEstrategiaOut,
+    tarefa: `Tarefa: montar a ESTRATÉGIA SECRETA pra aluna vender um ebook próprio no país oculto escolhido (campo pais).
+- segredo: a grande sacada desse mercado pra ela, em português.
+- produto: uma ideia de ebook curto ligada aos assuntos dela e ao jeito de viver desse público. Campos bi: x no idioma de venda (pais.idiomaCod), pt em português. nome_provisorio em português.
+- angulo: o ângulo que quase ninguém usa nesse mercado, explicado em português.
+- oferta: 1 a 2 bônus simples que ela consegue fazer (checklist, planner, roteiro) e uma garantia comum de plataforma (7 dias). Não fale de preço: o app mostra a faixa.
+- onde_divulgar: 2 a 3 canais com o como, pensando na verba e se ela aparece em vídeo.
+- plano: 3 fases (preparar, testar, crescer) com 3 a 4 ações curtas cada, e o "quando" em semanas.
+- ganchos: 3 ganchos de anúncio/vídeo (x no idioma de venda, pt em português).
+- onde_receber: que tipo de conta/plataforma serve pra receber nessa moeda, sem citar marca se não tiver certeza.
+- cuidados: 2 a 4 cuidados reais (cultura, promessa, idioma).
+- Nunca invente número, depoimento, prova ou resultado. Sem promessa de ganho, cura ou prazo. Tudo que é explicação é em português do Brasil.`,
+  }),
 } as const;
 
 export type AgenteKey = keyof typeof AGENTES;

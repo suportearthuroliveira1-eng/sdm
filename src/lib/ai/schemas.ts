@@ -141,3 +141,40 @@ export const rascunhoFichaOut = z.object({
   nao_prometer: z.string().describe("O que não prometer nesse tema, separado por vírgula."),
   dica: z.string().describe("Uma frase pra aluna: o que ela pode acrescentar com as palavras dela pra ficha ficar mais forte."),
 });
+
+/** País Oculto · mapa: 3 países do catálogo que combinam com ela. */
+export const ocultoMapaOut = z.object({
+  paises: z.array(
+    z.object({
+      k: z.string().describe("Chave do país no catálogo recebido."),
+      por_que_voce: z.string().describe("Por que esse país combina com ELA (assuntos, idiomas, tempo). Português, 1 a 2 frases."),
+      vantagem: z.string().describe("A vantagem escondida desse mercado, sem números."),
+      primeiro_passo: z.string().describe("O primeiro passo prático, em 1 frase."),
+    }),
+  ),
+  segredo_geral: z.string().describe("O segredo por trás dessa escolha, em 1 a 2 frases, falando com ela."),
+  checagem,
+});
+
+/** País Oculto · estratégia secreta pra um país. */
+export const ocultoEstrategiaOut = z.object({
+  segredo: z.string().describe("A grande sacada, em 2 a 3 frases, falando com ela."),
+  produto: z.object({
+    nome_provisorio: z.string(),
+    publico: bi,
+    dor: bi,
+    promessa: bi,
+    por_que_vende: z.string(),
+    concorrencia: z.enum(["baixa", "media", "alta"]),
+    canal: z.enum(["anuncio", "organico", "ambos"]),
+    formato: z.string(),
+  }),
+  angulo: z.object({ titulo: z.string(), explicacao: z.string() }),
+  oferta: z.object({ bonus: z.array(z.string()), garantia: z.string() }),
+  onde_divulgar: z.array(z.object({ canal: z.string(), como: z.string() })),
+  plano: z.array(z.object({ fase: z.string(), quando: z.string(), acoes: z.array(z.string()) })),
+  ganchos: z.array(bi),
+  onde_receber: z.string(),
+  cuidados: z.array(z.string()),
+  checagem,
+});

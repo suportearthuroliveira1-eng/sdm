@@ -112,3 +112,8 @@
 
 ## ADR-023 · Nenhuma etapa trava por falta de configuração
 - **Decisão:** checklists permitem "concluir assim mesmo" (com o que falta à vista); checkout aceita confirmação da aluna quando o site bloqueia o teste automático; criativos/roteiros da afiliada podem ser marcados como feitos usando o kit. Gravação de caixinhas e "feito" é atômica (jsonb_set no banco).
+
+## ADR-024 · País Oculto, capas de aula e marca sem migration
+- **Contexto**: o time pediu uma área secreta (País Oculto), capas/banners de aula e foto da Amanda/ícone pelo admin. Hoje não temos como aplicar migration em produção sem um token novo do Supabase.
+- **Decisão**: tudo que é novo vive em tabelas que já existem. Quem tem acesso ao País Oculto, os países ligados e o convite ficam no setting `pais_oculto`; o que a aluna gerou fica em `students.cartoes.oculto` (gravação atômica por `jsonb ||`). Capas e banners em `aulas_visual`; foto, ícone e nome em `marca`. Imagens vão pro bucket privado em `publico/...` e saem por `/api/publico/...` (só PNG/JPG/WEBP, até 4 MB, nome nunca repete, cache longo).
+- **Consequência**: zerar a aluna apaga o que ela fez no País Oculto. Se um dia virar tabela, é só migrar desses JSON. Preço no País Oculto vem da tabela do app (regra 6), não da IA.

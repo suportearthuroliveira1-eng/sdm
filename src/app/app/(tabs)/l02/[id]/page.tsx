@@ -3,7 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LockIcon } from "@/components/app/ui";
 import { agoraFacaLink } from "@/lib/domain/screens";
+import { AULAS_VISUAL_KEY, imagemDaAula, lerAulasVisual } from "@/lib/domain/aulas-visual";
 import { getJornada } from "@/lib/server/aluna";
+import { getSetting } from "@/lib/server/settings";
 import { AulaAcoes } from "./acoes";
 import { marcarOndeParou } from "@/lib/server/onde-parou";
 
@@ -12,7 +14,7 @@ export const metadata: Metadata = { title: "Aula" };
 // L02 · Player da aula com "Agora faça" (protótipo). Vídeo e roteiro de 5 blocos vêm do admin (AD05).
 export default async function L02({ params }: PageProps<"/app/l02/[id]">) {
   const id = decodeURIComponent((await params).id);
-  const j = await getJornada();
+  const [j, vRaw] = await Promise.all([getJornada(), getSetting<unknown>(AULAS_VISUAL_KEY, null)]);
   const mod = j.modulos.find((m) => m.aulas.some((a) => a.id === id));
   const aula = mod?.aulas.find((a) => a.id === id);
   if (!mod || !aula) notFound();
@@ -20,10 +22,15 @@ export default async function L02({ params }: PageProps<"/app/l02/[id]">) {
   const todas = j.modulos.flatMap((m) => m.aulas);
   const i = todas.findIndex((a) => a.id === id);
   const prox = todas.slice(i + 1).find((a) => !a.lock.travado);
+  const capa = imagemDaAula(lerAulasVisual(vRaw), aula.id, mod.id);
   const alvo = agoraFacaLink(aula.agoraFacaAlvo, j.student.produtoAtivo);
 
   return (
     <div className="flex flex-col gap-3.5 pt-3 lg:max-w-3xl lg:pt-0">
+      {capa ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={capa} alt={`Capa da aula ${aula.titulo}`} className="aspect-video w-full rounded-[18px] border border-line object-cover" />
+      ) : null}
       <div className="flex flex-col gap-0.5">
         <span className="mu text-sm">Aula {aula.id} · {mod.id} {mod.nome}</span>
         <h1 className="m-0 text-[24px] font-bold leading-tight lg:text-[30px]">{aula.titulo}</h1>

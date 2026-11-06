@@ -5,6 +5,7 @@ import { NavProgress } from "@/components/ux/nav-progress";
 import { Toaster } from "@/components/ux/toaster";
 import { cssDoTema } from "@/lib/domain/tema";
 import { temaApp } from "@/lib/server/config-app";
+import { marcaApp } from "@/lib/server/marca";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -13,7 +14,7 @@ const jakarta = Plus_Jakarta_Sans({
   display: "swap",
 });
 
-export const metadata: Metadata = {
+const METADATA_BASE: Metadata = {
   title: { default: "SDM", template: "%s · SDM" },
   description: "Sistema Dólar Mundial · área da aluna",
   applicationName: "SDM",
@@ -23,6 +24,12 @@ export const metadata: Metadata = {
     apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180" }],
   },
 };
+
+/** Ícone trocado em Admin → Marca vale pra aba do navegador e pro atalho do iPhone. */
+export async function generateMetadata(): Promise<Metadata> {
+  const { icone } = await marcaApp();
+  return icone ? { ...METADATA_BASE, icons: { icon: [{ url: icone }], apple: [{ url: icone }] } } : METADATA_BASE;
+}
 
 export const viewport: Viewport = {
   themeColor: "#0E0C13",

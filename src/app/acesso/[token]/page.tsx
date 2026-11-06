@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Brand } from "@/components/ui/screen";
 import { EnterButton } from "./enter-button";
+import { marcaApp } from "@/lib/server/marca";
 
 export const metadata: Metadata = { title: "Seu acesso", robots: { index: false } };
 
@@ -10,13 +11,14 @@ export const metadata: Metadata = { title: "Seu acesso", robots: { index: false 
  */
 export default async function Acesso({ params }: PageProps<"/acesso/[token]">) {
   const { token } = await params;
+  const marca = await marcaApp();
   return (
     <main data-screen="ACESSO" className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col gap-[22px] px-5 pb-7 pt-[max(env(safe-area-inset-top),34px)]">
       <div className="flex items-center gap-3">
-        <Brand />
+        <Brand src={marca.icone} />
         <div className="flex flex-col gap-0.5">
           <span className="text-base font-bold">Sistema Dólar Mundial</span>
-          <span className="mu text-[13px]">com Amanda Gomes</span>
+          <span className="mu text-[13px]">com {marca.nomeAmanda ?? "Amanda Gomes"}</span>
         </div>
       </div>
       <div className="mt-[18px] flex flex-col gap-2.5">

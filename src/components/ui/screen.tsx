@@ -48,7 +48,9 @@ export function Notice({ tone = "info", children }: { tone?: "info" | "ok" | "wa
 }
 
 /** Marca SDM (quadrado roxo) usada no A01 e no admin. */
-export function Brand({ size = 44 }: { size?: number }) {
+export function Brand({ size = 44, src }: { size?: number; src?: string }) {
+  // eslint-disable-next-line @next/next/no-img-element
+  if (src) return <img src={src} alt="" aria-hidden style={{ width: size, height: size }} className="flex-none rounded-[14px] object-cover" />;
   return (
     <span
       aria-hidden

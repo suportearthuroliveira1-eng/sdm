@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { createStudentAction, importCsvAction, type ImportResult, type LinkResult } from "@/lib/actions/admin";
 import { PRODUCTS, PRODUCT_LABEL } from "@/lib/domain/entitlements";
 import { Notice } from "@/components/ui/screen";
@@ -28,8 +28,24 @@ export function NewStudentForm() {
           ))}
         </div>
       </fieldset>
+      <fieldset>
+        <legend className="lb mb-1.5 block text-muted">Como ela entra</legend>
+        <div className="flex flex-wrap gap-2">
+          <label className="flex min-h-11 cursor-pointer items-center gap-2 rounded-xl border border-line px-4 has-[:checked]:border-accent has-[:checked]:bg-accent/10">
+            <input type="radio" name="entrega" value="senha" defaultChecked className="size-4 accent-[var(--accent)]" /> E-mail + senha provisória
+          </label>
+          <label className="flex min-h-11 cursor-pointer items-center gap-2 rounded-xl border border-line px-4 has-[:checked]:border-accent has-[:checked]:bg-accent/10">
+            <input type="radio" name="entrega" value="link" className="size-4 accent-[var(--accent)]" /> Só o link de acesso
+          </label>
+        </div>
+      </fieldset>
+      <label className="flex min-h-11 cursor-pointer items-center gap-2 self-start rounded-xl border border-c-amber/50 px-4 text-sm has-[:checked]:bg-c-amber/10">
+        <input type="checkbox" name="oculto" className="size-4 accent-[var(--c-amber)]" /> Liberar o País Oculto pra ela
+      </label>
       {state && !state.ok ? <Notice tone="danger">{state.error}</Notice> : null}
-      <button className="ab1 self-start" disabled={pending}>{pending ? "Criando..." : "Criar e gerar link"}</button>
+      <button className="ab1 self-start" disabled={pending}>{pending ? "Criando..." : "Criar aluna"}</button>
+      {state?.ok && state.senha ? <SenhaBox email={state.email ?? ""} senha={state.senha} mensagem={state.mensagemSenha ?? ""} /> : null}
+      {state?.ok && state.oculto ? <Notice tone="ok">País Oculto liberado.</Notice> : null}
       {state?.ok ? <LinkBox url={state.url} message={state.message} expiresAt={state.expiresAt} /> : null}
     </form>
   );
@@ -54,5 +70,18 @@ export function ImportCsvForm() {
         </div>
       ) : null}
     </form>
+  );
+}
+
+function SenhaBox({ email, senha, mensagem }: { email: string; senha: string; mensagem: string }) {
+  const [ok, setOk] = useState(false);
+  return (
+    <div className="rounded-xl border border-ok-line bg-ok-bg p-4">
+      <p className="mb-1 text-sm text-ok">Conta criada. Mostre só pra ela (a senha aparece uma vez):</p>
+      <p className="m-0 text-sm">E-mail: <b>{email}</b></p>
+      <p className="m-0 text-sm">Senha provisória: <b className="font-mono text-lg tracking-wider">{senha}</b></p>
+      <button type="button" className="ab2 mt-2" onClick={async () => { await navigator.clipboard.writeText(mensagem); setOk(true); }}>{ok ? "Copiado" : "Copiar mensagem pro WhatsApp"}</button>
+      <p className="mu mb-0 mt-2 text-xs">No primeiro acesso o app pede pra ela criar a senha definitiva.</p>
+    </div>
   );
 }
