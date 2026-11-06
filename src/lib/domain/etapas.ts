@@ -87,7 +87,7 @@ export function pronta(slug: string, e: EstadoPasta): boolean {
 }
 
 /** Lista de etapas da pasta, na ordem, com o status de cada uma. */
-export function etapasDaPasta(e: EstadoPasta): EtapaStatus[] {
+export function etapasDaPasta(e: EstadoPasta, textos: Record<string, { nome?: string; entenda?: string }> = {}): EtapaStatus[] {
   const estrutura = e.tipo === "sdm" ? ETAPAS_SDM : e.tipo === "proprio" ? ETAPAS_PROPRIO : [];
   const div = [
     ...ETAPAS_DIVULGACAO_BASE,
@@ -117,7 +117,8 @@ export function etapasDaPasta(e: EstadoPasta): EtapaStatus[] {
     }
     const agora = !ok && !travada && !agoraMarcado && !(def.slug === "afiliacao" && emAnalise);
     if (agora) agoraMarcado = true;
-    const st: EtapaStatus = { ...def, ok, agora, travada };
+    const t = textos[def.slug];
+    const st: EtapaStatus = { ...def, ...(t?.nome ? { nome: t.nome } : {}), ...(t?.entenda ? { entenda: t.entenda } : {}), ok, agora, travada };
     return st;
   });
 }

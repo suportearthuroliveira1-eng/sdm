@@ -2,33 +2,28 @@ import type { Metadata } from "next";
 import { Passos } from "@/components/app/passos";
 import { SubmitButton } from "@/components/ux/submit-button";
 import { combinar } from "@/lib/actions/onboarding";
+import { redirect } from "next/navigation";
 import { requireStudent } from "@/lib/auth/session";
+import { configFluxo, textosApp } from "@/lib/server/config-app";
+import { SDM_FAZ, VOCE_FAZ } from "@/lib/domain/textos-padrao";
 
 export const metadata: Metadata = { title: "O nosso combinado" };
 
 // Tela 4 · duas colunas: o que o SDM faz e o que ela faz. Nada de promessa de ganho.
-const SDM_FAZ = [
-  "Explica cada passo antes de pedir, em aula curta.",
-  "A IA escreve no idioma do cliente e mostra o português do lado.",
-  "O app mostra sempre um próximo passo só.",
-  "O time responde quando você travar.",
-];
-const VOCE_FAZ = [
-  "Eu vou dar um passo por dia, mesmo que pequeno.",
-  'Eu vou fazer o "Agora faça" de cada aula antes de seguir.',
-  "Eu vou perguntar quando travar, em vez de sumir.",
-  "Eu vou até o fim do meu caminho.",
-];
+
 
 export default async function A07() {
-  const { student } = await requireStudent();
+  const [{ student }, fluxo, tx] = await Promise.all([requireStudent(), configFluxo(), textosApp()]);
+  if (fluxo.pularCombinado) redirect("/app/a05");
+  const sdmFaz = tx.combinado.sdmFaz?.length ? tx.combinado.sdmFaz : SDM_FAZ;
+  const voceFaz = tx.combinado.voceFaz?.length ? tx.combinado.voceFaz : VOCE_FAZ;
   return (
     <>
       <Passos atual={2} rotulo="Combinado" />
       <span className="self-start rounded-[10px] bg-warn-bg px-2.5 py-1 text-xs font-bold tracking-[0.5px] text-warn">AULA 0.6</span>
-      <h1 className="m-0 text-[26px] font-bold leading-tight">O nosso combinado</h1>
+      <h1 className="m-0 text-[26px] font-bold leading-tight">{tx.combinado.titulo || "O nosso combinado"}</h1>
       <div className="grid gap-3 sm:grid-cols-2">
-        {[["O QUE O SDM FAZ", SDM_FAZ], ["O QUE VOCÊ FAZ", VOCE_FAZ]].map(([t, l]) => (
+        {[["O QUE O SDM FAZ", sdmFaz], ["O QUE VOCÊ FAZ", voceFaz]].map(([t, l]) => (
           <div key={t as string} className="cd gap-2">
             <span className="kk">{t as string}</span>
             {(l as string[]).map((x, i) => (

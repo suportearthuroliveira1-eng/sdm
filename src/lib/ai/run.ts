@@ -16,6 +16,24 @@ export class IaDesligada extends Error {
   }
 }
 export class IaLimite extends Error {}
+/** O time desligou esse agente no admin (Admin → IA). */
+export class AgenteDesligado extends Error {}
+
+/** Configuração da IA editável no admin (setting `ia`). */
+export type ConfigIa = {
+  /** substitui as regras base do código (src/lib/ai/regras.ts) */
+  regrasBase?: string;
+  /** agentes desligados (chaves de AGENTES) */
+  desligados?: string[];
+  /** por agente: modelo (classe) e limite de tokens de saída */
+  agentes?: Partial<Record<string, { classe?: Classe; maxTokens?: number }>>;
+  /** jeito da Professora (substitui o bloco "VOCÊ É A PROFESSORA DO APP") */
+  professora?: string;
+};
+export async function configIa(): Promise<ConfigIa> {
+  const v = await getSetting<ConfigIa | null>("ia", null);
+  return v && typeof v === "object" ? v : {};
+}
 
 type Modelos = { text_cheap?: string; text_mid?: string; image?: string; embedding?: string };
 /** Preço por 1M tokens (entrada, entrada em cache, saída) em US$. Editável em settings.ai_prices. */
@@ -50,14 +68,15 @@ export async function openai() {
 }
 
 /** Prompt de sistema: regras base (fixas) + tarefa do agente (versão ativa no banco, senão a do código). */
-async function promptDoAgente(key: AgenteKey) {
+async function promptDoAgente(key: AgenteKey, cfg: ConfigIa) {
   const a = AGENTES[key];
+  const base = cfg.regrasBase?.trim() ? cfg.regrasBase : REGRAS_BASE;
   const row = await db().query.agents.findFirst({
     where: and(eq(schema.agents.id, a.id), eq(schema.agents.ativo, true)),
     orderBy: desc(schema.agents.versao),
   });
   const tarefaBanco = row && !row.promptSistema.startsWith("[PENDENTE]") ? row.promptSistema : null;
-  return { versao: row?.versao ?? 0, texto: `${REGRAS_BASE}\n\n${tarefaBanco ?? a.tarefa}`, temperatura: row?.temperatura ?? null };
+  return { versao: row?.versao ?? 0, texto: `${base}\n\n${tarefaBanco ?? a.tarefa}`, temperatura: row?.temperatura ?? null };
 }
 
 function custo(model: string, precos: Precos, u: { input_tokens?: number; output_tokens?: number; input_tokens_details?: { cached_tokens?: number } } | undefined) {
@@ -79,16 +98,21 @@ export async function rodar<K extends AgenteKey>(
   opts: { studentId: string | null; semCache?: boolean },
 ): Promise<{ saida: z.infer<(typeof AGENTES)[K]["schema"]>; doCache: boolean; custoUsd: number; modelo: string; agente: string }> {
   const a = AGENTES[key];
-  const model = await modelo(a.classe);
+  const cfg = await configIa();
+  if (cfg.desligados?.includes(key)) throw new AgenteDesligado(`Agente ${key} desligado no admin.`);
+  const ajuste = cfg.agentes?.[key] ?? {};
+  const model = await modelo(ajuste.classe ?? a.classe);
   if (!model) throw new IaDesligada();
+  const maxTokens = ajuste.maxTokens && ajuste.maxTokens >= 200 ? Math.min(ajuste.maxTokens, 16000) : a.maxTokens;
   if (opts.studentId) {
     const limite = await getSetting<number | null>("quota_ia_dia", null);
     const rl = await rateLimit(`ia:${opts.studentId}`, typeof limite === "number" && limite > 0 ? limite : 200, 86400);
     if (!rl.ok) throw new IaLimite(`Você usou a IA bastante hoje. Ela volta às ${rl.retryAt.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", timeZone: "America/Sao_Paulo" })}.`);
   }
-  const p = await promptDoAgente(key);
+  const p = await promptDoAgente(key, cfg);
   const entradaTxt = JSON.stringify(entrada);
-  const hash = createHash("sha256").update(`${key}|${a.id}|${p.versao}|${model}|${entradaTxt}`).digest("hex");
+  // o texto do prompt entra no hash: mudou o prompt no admin, a resposta é nova
+  const hash = createHash("sha256").update(`${key}|${a.id}|${p.texto}|${model}|${maxTokens}|${entradaTxt}`).digest("hex");
 
   if (!opts.semCache) {
     const hit = await db().query.aiCache.findFirst({ where: eq(schema.aiCache.hash, hash) });
@@ -110,7 +134,7 @@ export async function rodar<K extends AgenteKey>(
         instructions: p.texto,
         input: `ENTRADA (JSON):\n${entradaTxt}${tentativa ? "\n\nATENÇÃO: a tentativa anterior não cumpriu todas as regras. Refaça cumprindo todas." : ""}`,
         text: { format: zodTextFormat(a.schema, key) },
-        max_output_tokens: a.maxTokens + 2000, // folga pro raciocínio
+        max_output_tokens: maxTokens + 2000, // folga pro raciocínio
         reasoning: { effort: "low" },
         prompt_cache_key: `sdm-${a.id}`,
       });
@@ -144,6 +168,7 @@ export async function rodar<K extends AgenteKey>(
 
 /** Mensagem amigável pra mostrar na tela. */
 export function erroIa(e: unknown): string {
+  if (e instanceof AgenteDesligado) return "Essa parte da IA está pausada pelo time. Fale com o suporte se precisar.";
   if (e instanceof IaDesligada) return "A IA ainda não está ligada neste app (falta a chave da OpenAI). Fale com o time.";
   if (e instanceof IaLimite) return e.message;
   return "A IA não conseguiu responder agora. Tente de novo em instantes.";

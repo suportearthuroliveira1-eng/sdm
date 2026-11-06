@@ -2,7 +2,7 @@ import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { getAuthUser } from "@/lib/auth/session";
 import { db, schema } from "@/lib/db";
-import { modelo, openai } from "@/lib/ai/run";
+import { configIa, modelo, openai } from "@/lib/ai/run";
 import { promptProfessora } from "@/lib/ai/professora";
 import { getSetting } from "@/lib/server/settings";
 import { rateLimit } from "@/lib/server/rate-limit";
@@ -28,7 +28,9 @@ export async function POST(req: Request) {
   if (!parsed.success) return new Response("Mensagem inválida.", { status: 400 });
   const { texto, print, pastaId, aula } = parsed.data;
 
-  const model = await modelo("text_cheap");
+  const cfgIa = await configIa();
+  if (cfgIa.desligados?.includes("professora")) return new Response("A Professora está pausada pelo time agora. Use o glossário ou fale com o time.", { status: 503 });
+  const model = await modelo(cfgIa.agentes?.professora?.classe ?? "text_cheap");
   if (!model) return new Response("A Professora ainda não está ligada neste app (falta a chave da OpenAI).", { status: 503 });
   const cota = await getSetting<number | null>("quota_professora_dia", null);
   const rl = await rateLimit(`prof:${student.id}`, typeof cota === "number" && cota > 0 ? cota : 40, 86400);
@@ -43,7 +45,7 @@ export async function POST(req: Request) {
   await db().insert(schema.chatMessages).values({ studentId: student.id, studentProductId: pastaId ?? null, aulaAtual: aula ?? null, papel: "user", texto, anexoPath: print ? "[print enviado]" : null });
 
   const client = await openai();
-  const instrucoes = await promptProfessora();
+  const instrucoes = await promptProfessora(cfgIa);
   const input = [
     ...hist.map((m) => ({ role: m.papel === "assistant" ? ("assistant" as const) : ("user" as const), content: m.texto })),
     {

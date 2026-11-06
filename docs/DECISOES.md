@@ -85,3 +85,12 @@
 - **Contexto:** a dona pediu a OpenAI ligada com a chave "fixa no código". Chave em commit fica pra sempre no histórico e o GitHub/OpenAI bloqueiam ou revogam; o token da Vercel tinha expirado.
 - **Decisão:** tabela `app_secrets` (RLS ligado sem política, `REVOKE` de anon/authenticated); `segredo(k)` lê banco → variável de ambiente, cache de 30 s; tela **Admin → Chaves e variáveis** (só papel admin) salva testando na OpenAI, mostra só os 4 últimos caracteres; auditoria sem o valor. Variáveis que o app precisa pra ligar (banco, service role) continuam só na Vercel.
 - **Consequência:** a IA ligou em produção sem Redeploy. Trocar a chave = colar a nova no admin.
+
+## ADR-017 · Personalizar pelo admin (settings validadas) e primeiro acesso obrigatório
+- **Contexto:** a dona pediu pra configurar tudo no admin (respostas do diagnóstico, fluxo, decisão da IA, textos) e que a aluna não use o app sem responder.
+- **Decisão:** settings `diagnostico`, `fluxo`, `textos_app`, `ia` validadas com Zod (`src/lib/domain/config-schemas.ts`); valor inválido ou ausente cai no padrão do código. Telas em Admin → Personalizar salvam com auditoria. Decisão do caminho = soma de pesos por opção (`decidir()`), empate → padrão; modo "regras" fixa o caminho e a IA só explica. Prompt de agente vira versão nova na tabela `agents` (dá pra voltar). Primeiro acesso: `passoPendente()` no layout das abas; admin não é barrado.
+- **Consequência:** mudar código de pergunta (`k`) deixa respostas antigas sem par (aviso na tela). Variáveis que o app precisa pra ligar continuam na Vercel.
+
+## ADR-018 · Região pdx1 e login conferido localmente
+- **Decisão:** `vercel.json` `regions: ["pdx1"]` (banco em us-west-2). `getClaims()` no lugar de `getUser()` (JWT ES256 com JWKS em cache), sem ida ao Supabase a cada pedido.
+- **Consequência:** sessão revogada em outro lugar vale até o JWT vencer (1 h); aluna desativada continua barrada pelo banco.

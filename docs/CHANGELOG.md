@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-11-06 · Personalizar no admin, primeiro acesso obrigatório e passos do produto
+- **IA ligada em produção** sem Vercel: tabela `app_secrets` (migration 0008, RLS sem política) + Admin → Chaves e variáveis (salva testando na OpenAI). `segredo()` lê banco → env (ADR-016).
+- **Velocidade**: funções na região do banco (`vercel.json` → pdx1; antes iad1, ~70 ms por consulta); login conferido localmente com `getClaims()` (JWT ES256) no proxy e no servidor.
+- **Diagnóstico**: escolher → **Confirmar** (salva e avança) e **Voltar**; "Outro" com campo; múltipla com "pode marcar mais de uma"; perguntas, tipos (uma/várias/texto) e regras de decisão (caminho/divulgação com peso) vêm do admin (`diagnostico`). Modo "regras" (IA só explica) ou "ia" (IA decide com as regras de orientação).
+- **Primeiro acesso obrigatório** (setting `fluxo`): sem terminar boas-vindas, combinado, diagnóstico e caminho, o app volta pra tela que falta; dá pra pular boas-vindas/combinado e liberar "Decidir depois".
+- **Admin → Personalizar**: Fluxo e textos (regras + textos de boas-vindas, combinado, cartões do caminho, nome e explicação de cada etapa), Diagnóstico e decisão (editor de perguntas/opções/regras), Inteligência artificial (modelos, cotas, regras base, Professora, cada agente: ligado, modelo, limite, prompt com versões e custo de 7 dias). Menu do admin agrupado.
+- **IA**: `rodar()` lê do admin regras base, agente desligado, modelo e limite; o texto do prompt entra no hash do cache.
+- **Produto**: cabeçalho "Passo X de N" com barra e trilha clicável, Entenda recolhido em etapa feita, anterior/próxima no rodapé, botão principal fixo no Entenda, etapa fechada leva pro passo de agora; painel com Continuar, progresso, fases e motivo do cadeado uma vez só (sem o código interno).
+- Fade de tela mais curto; "Preparando..." duplicado saiu da escolha do caminho.
+- Testes: 45 unitários (decisão com peso, validação de resposta, ordem do primeiro acesso), 6 e2e, fluxo inteiro com IA.
+
 ## 2026-11-05 · Telas presas em produção: causa achada e corrigida
 - Causa medida: pooler do Supabase na porta 6543 + pipelining do driver `postgres` = consultas que nunca voltam a partir de 6 em paralelo (ADR-015).
 - Tentativa com modo sessão (5432) estourou o limite de 15 conexões e derrubou o site por alguns minutos; revertida.

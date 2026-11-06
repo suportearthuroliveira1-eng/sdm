@@ -1,13 +1,13 @@
 # Estado do projeto
 
-> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-05 (11ª tarefa: telas presas em produção — driver `pg`, ADR-015)** · branch `claude/intelligent-bohr-54teds`.
+> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-05 (12ª tarefa: IA ligada em produção pela chave no admin, primeiro acesso obrigatório com Confirmar, Personalizar no admin, passos do produto, região pdx1)** · branch `claude/intelligent-bohr-54teds`.
 
 ## Fase atual
-**O app agora segue `docs/App_SDM_Fluxo_Ideal.pdf`** (dois caminhos + divulgação). IA real ligada (OpenAI) e testada de ponta a ponta localmente. Em produção a IA liga quando `OPENAI_API_KEY` estiver na Vercel (pendência da dona).
+**O app segue `docs/App_SDM_Fluxo_Ideal.pdf`** (dois caminhos + divulgação). **IA ligada em produção** (chave da OpenAI em Admin → Chaves e variáveis, tabela `app_secrets`). Quase tudo do app é configurável no admin, sem deploy: perguntas do diagnóstico e regras de decisão, regras do primeiro acesso, textos, IA (modelos, limites, regras base, Professora, prompt de cada agente com versões).
 
 | Bloco (PDF) | Situação |
 |---|---|
-| Primeiro acesso (telas 1–7) | ✓ login e-mail+senha, instalar, boas-vindas, combinado, diagnóstico 8 perguntas com IA (reserva por regras), "o que a IA entendeu", escolha do caminho cria a pasta |
+| Primeiro acesso (telas 1–7) | ✓ **obrigatório** (configurável), login e-mail+senha, instalar, boas-vindas, combinado, diagnóstico com **Confirmar e Voltar** em cada pergunta (perguntas e regras do admin), decisão do caminho por regras com peso (IA explica) ou pela IA, "o que a IA entendeu", escolha do caminho cria a pasta |
 | Início (I1–I5) | ✓ I1 próximo passo único, I2 meu caminho (7 fases), I5 novidades (placeholder) · ✗ I3 rotina, I4 números da semana |
 | Produtos (P1–P3) | ✓ pastas agrupadas, criar produto com IA, quero ser afiliada, painel com ✓/●/cadeado e motivo, biblioteca |
 | Caminho A · afiliada SDM (A0–A7) | ✓ A0 entenda, A1 pedir afiliação + aprovação no admin, A2 link por canal + teste, A3 kit do time + adaptar com IA, A4 conta (Wise), A5 regras, A6 → divulgação · ✗ A7 comissões (depende da Hubla) |
@@ -16,11 +16,11 @@
 | Aulas (L1–L7) | ✓ grade, player com "Agora faça", "Tenho dúvida" → Professora, glossário · ✗ L1 "só minha rota", plantão, PO com oferta, conquistas |
 | Professora (Q1–Q3) | ✓ chat com IA em streaming (glossário + aulas no prompt, cita aula com link, lê print reduzido), histórico, sugestões pela etapa, chamado pro time |
 | Perfil (U1–U6) | ✓ dados, meu caminho (somar/trocar/refazer diagnóstico), acessos, ajuda, trocar senha · ✗ editar dados, contas, avisos |
-| Admin | ✓ + Pedidos de afiliação (aprovar com link / recusar com motivo) e Kit do SDM (peças) · ✗ AD04–AD07, AD09, AD10, AD12, AD13 |
-| Movimento / retorno ao toque | ✓ barra de progresso no clique, esqueleto de carregamento, fade de tela, botões que afundam, spinners em formulários, toasts |
+| Admin | ✓ + Pedidos de afiliação, Kit do SDM, **Personalizar**: Fluxo e textos, Diagnóstico e decisão, Inteligência artificial (AD04), Chaves e variáveis · ✗ AD05–AD07, AD09, AD12, AD13 |
+| Movimento / retorno ao toque | ✓ passos do produto (Passo X de N, trilha clicável, anterior/próxima, painel com Continuar e fases), barra de progresso no clique, esqueleto de carregamento, fade de tela, botões que afundam, spinners em formulários, toasts |
 
 ## Bloqueio principal
-- **`OPENAI_API_KEY` na Vercel** (sem ela, em produção os botões de IA mostram "IA ainda não ligada" e o diagnóstico usa as regras de reserva). O token da Vercel que a dona passou expirou, por isso não deu pra cadastrar por API.
+- Nenhum pra IA: a chave está no admin. (Se quiser, depois põe `OPENAI_API_KEY` na Vercel também; o admin tem prioridade.)
 - Contexto v6 ainda não chegou (roteiros das aulas, regras dos agentes da seção 10). As regras de conteúdo dos agentes foram escritas a partir do prompt original (`src/lib/ai/regras.ts`).
 
 ## Telas (detalhe antigo, por ID do protótipo)
@@ -78,7 +78,6 @@
 | Desde | Pendência |
 |---|---|
 | 2026-11-05 | Subir `docs/SDM_contexto_completo_v6.md` (protótipos já chegaram) |
-| 2026-11-05 | Cadastrar `OPENAI_API_KEY` na Vercel (Settings → Environments → Production → Environment Variables) e fazer Redeploy |
 | 2026-11-05 | Revogar/rotacionar a chave da OpenAI depois (foi colada no chat) |
 | 2026-11-05 | Definir: comissão do SDM (`sdm_comissao`), regras de pausa/escala (sinal dos números), plataforma de venda e onde a página do produto próprio fica publicada, regras da afiliação (`afiliacao.regras`), ficha do SDM (`sdm.ficha.en/es`) |
 | 2026-11-05 | Trocar as senhas temporárias das 2 contas full (dona e Fellipe: aluna com SDM/UP1/D1/UP2/D2 + admin) em Perfil → Trocar senha |

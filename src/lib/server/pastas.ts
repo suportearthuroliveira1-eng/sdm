@@ -4,6 +4,7 @@ import { cache } from "react";
 import { requireStudent } from "@/lib/auth/session";
 import { db, schema } from "@/lib/db";
 import { etapasDaPasta, faseAtual, type EstadoPasta, type TipoPasta } from "@/lib/domain/etapas";
+import { textosApp } from "@/lib/server/config-app";
 
 export type PastaResumo = {
   id: string;
@@ -49,10 +50,10 @@ export const minhasPastas = cache(async (): Promise<PastaResumo[]> => {
     .leftJoin(schema.vitrineProducts, eq(schema.vitrineProducts.id, schema.studentProducts.vitrineProductId))
     .where(eq(schema.studentProducts.studentId, student.id))
     .orderBy(schema.studentProducts.criadoEm);
-  const est = await estadoDasPastas(rows.map((r) => r.p.id));
+  const [est, tx] = await Promise.all([estadoDasPastas(rows.map((r) => r.p.id)), textosApp()]);
   return rows.map(({ p, vitNome }) => {
     const estado: EstadoPasta = { tipo: p.tipo as TipoPasta, dados: (p.dados ?? {}) as Record<string, unknown>, divulgacao: p.divulgacao, ...est.get(p.id)! };
-    return { id: p.id, code: p.code, tipo: estado.tipo, nome: p.nome ?? vitNome ?? "[produto]", estado, etapas: etapasDaPasta(estado), fase: faseAtual(estado), paisVenda: p.paisVenda };
+    return { id: p.id, code: p.code, tipo: estado.tipo, nome: p.nome ?? vitNome ?? "[produto]", estado, etapas: etapasDaPasta(estado, tx.etapas), fase: faseAtual(estado), paisVenda: p.paisVenda };
   });
 });
 
@@ -61,9 +62,10 @@ export async function pastaDaAluna(id: string) {
   const { student } = await requireStudent();
   const p = await db().query.studentProducts.findFirst({ where: and(eq(schema.studentProducts.id, id), eq(schema.studentProducts.studentId, student.id)) });
   if (!p) return null;
-  const est = (await estadoDasPastas([p.id])).get(p.id)!;
+  const [estados, tx] = await Promise.all([estadoDasPastas([p.id]), textosApp()]);
+  const est = estados.get(p.id)!;
   const estado: EstadoPasta = { tipo: p.tipo as TipoPasta, dados: (p.dados ?? {}) as Record<string, unknown>, divulgacao: p.divulgacao, ...est };
-  return { student, pasta: p, estado, etapas: etapasDaPasta(estado), fase: faseAtual(estado) };
+  return { student, pasta: p, estado, etapas: etapasDaPasta(estado, tx.etapas), fase: faseAtual(estado) };
 }
 
 /** Href de uma etapa (pastas da vitrine continuam nas telas V07/V08/F02/DV01). */

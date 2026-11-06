@@ -2,7 +2,7 @@ import { and, eq } from "drizzle-orm";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { EtapaHead } from "@/components/etapas/comum";
+import { EtapaHead, NavEtapas } from "@/components/etapas/comum";
 import { BaseAnuncios, Divulgar, Numeros, Perfil, Pixel } from "@/components/etapas/divulgacao";
 import { Ebook } from "@/components/etapas/ebook";
 import { ProprioEntenda, ProprioFicha, ProprioIdeias, ProprioOferta, ProprioPagina, ProprioPlataforma, ProprioRevisao, ProprioTeste } from "@/components/etapas/proprio";
@@ -26,9 +26,12 @@ export default async function Etapa({ params }: PageProps<"/app/p/[id]/[etapa]">
   if (et.travada) {
     return (
       <div className="flex flex-col gap-3 lg:max-w-3xl">
-        <EtapaHead pastaId={pasta.id} pastaNome={pasta.nome ?? ""} etapa={et} numero={i + 1} />
+        <EtapaHead pastaId={pasta.id} pastaNome={pasta.nome ?? ""} etapa={et} etapas={etapas} />
         <div className="warn">Essa etapa ainda está fechada. {et.travada}</div>
-        <Link href={`/app/p/${pasta.id}`} className="b1 no-underline">Ver o que falta</Link>
+        {(() => {
+          const agora = etapas.find((e) => e.agora);
+          return agora ? <Link href={hrefEtapa(pasta.id, agora.slug)} className="b1 no-underline">Ir pro passo de agora: {agora.nome}</Link> : <Link href={`/app/p/${pasta.id}`} className="b1 no-underline">Ver o que falta</Link>;
+        })()}
       </div>
     );
   }
@@ -75,8 +78,9 @@ export default async function Etapa({ params }: PageProps<"/app/p/[id]/[etapa]">
 
   return (
     <div className="flex flex-col gap-3.5 lg:max-w-4xl">
-      <EtapaHead pastaId={pasta.id} pastaNome={pasta.nome ?? ""} etapa={et} numero={i + 1} />
+      <EtapaHead pastaId={pasta.id} pastaNome={pasta.nome ?? ""} etapa={et} etapas={etapas} />
       {corpo}
+      <NavEtapas pastaId={pasta.id} etapas={etapas} slug={slug} />
     </div>
   );
 }

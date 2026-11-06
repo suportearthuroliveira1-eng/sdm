@@ -6,14 +6,16 @@ import { FASES } from "@/lib/domain/etapas";
 import { getJornada } from "@/lib/server/aluna";
 import { minhasPastas } from "@/lib/server/pastas";
 import { proximoPasso } from "@/lib/server/proximo";
+import { configFluxo } from "@/lib/server/config-app";
+import { passoPendente } from "@/lib/domain/onboarding";
 
 export const metadata: Metadata = { title: "Início" };
 
 // Início (aba 1) do fluxo ideal: I1 próximo passo, I2 meu caminho, I5 novidades.
 export default async function Inicio() {
-  const [j, pastas] = await Promise.all([getJornada(), minhasPastas()]);
-  if (!j.student.boasVindasEm) redirect("/app/a04"); // primeira vez: boas-vindas
-  const prox = proximoPasso(j, pastas);
+  const [j, pastas, fluxo] = await Promise.all([getJornada(), minhasPastas(), configFluxo()]);
+  if (!j.student.boasVindasEm && !fluxo.pularBoasVindas) redirect("/app/a04"); // primeira vez: boas-vindas
+  const prox = proximoPasso(j, pastas, passoPendente(j.student, fluxo));
   const aulaExiste = prox.aula && j.modulos.some((m) => m.aulas.some((a) => a.id === prox.aula));
   const principal = prox.pasta ?? pastas.find((p) => p.tipo !== "vitrine");
   const pct = j.total ? Math.round((j.vistas / j.total) * 100) : 0;

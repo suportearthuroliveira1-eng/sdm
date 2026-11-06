@@ -8,7 +8,9 @@ import { z } from "zod";
 import { rodar, erroIa } from "@/lib/ai/run";
 import { requireStudent } from "@/lib/auth/session";
 import { db, schema } from "@/lib/db";
-import { completo, PERGUNTAS, resultadoPorRegras, type Respostas, type Resultado } from "@/lib/domain/diagnostico";
+import { completo, decidir, resultadoPorRegras, tipoDe, validarResposta, type Respostas, type Resultado } from "@/lib/domain/diagnostico";
+import { configDiagnostico, configFluxo } from "@/lib/server/config-app";
+import { depoisDe } from "@/lib/domain/onboarding";
 import { errMsg, log } from "@/lib/server/log";
 
 const reval = () => revalidatePath("/app", "layout");
@@ -18,7 +20,7 @@ export async function boasVindas(destino: "a07" | "l02") {
   const { student } = await requireStudent();
   await db().update(schema.students).set({ boasVindasEm: new Date() }).where(eq(schema.students.id, student.id));
   reval();
-  redirect(destino === "l02" ? "/app/l02/0.1" : "/app/a07");
+  redirect(destino === "l02" ? "/app/l02/0.1" : depoisDe("a04", await configFluxo()));
 }
 
 /** A07 · o nosso combinado (registra a data). */
@@ -33,11 +35,13 @@ async function diagnosticoAtual(studentId: string) {
   return db().query.diagnostics.findFirst({ where: eq(schema.diagnostics.studentId, studentId), orderBy: desc(schema.diagnostics.versao) });
 }
 
-/** A05 · salva UMA resposta na hora (dá pra parar e continuar depois). */
-export async function salvarResposta(k: string, valor: string | string[]) {
-  const p = PERGUNTAS.find((x) => x.k === k);
-  if (!p) throw new Error("pergunta inválida");
-  const v = p.multi ? z.array(z.string().max(80)).max(10).parse(valor) : z.string().max(120).parse(valor);
+/** A05 · salva UMA resposta confirmada (dá pra parar e continuar depois). */
+export async function salvarResposta(k: string, valor: string | string[]): Promise<{ ok: boolean; erro?: string }> {
+  const cfg = await configDiagnostico();
+  const p = cfg.perguntas.find((x) => x.k === k);
+  if (!p) return { ok: false, erro: "Pergunta não encontrada. Recarregue a página." };
+  const v = validarResposta(p, valor);
+  if (v === null) return { ok: false, erro: tipoDe(p) === "multipla" ? "Marque pelo menos uma opção." : "Escolha uma opção (ou escreva a sua)." };
   const { student } = await requireStudent();
   const atual = await diagnosticoAtual(student.id);
   // Diagnóstico já concluído e refeito: começa uma versão nova (o histórico fica).
@@ -49,19 +53,32 @@ export async function salvarResposta(k: string, valor: string | string[]) {
   return { ok: true };
 }
 
-/** A05 → A06 · fecha o diagnóstico: IA monta o resumo (ou a regra de reserva). */
+/** A05 → A06 · fecha o diagnóstico. Modo "regras": caminho e divulgação das regras do admin, IA explica. Modo "ia": IA decide. */
 export async function concluirDiagnostico(): Promise<{ ok: boolean; erro?: string }> {
   const { student } = await requireStudent();
+  const cfg = await configDiagnostico();
   const atual = await diagnosticoAtual(student.id);
   const r = (atual?.respostas ?? {}) as Respostas;
-  if (!atual || !completo(r)) return { ok: false, erro: "Faltam respostas." };
+  if (!atual || !completo(r, cfg.perguntas)) return { ok: false, erro: "Faltam respostas." };
+  const regras = resultadoPorRegras(r, cfg);
+  const d = decidir(r, cfg);
   let resultado: Resultado;
   try {
-    const out = await rodar("diagnostico", { respostas: r }, { studentId: student.id });
+    const entrada = {
+      perguntas_e_respostas: cfg.perguntas.map((p) => ({ pergunta: p.q, resposta: r[p.k] ?? null })),
+      ...(cfg.decisao.modo === "regras"
+        ? { decisao_do_time: { caminho: d.caminho, divulgacao: d.divulgacao, aviso: "Use exatamente esse caminho e essa divulgação; explique o porquê a partir das respostas." } }
+        : { orientacao_do_time: { caminho_sugerido_pelas_regras: d.caminho, divulgacao_sugerida_pelas_regras: d.divulgacao } }),
+    };
+    const out = await rodar("diagnostico", entrada, { studentId: student.id });
     resultado = { ...out.saida, motor: "ia" };
+    if (cfg.decisao.modo === "regras") {
+      if (resultado.caminho.valor !== d.caminho) resultado.caminho = regras.caminho;
+      if (resultado.divulgacao.valor !== d.divulgacao) resultado.divulgacao = regras.divulgacao;
+    }
   } catch (e) {
     log("warn", "diagnóstico sem IA, usando regras", { err: errMsg(e), aviso: erroIa(e) });
-    resultado = resultadoPorRegras(r);
+    resultado = regras;
   }
   const lista = (v: unknown) => (Array.isArray(v) ? (v as string[]) : v ? [String(v)] : []);
   await db().update(schema.diagnostics).set({ resultado }).where(eq(schema.diagnostics.id, atual.id));
@@ -103,6 +120,7 @@ async function garantirPasta(studentId: string, tipo: "sdm" | "proprio", paisVen
 export async function escolherCaminho(caminho: string) {
   const c = z.enum(["afiliada", "produto", "ambos", "depois"]).parse(caminho);
   const { student } = await requireStudent();
+  if (c === "depois" && !(await configFluxo()).permitirDecidirDepois) redirect("/app/caminho");
   const diag = await diagnosticoAtual(student.id);
   const pais = (diag?.resultado as Resultado | null)?.pais_venda?.k ?? null;
   let ativa: string | null = null;

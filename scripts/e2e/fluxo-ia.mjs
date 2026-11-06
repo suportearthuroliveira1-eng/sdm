@@ -22,8 +22,9 @@ try {
   await p.getByRole("button", { name: "Combinado" }).click(); await p.waitForURL(/a05/); log("2 combinado -> diagnóstico");
   const resp = ["Estados Unidos", ["Português", "Inglês"], "1 hora", "Nada agora", ["Cozinha e receitas"], "Nunca", "Não falar bem o idioma", "Ter o meu próprio produto"];
   for (const r of resp) {
-    if (Array.isArray(r)) { for (const o of r) await p.getByRole("checkbox", { name: o }).click(); await p.getByRole("button", { name: "Continuar" }).click(); }
+    if (Array.isArray(r)) { for (const o of r) await p.getByRole("checkbox", { name: o }).click(); }
     else await p.getByRole("radio", { name: r }).click();
+    await p.getByRole("button", { name: /^Confirmar/ }).click(); // cada resposta tem botão de confirmar
     await p.waitForTimeout(400);
   }
   await p.waitForURL(/a06/); log("3 resultado IA ok"); await shot("a06");
@@ -62,6 +63,6 @@ try {
   await p.getByLabel("Sua mensagem").fill("O que é CTR?"); await p.getByRole("button", { name: "Enviar" }).click();
   await p.waitForFunction(() => !document.body.innerText.includes("pensando..."), null, { timeout: 60000 }); await p.waitForTimeout(2500);
   log("17 professora:", (await p.locator(".whitespace-pre-line").last().innerText()).slice(0, 260)); await shot("professora");
-  await p.goto(B + `/app/p/${pasta}`); log("18 painel:", await p.getByText(/etapas prontas/).innerText()); await shot("painel");
+  await p.goto(B + `/app/p/${pasta}`); log("18 painel:", await p.getByText(/DE \d+ PRONTAS/).innerText()); await shot("painel");
 } catch (e) { log("ERRO", e.message.split("\n")[0]); await shot("erro"); log("url", p.url()); }
 await b.close();

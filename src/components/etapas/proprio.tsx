@@ -6,7 +6,7 @@ import { iaLigada } from "@/lib/ai/run";
 import { AcaoIa, Checklist, MarcarFeito } from "./interativos";
 import { AvaliarIdeia, EscolherIdeia, FichaEditavel, FormIa, OfertaForm, PaginaEditor } from "./proprio-client";
 import { LinkTester } from "./link-tester";
-import { PassoAPasso } from "./comum";
+import { BarraAcao, PassoAPasso } from "./comum";
 import { ETAPAS_PROPRIO } from "@/lib/domain/etapas";
 
 type P = { id: string; dados: Record<string, unknown>; studentId: string; paisVenda: string | null };
@@ -31,7 +31,9 @@ export function ProprioEntenda({ p, proxima }: { p: P; proxima: string }) {
           </li>
         ))}
       </ol>
-      <MarcarFeito pastaId={p.id} etapa="entenda" feita={feito(p, "entenda")} proxima={proxima}>Começar</MarcarFeito>
+      <BarraAcao>
+        <MarcarFeito pastaId={p.id} etapa="entenda" feita={feito(p, "entenda")} proxima={proxima}>Começar</MarcarFeito>
+      </BarraAcao>
     </>
   );
 }

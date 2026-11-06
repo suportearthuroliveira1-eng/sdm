@@ -52,11 +52,12 @@ export function MarcarFeito({ pastaId, etapa, feita, habilitado = true, proxima,
   const router = useRouter();
   const [pending, start] = useTransition();
   if (feita) {
-    return (
-      <div className="flex flex-col gap-2">
-        <div className="good">Etapa feita.</div>
-        {proxima ? <button type="button" className="b1" onClick={() => router.push(proxima)}>Próxima etapa</button> : null}
-      </div>
+    return proxima ? (
+      <button type="button" className="b1" onClick={() => router.push(proxima)}>
+        Próxima etapa
+      </button>
+    ) : (
+      <div className="good">Etapa feita.</div>
     );
   }
   return (

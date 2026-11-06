@@ -6,13 +6,13 @@ import { hrefEtapa } from "@/lib/server/pastas";
 export type Proximo = { k: string; titulo: string; descricao: string; href: string; aula: string | null; pasta?: PastaResumo };
 
 /** Regra 1 do app: o Início mostra UM próximo passo só. */
-export function proximoPasso(j: Awaited<ReturnType<typeof getJornada>>, pastas: PastaResumo[]): Proximo {
+export function proximoPasso(j: Awaited<ReturnType<typeof getJornada>>, pastas: PastaResumo[], primeiroAcesso: string | null = null): Proximo {
   const s = j.student;
-  if (!s.boasVindasEm) return { k: "boas", titulo: "Assistir o recado da Amanda", descricao: "Um vídeo curto pra você começar.", href: "/app/a04", aula: "0.1" };
-  if (!s.combinadoEm) return { k: "comb", titulo: "Fazer o nosso combinado", descricao: "O que o SDM faz e o que você faz.", href: "/app/a07", aula: "0.6" };
-  if (!s.diagnosticoEm) return { k: "diag", titulo: "Responder o diagnóstico", descricao: "8 perguntas rápidas. A IA usa pra sugerir o seu caminho.", href: "/app/a05", aula: null };
+  if (primeiroAcesso === "/app/a04") return { k: "boas", titulo: "Assistir o recado da Amanda", descricao: "Um vídeo curto pra você começar.", href: "/app/a04", aula: "0.1" };
+  if (primeiroAcesso === "/app/a07") return { k: "comb", titulo: "Fazer o nosso combinado", descricao: "O que o SDM faz e o que você faz.", href: "/app/a07", aula: "0.6" };
+  if (primeiroAcesso === "/app/a05") return { k: "diag", titulo: "Responder o diagnóstico", descricao: "Perguntas rápidas. A IA usa pra sugerir o seu caminho.", href: "/app/a05", aula: null };
   const comPasta = pastas.filter((p) => p.tipo !== "vitrine" || p.etapas.length);
-  if (!s.caminho || (s.caminho === "depois" && !comPasta.length)) {
+  if (primeiroAcesso === "/app/caminho" || (s.caminho === "depois" && !comPasta.length)) {
     return { k: "caminho", titulo: "Escolher o seu caminho", descricao: "Afiliada do SDM, o seu produto com a IA, ou os dois.", href: "/app/caminho", aula: null };
   }
   const ativa = pastas.find((p) => p.id === s.produtoAtivo && p.tipo !== "vitrine") ?? pastas.find((p) => p.tipo !== "vitrine");

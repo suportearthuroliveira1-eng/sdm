@@ -5,7 +5,7 @@ import { db, schema } from "@/lib/db";
 import { adaptarPeca, pedirAfiliacao } from "@/lib/actions/caminhos";
 import { getSetting } from "@/lib/server/settings";
 import { AcaoIa, Checklist, MarcarFeito } from "./interativos";
-import { itensChecklist, PassoAPasso } from "./comum";
+import { BarraAcao, itensChecklist, PassoAPasso } from "./comum";
 import { LinkTester } from "./link-tester";
 
 type P = { id: string; dados: Record<string, unknown>; studentId: string; paisVenda: string | null };
@@ -27,7 +27,9 @@ export async function SdmEntenda({ p, proxima }: { p: P; proxima: string }) {
           <div key={t} className="cd gap-1.5"><span className="kk">{t}</span><span className="tx">{d}</span></div>
         ))}
       </div>
-      <MarcarFeito pastaId={p.id} etapa="entenda" feita={feito(p, "entenda")} proxima={proxima}>Começar</MarcarFeito>
+      <BarraAcao>
+        <MarcarFeito pastaId={p.id} etapa="entenda" feita={feito(p, "entenda")} proxima={proxima}>Começar</MarcarFeito>
+      </BarraAcao>
     </>
   );
 }
