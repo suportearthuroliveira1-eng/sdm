@@ -5,18 +5,28 @@ import { db, schema } from "@/lib/db";
 import { PRODUCTS, PRODUCT_DESC, PRODUCT_LABEL } from "@/lib/domain/entitlements";
 import { getFlag } from "@/lib/server/settings";
 import { deleteProductMapAction, reprocessEventAction, upsertProductMapAction } from "@/lib/actions/admin";
+import { env } from "@/lib/env";
+import { emailConfigurado } from "@/lib/integrations/email";
+import { statusSegredo } from "@/lib/server/segredos";
+import { HublaCard } from "./hubla-card";
 
 export const metadata = { title: "Acessos e webhooks" };
 
 // AD08 · Mapa produto → entitlement, log de eventos, reprocessar.
 export default async function AD08() {
   await requireAdmin(["admin"]);
-  const [map, evts, hubla, hotmart] = await Promise.all([
+  const [map, evts, hubla, hotmart, token, temEmail] = await Promise.all([
     db().select().from(schema.hublaProductMap).orderBy(schema.hublaProductMap.provider),
     db().select().from(schema.events).orderBy(desc(schema.events.createdAt)).limit(50),
     getFlag("auth_hubla_webhook"),
     getFlag("auth_hotmart_webhook"),
+    statusSegredo("HUBLA_WEBHOOK_TOKEN"),
+    emailConfigurado(),
   ]);
+  const produtoDo = (payload: unknown) => {
+    const ev = (payload as { event?: { product?: { id?: string; name?: string }; user?: { email?: string }; invoice?: { payer?: { email?: string } } } })?.event;
+    return { id: ev?.product?.id ?? "", nome: ev?.product?.name ?? "", email: ev?.user?.email ?? ev?.invoice?.payer?.email ?? "" };
+  };
   const fmt = (d: Date) => d.toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
   return (
     <>
@@ -38,10 +48,8 @@ export default async function AD08() {
           </tbody>
         </table>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="acd"><p className="text-sm text-muted">Webhook Hubla · <code>/api/webhooks/hubla</code></p><p className={hubla ? "text-ok" : "text-warn"}>{hubla ? "ligado" : "desligado (eventos são guardados, não processados)"}</p></div>
-        <div className="acd"><p className="text-sm text-muted">Webhook Hotmart · <code>/api/webhooks/hotmart</code></p><p className={hotmart ? "text-ok" : "text-warn"}>{hotmart ? "ligado" : "desligado"}</p></div>
-      </div>
+      <HublaCard ligado={hubla} url={`${env().APP_URL}/api/webhooks/hubla`} temToken={Boolean(token.origem)} temEmail={temEmail} mapeados={map.filter((m) => m.provider === "hubla" && m.ativo).length} />
+      <div className="acd"><p className="text-sm text-muted">Webhook Hotmart · <code>/api/webhooks/hotmart</code></p><p className={hotmart ? "text-ok" : "text-warn"}>{hotmart ? "ligado" : "desligado"}</p></div>
 
       <div className="acd flex flex-col gap-4">
         <h2 className="text-lg font-semibold">Mapa produto → acesso</h2>
@@ -68,11 +76,11 @@ export default async function AD08() {
       <div className="acd overflow-x-auto">
         <h2 className="mb-3 text-lg font-semibold">Últimos eventos</h2>
         <table className="w-full text-left text-sm">
-          <thead className="text-muted"><tr><th className="py-2">ID</th><th>Tipo</th><th>Quando</th><th>Status</th><th /></tr></thead>
+          <thead className="text-muted"><tr><th className="py-2">ID</th><th>Tipo</th><th>Produto (ID pra mapear)</th><th>Comprador</th><th>Quando</th><th>Status</th><th /></tr></thead>
           <tbody>
-            {evts.length === 0 ? <tr><td colSpan={5} className="py-3 text-muted">Nenhum evento recebido.</td></tr> : evts.map((e) => (
+            {evts.length === 0 ? <tr><td colSpan={7} className="py-3 text-muted">Nenhum evento recebido.</td></tr> : evts.map((e) => (
               <tr key={e.id} className="border-t border-line/60">
-                <td className="py-2 font-mono">{e.code}</td><td>{e.tipo}</td><td className="text-muted">{fmt(e.createdAt)}</td>
+                <td className="py-2 font-mono">{e.code}</td><td>{e.tipo}</td><td><span className="font-mono text-xs">{produtoDo(e.payload).id}</span>{produtoDo(e.payload).nome ? <span className="block text-xs text-muted">{produtoDo(e.payload).nome}</span> : null}</td><td className="text-xs text-muted">{produtoDo(e.payload).email}</td><td className="text-muted">{fmt(e.createdAt)}</td>
                 <td>{e.processado ? <span className="text-ok">processado</span> : e.erro ? <span className="text-danger" title={e.erro}>erro: {e.erro}</span> : <span className="text-warn">pendente</span>}</td>
                 <td className="text-right"><form action={reprocessEventAction.bind(null, e.id)}><button className="ab2 min-h-9 px-3 text-xs">Reprocessar</button></form></td>
               </tr>

@@ -2,21 +2,33 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ExcluirImagem, GerarButton, ItemAcoes } from "@/components/pasta/acoes";
 import { CopyButton } from "@/components/pasta/copy-button";
-import { PastaHead } from "@/components/pasta/head";
 import { LangProvider, T } from "@/components/pasta/lang";
 import { iaConfigurada } from "@/lib/gen/ia";
 import { CORES, type Anuncio, type Bi, type Roteiro } from "@/lib/gen/modelo";
 import { baseDaPasta, getPasta, imagensDaPasta, itensDaPasta } from "@/lib/server/pasta";
 import { urlsAssinadas } from "@/lib/server/storage";
+import { hrefEtapa, pastaDaAluna } from "@/lib/server/pastas";
+import { Icone, type NomeIcone } from "@/components/ui/icone";
 import { AnuncioEditor } from "./anuncio-editor";
+import { MarcarFeito } from "@/components/etapas/interativos";
 import { ImagemForms } from "./imagem-forms";
 
 export const metadata: Metadata = { title: "Divulgação" };
 
-// DV01 · Divulgação (PG01 anúncios, OG02/OG05 roteiros, bio/legenda e imagens), tudo salvo na pasta.
+const ABAS: { k: string; nome: string; icone: NomeIcone; cor: string; ajuda: string }[] = [
+  { k: "anuncios", nome: "Anúncios", icone: "megafone", cor: "var(--c-pink)", ajuda: "3 anúncios prontos: gancho, meio e chamada, com o criativo em PNG pra baixar." },
+  { k: "imagens", nome: "Imagens", icone: "olho", cor: "var(--c-sky)", ajuda: "Opcional: gere com a IA ou envie a sua. A imagem vira fundo dos anúncios." },
+  { k: "ganchos", nome: "Ganchos", icone: "lampada", cor: "var(--c-amber)", ajuda: "10 frases curtas que fazem a pessoa parar de rolar." },
+  { k: "roteiros", nome: "Roteiros", icone: "play", cor: "var(--c-orange)", ajuda: "10 roteiros de vídeo curto, sem precisar aparecer." },
+  { k: "bio", nome: "Bio e legenda", icone: "pessoa", cor: "var(--c-teal)", ajuda: "Bio do perfil, legenda com hashtags e chamadas." },
+];
+
+// DV01 · Criativos e roteiros em passo a passo (uma seção por vez), tudo salvo na pasta.
 export default async function DV01({ params, searchParams }: PageProps<"/app/dv01/[id]">) {
   const { id } = await params;
-  const fundo = String((await searchParams).fundo ?? "");
+  const sp = await searchParams;
+  const fundo = String(sp.fundo ?? "");
+  const aba = ABAS.some((a) => a.k === sp.aba) ? String(sp.aba) : "anuncios";
   const c = await getPasta(id);
   const { pasta, vit } = c;
   const base = await baseDaPasta(c);
@@ -29,13 +41,53 @@ export default async function DV01({ params, searchParams }: PageProps<"/app/dv0
   const imgFundo = imgs.find((i) => i.id === fundo);
   const idioma = base?.lang ?? vit?.idioma ?? "en";
   const nomeProduto = vit?.nome ?? pasta.nome ?? "";
+  const feito: Record<string, boolean> = { anuncios: ads.length > 0, imagens: imgs.length > 0, ganchos: Boolean(gancho), roteiros: Boolean(roteiro), bio: Boolean(bio) };
+  const i = ABAS.findIndex((a) => a.k === aba);
+  const ant = ABAS[i - 1];
+  const prox = ABAS[i + 1];
+  const href = (k: string) => `/app/dv01/${pasta.id}?aba=${k}${fundo ? `&fundo=${fundo}` : ""}`;
+  // próxima etapa do caminho (pastas sdm/proprio): a primeira aberta e não feita depois de criativos/roteiros
+  const ctx = pasta.tipo === "vitrine" ? null : await pastaDaAluna(pasta.id);
+  const seguir = ctx?.etapas.find((e) => !e.ok && !e.travada && e.slug !== "criativos" && e.slug !== "roteiros");
+  const voltar = ctx ? `/app/p/${pasta.id}` : `/app/v05/${pasta.id}`;
 
   return (
     <div className="flex flex-col gap-6">
-      <PastaHead id={pasta.id} code={pasta.code} produto={nomeProduto} k="DIVULGAÇÃO" t="Criativos e roteiros" />
-      {!base ? <div className="warn">{pasta.tipo === "sdm" ? "Pra afiliada do SDM, use as peças prontas do kit (etapa Kit de divulgação). Os criativos com IA aparecem aqui quando o time cadastrar a ficha do SDM." : "Complete a ficha do produto (etapa Ficha) pra gerar criativos com a IA."}</div> : null}
+      <div className="flex flex-col gap-3 pt-3 lg:pt-0">
+        <Link href={voltar} className="flex min-h-11 items-center gap-1.5 self-start text-sm font-semibold text-muted no-underline hover:text-text"><span aria-hidden>←</span> {nomeProduto}</Link>
+        <div className="flex items-center gap-3">
+          <span className="grid size-12 shrink-0 place-items-center rounded-2xl" style={{ color: ABAS[i]!.cor, background: `color-mix(in srgb, ${ABAS[i]!.cor} 16%, transparent)` }}><Icone nome={ABAS[i]!.icone} tamanho={26} /></span>
+          <div className="flex flex-col">
+            <span className="kk">CRIATIVOS E ROTEIROS · PASSO {i + 1} DE {ABAS.length}</span>
+            <h1 className="m-0 text-[24px] font-bold leading-tight lg:text-[28px]">{ABAS[i]!.nome}</h1>
+          </div>
+        </div>
+        <p className="tx m-0">{ABAS[i]!.ajuda}</p>
+        <nav aria-label="Seções" className="-mx-4 flex gap-1.5 overflow-x-auto px-4 pb-1 [scrollbar-width:none] lg:mx-0 lg:px-0">
+          {ABAS.map((a, k) => (
+            <Link key={a.k} href={href(a.k)} aria-current={a.k === aba ? "step" : undefined} className={`flex min-h-10 shrink-0 items-center gap-1.5 rounded-full border px-3 text-xs font-semibold no-underline ${a.k === aba ? "bg-sel text-text" : "border-line text-text-2"}`} style={a.k === aba ? { borderColor: a.cor } : undefined}>
+              <span style={{ color: feito[a.k] ? "var(--ok)" : a.cor }}>{feito[a.k] ? <Icone nome="check" tamanho={14} espessura={2.6} /> : <Icone nome={a.icone} tamanho={14} />}</span>
+              {k + 1}. {a.nome}
+            </Link>
+          ))}
+        </nav>
+      </div>
+      {!base ? (
+        <div className="flex flex-col gap-2 rounded-2xl border border-warn-line bg-warn-bg p-4 text-warn-text">
+          <span className="text-sm">{pasta.tipo === "sdm" ? "Pra afiliada do SDM, os anúncios e roteiros vêm prontos no kit do time (etapa Kit de divulgação). A IA cria aqui quando o time cadastrar a ficha do SDM." : "Complete a ficha do produto (etapa Ficha) pra gerar criativos com a IA."}</span>
+          {ctx && pasta.tipo === "sdm" ? (
+            <div className="grid gap-2 sm:grid-cols-2">
+              <MarcarFeito pastaId={pasta.id} etapa={aba === "roteiros" || aba === "ganchos" ? "roteiros" : "criativos"} feita={false} proxima={seguir ? hrefEtapa(pasta.id, seguir.slug) : voltar}>
+                Vou usar as peças do kit: seguir
+              </MarcarFeito>
+              <Link href={hrefEtapa(pasta.id, "kit")} className="b2 no-underline">Abrir o kit</Link>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
       <LangProvider idioma={idioma}>
         {/* ANÚNCIOS */}
+        {aba === "anuncios" ? (
         <section aria-labelledby="h-ads" className="flex flex-col gap-3">
           <div className="flex flex-wrap items-end justify-between gap-2">
             <div>
@@ -82,10 +134,11 @@ export default async function DV01({ params, searchParams }: PageProps<"/app/dv0
             })}
           </div>
         </section>
+        ) : null}
 
-        {/* GANCHOS E ROTEIROS */}
-        <div className="grid gap-6 lg:grid-cols-2">
-          <section aria-labelledby="h-g" className="flex flex-col gap-3">
+        {/* GANCHOS */}
+        {aba === "ganchos" ? (
+          <section aria-labelledby="h-g" className="flex flex-col gap-3 lg:max-w-3xl">
             <div className="flex items-end justify-between gap-2">
               <h2 id="h-g" className="m-0 text-lg font-bold">Ganchos</h2>
               <GerarButton pastaId={pasta.id} tipo="gancho" label={gancho ? "Gerar de novo" : "Gerar 10 ganchos"} className={gancho ? "b2" : "b1"} />
@@ -102,7 +155,11 @@ export default async function DV01({ params, searchParams }: PageProps<"/app/dv0
               </div>
             ) : null}
           </section>
-          <section aria-labelledby="h-r" className="flex flex-col gap-3">
+        ) : null}
+
+        {/* ROTEIROS */}
+        {aba === "roteiros" ? (
+          <section aria-labelledby="h-r" className="flex flex-col gap-3 lg:max-w-3xl">
             <div className="flex items-end justify-between gap-2">
               <h2 id="h-r" className="m-0 text-lg font-bold">Roteiros de vídeo</h2>
               <GerarButton pastaId={pasta.id} tipo="roteiro" label={roteiro ? "Gerar de novo" : "Gerar 10 roteiros"} className={roteiro ? "b2" : "b1"} />
@@ -122,9 +179,10 @@ export default async function DV01({ params, searchParams }: PageProps<"/app/dv0
               </div>
             ) : null}
           </section>
-        </div>
+        ) : null}
 
         {/* BIO E LEGENDA */}
+        {aba === "bio" ? (
         <section aria-labelledby="h-b" className="flex flex-col gap-3 lg:max-w-3xl">
           <div className="flex items-end justify-between gap-2">
             <h2 id="h-b" className="m-0 text-lg font-bold">Bio e legenda</h2>
@@ -147,9 +205,11 @@ export default async function DV01({ params, searchParams }: PageProps<"/app/dv0
             );
           })() : null}
         </section>
+        ) : null}
       </LangProvider>
 
       {/* IMAGENS */}
+      {aba === "imagens" ? (
       <section aria-labelledby="h-i" className="flex flex-col gap-3">
         <div>
           <h2 id="h-i" className="m-0 text-lg font-bold">Imagens ({imgs.length})</h2>
@@ -165,7 +225,7 @@ export default async function DV01({ params, searchParams }: PageProps<"/app/dv0
                 <figcaption className="mu line-clamp-2 px-1">{im.proporcao} · {im.prompt}</figcaption>
                 <div className="flex flex-wrap gap-1.5 px-1">
                   {im.storagePath && urls[im.storagePath] ? <a href={urls[im.storagePath]} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center rounded-[22px] border border-line-2 px-3 text-xs text-text-2 no-underline">Abrir</a> : null}
-                  <Link href={`/app/dv01/${pasta.id}?fundo=${im.id}#h-ads`} className="inline-flex min-h-11 items-center rounded-[22px] border border-line-2 px-3 text-xs text-text-2 no-underline">Usar nos criativos</Link>
+                  <Link href={`/app/dv01/${pasta.id}?aba=anuncios&fundo=${im.id}`} className="inline-flex min-h-11 items-center rounded-[22px] border border-line-2 px-3 text-xs text-text-2 no-underline">Usar nos criativos</Link>
                   <ExcluirImagem id={im.id} />
                 </div>
               </figure>
@@ -173,11 +233,23 @@ export default async function DV01({ params, searchParams }: PageProps<"/app/dv0
           </div>
         ) : null}
       </section>
+      ) : null}
 
-      <div className="flex flex-wrap gap-2">
-        <Link href={`/app/v09/${pasta.id}`} className="b2 no-underline">Abrir a biblioteca</Link>
-        <Link href={`/app/v05/${pasta.id}`} className="b2 no-underline">Voltar pro painel</Link>
-      </div>
+      {/* navegação do passo a passo */}
+      <nav aria-label="Navegar entre as seções" className="sticky bottom-[calc(64px+max(env(safe-area-inset-bottom),12px))] z-10 -mx-4 flex flex-col gap-2 border-t border-line bg-bg/95 px-4 py-3 backdrop-blur lg:bottom-0 lg:mx-0 lg:rounded-t-2xl lg:border-x">
+        <div className="grid grid-cols-2 gap-2">
+          {ant ? <Link href={href(ant.k)} className="b2 no-underline">← {ant.nome}</Link> : <Link href={voltar} className="b2 no-underline">← Voltar</Link>}
+          {prox ? (
+            <Link href={href(prox.k)} className={`${feito[aba] || aba === "imagens" ? "b1" : "b2"} no-underline`}>{prox.nome} →</Link>
+          ) : seguir ? (
+            <Link href={hrefEtapa(pasta.id, seguir.slug)} className="b1 no-underline">Seguir: {seguir.nome} →</Link>
+          ) : (
+            <Link href={voltar} className="b1 no-underline">Concluir →</Link>
+          )}
+        </div>
+        {!feito[aba] && aba !== "imagens" ? <span className="text-center text-xs text-muted">Gere esta parte ou pule pra próxima. Dá pra voltar quando quiser.</span> : null}
+        {seguir && prox ? <Link href={hrefEtapa(pasta.id, seguir.slug)} className="text-center text-xs font-semibold no-underline">Já tenho o que preciso: seguir pra {seguir.nome} →</Link> : null}
+      </nav>
     </div>
   );
 }

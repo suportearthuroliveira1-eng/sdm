@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import Link from "next/link";
 import { CopyButton } from "@/components/pasta/copy-button";
 import { FormPending, SubmitButton } from "@/components/ux/submit-button";
@@ -7,8 +7,10 @@ import { db, schema } from "@/lib/db";
 import { env } from "@/lib/env";
 import { getSetting } from "@/lib/server/settings";
 import { Checklist } from "./interativos";
-import { itensChecklist, PassoAPasso } from "./comum";
+import { itensChecklist, PassoAPasso, SubPassos } from "./comum";
 import { NumerosForm } from "./numeros-form";
+import { BioPaginaForm } from "./bio-pagina-form";
+import { destinoDaBio } from "@/lib/server/bio";
 
 type P = { id: string; dados: Record<string, unknown>; studentId: string; paisVenda: string | null; divulgacao: string | null; bioCode: string | null };
 const feito = (p: P, k: string) => Boolean((p.dados.feito as Record<string, boolean> | undefined)?.[k]);
@@ -65,38 +67,59 @@ export async function Pixel({ p, proxima }: { p: P; proxima: string }) {
 }
 
 /** DO1 · rede e perfil: link da bio com contagem de cliques + aquecimento de 7 dias. */
-export async function Perfil({ p, proxima }: { p: P; proxima: string }) {
+export async function Perfil({ p, proxima, parte = "link" }: { p: P; proxima: string; parte?: string }) {
   const [ck, cliques, bio] = await Promise.all([
     itensChecklist("OG03"),
     db().select({ id: schema.linkClicks.id }).from(schema.linkClicks).where(eq(schema.linkClicks.studentProductId, p.id)),
-    db().query.generatedItems.findFirst({ where: eq(schema.generatedItems.studentProductId, p.id), orderBy: desc(schema.generatedItems.createdAt) }),
+    db().query.generatedItems.findFirst({ where: and(eq(schema.generatedItems.studentProductId, p.id), eq(schema.generatedItems.tipo, "bio")), orderBy: desc(schema.generatedItems.createdAt) }),
   ]);
+  const pastaRow = await db().query.studentProducts.findFirst({ where: eq(schema.studentProducts.id, p.id) });
   const link = p.bioCode ? `${env().APP_URL}/l/${p.bioCode}` : null;
   const b = bio?.tipo === "bio" ? (bio.conteudo as { bio: { x: string; pt: string }; nomes_perfil?: string[] }) : null;
+  const temPagina = Boolean(p.dados.bioPagina);
+  const partes = [
+    { k: "link", nome: "Link e página", ok: temPagina },
+    { k: "bio", nome: "Bio e nome", ok: Boolean(b) },
+    { k: "aquecimento", nome: "Aquecimento", ok: feito(p, "perfil") },
+  ];
   return (
-    <>
-      <div className="cd gap-1.5">
-        <span className="kk">SEU LINK DA BIO</span>
-        {link ? <span className="break-all font-mono text-sm">{link}</span> : null}
-        <span className="mu">Cada clique é contado aqui. Total: <b className="text-text">{cliques.length}</b></span>
-        {link ? <CopyButton text={link} className="self-start" /> : null}
-      </div>
-      <div className="cd gap-1.5">
-        <span className="kk">BIO E NOME DO PERFIL</span>
-        {b ? (
-          <>
-            <span className="tx">{b.bio.x}</span>
-            <span className="mu">{b.bio.pt}</span>
-            <CopyButton text={b.bio.x} label="Copiar bio" className="self-start" />
-            {b.nomes_perfil?.length ? <span className="mu">Sugestões de nome: {b.nomes_perfil.join(" · ")}</span> : null}
-          </>
-        ) : (
-          <span className="mu">Gere a bio na tela de criativos e roteiros.</span>
-        )}
-        <Link href={`/app/dv01/${p.id}#h-b`} className="b2 no-underline">{b ? "Pedir outra bio" : "Gerar bio com a IA"}</Link>
-      </div>
-      <Checklist pastaId={p.id} lista="perfil" titulo={`${ck.titulo} (7 dias)`} itens={ck.itens} marcados={marcados(p, "perfil")} etapa="perfil" feita={feito(p, "perfil")} proxima={proxima} />
-    </>
+    <SubPassos base={`/app/p/${p.id}/perfil`} partes={partes} atual={partes.some((x) => x.k === parte) ? parte : "link"}>
+      {parte === "bio" ? (
+        <div className="cd gap-1.5">
+          <span className="kk">BIO E NOME DO PERFIL</span>
+          <span className="mu">A bio vai no seu perfil da rede. A IA escreve no idioma de quem compra, com tradução.</span>
+          {b ? (
+            <>
+              <span className="tx">{b.bio.x}</span>
+              <span className="mu">{b.bio.pt}</span>
+              <CopyButton text={b.bio.x} label="Copiar bio" className="self-start" />
+              {b.nomes_perfil?.length ? <span className="mu">Sugestões de nome: {b.nomes_perfil.join(" · ")}</span> : null}
+            </>
+          ) : null}
+          <Link href={`/app/dv01/${p.id}?aba=bio`} className={b ? "b2 no-underline" : "b1 no-underline"}>{b ? "Pedir outra bio" : "Gerar bio com a IA"}</Link>
+        </div>
+      ) : parte === "aquecimento" ? (
+        <Checklist pastaId={p.id} lista="perfil" titulo={`${ck.titulo} (7 dias)`} itens={ck.itens} marcados={marcados(p, "perfil")} etapa="perfil" feita={feito(p, "perfil")} proxima={proxima} />
+      ) : (
+        <>
+          <div className="cd gap-1.5">
+            <span className="kk">SEU LINK DA BIO</span>
+            {link ? <span className="break-all font-mono text-sm">{link}</span> : null}
+            <span className="mu">Cole esse link na bio do Instagram ou TikTok. Ele abre a sua página de links. Cada visita é contada aqui. Total: <b className="text-text">{cliques.length}</b></span>
+            {link ? <CopyButton text={link} className="self-start" /> : null}
+          </div>
+          {link ? (
+            <BioPaginaForm
+              pastaId={p.id}
+              link={link}
+              inicial={(p.dados.bioPagina as { nome?: string; frase?: string; botao?: string; links?: { texto: string; url: string }[] } | undefined) ?? {}}
+              temDestino={Boolean(pastaRow && destinoDaBio(pastaRow))}
+              sugestaoFrase={b?.bio.x ?? ""}
+            />
+          ) : null}
+        </>
+      )}
+    </SubPassos>
   );
 }
 

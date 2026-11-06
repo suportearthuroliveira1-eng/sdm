@@ -33,7 +33,7 @@ export async function salvarSegredo(_p: SegredoState, form: FormData): Promise<S
     revalidatePath("/admin/chaves");
     return { ok: true, msg: "Apagada. O app volta a usar a da Vercel, se existir." };
   }
-  if (valor.length < 20 || /\s/.test(valor)) return { erro: "Cole a chave inteira, sem espaços." };
+  if (valor.length < (k === "HUBLA_WEBHOOK_TOKEN" ? 8 : 20) || /\s/.test(valor)) return { erro: "Cole a chave inteira, sem espaços." };
   const def = SEGREDOS_EDITAVEIS[k];
   if (def.prefixo && !valor.startsWith(def.prefixo)) return { erro: `Essa chave começa com ${def.prefixo}` };
   if (k === "OPENAI_API_KEY") {

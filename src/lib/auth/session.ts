@@ -10,12 +10,13 @@ import { supabaseServer } from "@/lib/supabase/server";
  * Usuária da sessão. `getClaims()` confere a assinatura do JWT localmente
  * (chaves ES256 do projeto, JWKS em cache), sem ir ao Supabase a cada pedido.
  */
-export const getAuthUser = cache(async (): Promise<{ id: string; email: string | null } | null> => {
+export const getAuthUser = cache(async (): Promise<{ id: string; email: string | null; trocarSenha: boolean } | null> => {
   const supabase = await supabaseServer();
   const { data, error } = await supabase.auth.getClaims();
   const c = data?.claims;
   if (error || !c?.sub) return null;
-  return { id: c.sub, email: typeof c.email === "string" ? c.email : null };
+  const meta = (c.user_metadata ?? {}) as { trocar_senha?: boolean };
+  return { id: c.sub, email: typeof c.email === "string" ? c.email : null, trocarSenha: meta.trocar_senha === true };
 });
 
 /**
@@ -25,6 +26,8 @@ export const getAuthUser = cache(async (): Promise<{ id: string; email: string |
 export const requireStudent = cache(async () => {
   const user = await getAuthUser();
   if (!user?.email) redirect("/app/a01");
+  // entrou com a senha provisória (compra pela Hubla / admin): cria a definitiva antes de tudo
+  if (user.trocarSenha) redirect("/app/senha?primeiro=1");
 
   let student = await db().query.students.findFirst({
     where: eq(schema.students.authUserId, user.id),

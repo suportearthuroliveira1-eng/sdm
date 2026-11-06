@@ -106,3 +106,9 @@
 ## ADR-021 · Preço do ebook por regra, não pela IA
 - **Contexto:** a dona pediu "preço sugerido, nunca preço alto, e a moeda". O número da IA variava (9, 0, [valor]).
 - **Decisão:** sugestão, faixa e teto por moeda numa tabela (`precos.ts`, editável em `precos_ebook`). A IA não define preço; o app recusa acima do teto. A moeda segue o país da pasta (provisório até a etapa Idioma e país).
+
+## ADR-022 · Venda na Hubla cria a conta com senha provisória
+- **Decisão:** a venda (webhook Hubla) cria a aluna e o login; se houver e-mail configurado (Resend), gera senha provisória e envia; a marca `trocar_senha` fica no `user_metadata` do Supabase (vai no JWT, sem migration) e obriga a criar a definitiva no 1º acesso. Sem e-mail configurado, o admin gera a senha na ficha (mostra uma vez) e manda no WhatsApp. Reenvio pela própria aluna só pra conta que nunca entrou ou ainda está com a provisória (ninguém troca a senha de quem já usa o app). Token da Hubla e chave do Resend em Admin → Chaves (`app_secrets`).
+
+## ADR-023 · Nenhuma etapa trava por falta de configuração
+- **Decisão:** checklists permitem "concluir assim mesmo" (com o que falta à vista); checkout aceita confirmação da aluna quando o site bloqueia o teste automático; criativos/roteiros da afiliada podem ser marcados como feitos usando o kit. Gravação de caixinhas e "feito" é atômica (jsonb_set no banco).

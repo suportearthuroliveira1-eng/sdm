@@ -1,3 +1,4 @@
+import { randomInt } from "node:crypto";
 import { z } from "zod";
 
 /** Regra de senha: 8+ caracteres, com letra e número. */
@@ -16,3 +17,11 @@ export const signupSchema = z
     confirmar: z.string(),
   })
   .refine((d) => d.senha === d.confirmar, { message: "As duas senhas não são iguais.", path: ["confirmar"] });
+
+/** Senha provisória fácil de digitar (sem 0/O, 1/l/I): 4 letras + 4 números. Atende a regra (letra + número, 8+). */
+export function gerarSenhaProvisoria() {
+  const L = "abcdefghjkmnpqrstuvwxyz";
+  const N = "23456789";
+  const p = (c: string, n: number) => Array.from({ length: n }, () => c[randomInt(c.length)]).join("");
+  return `${p(L, 4)}${p(N, 4)}`;
+}

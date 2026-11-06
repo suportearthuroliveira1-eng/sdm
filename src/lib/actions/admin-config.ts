@@ -30,6 +30,8 @@ const CONFIGS = {
   quota_ia_dia: { schema: z.number().int().min(1).max(5000), grupo: "ia", descricao: "Usos de IA por aluna por dia." },
   quota_professora_dia: { schema: z.number().int().min(1).max(1000), grupo: "ia", descricao: "Perguntas à Professora por aluna por dia." },
   cadastro_aberto: { schema: z.boolean(), grupo: "acesso", descricao: "Qualquer pessoa pode criar conta." },
+  auth_hubla_webhook: { schema: z.boolean(), grupo: "acesso", descricao: "Processar as vendas da Hubla (criar aluna, liberar acesso, mandar a senha provisória)." },
+  email_remetente: { schema: z.string().trim().min(3).max(120), grupo: "acesso", descricao: "Remetente dos e-mails de acesso, ex.: SDM <acesso@seudominio.com> (domínio verificado no Resend)." },
   precos_ebook: { schema: precosSchema, grupo: "personalizar", descricao: "Preço do ebook por moeda: sugerido, faixa (mín/máx) e teto (acima disso o app recusa)." },
   tema: { schema: temaSchema, grupo: "personalizar", descricao: "Cores, raio e animações do app (Admin → Aparência)." },
 } as const;

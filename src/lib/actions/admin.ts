@@ -13,6 +13,8 @@ import { passwordSchema } from "@/lib/domain/password";
 import { supabaseAdmin } from "@/lib/supabase/server";
 import { errMsg } from "@/lib/server/log";
 import { zerarAluna } from "@/lib/server/zerar";
+import { definirSenhaProvisoria, textoAcesso } from "@/lib/server/senha-provisoria";
+import { enviarEmail } from "@/lib/integrations/email";
 
 export type LinkResult = { ok: true; url: string; message: string; expiresAt: string; studentId: string } | { ok: false; error: string };
 
@@ -192,6 +194,30 @@ export async function zerarAlunaAction(studentId: string, _p: { ok?: boolean; er
     revalidatePath(`/admin/alunas/${id}`);
     revalidatePath("/app", "layout");
     return { ok: true, msg: `Zerada: ${n.pastas} pasta(s), ${n.diagnosticos} diagnóstico(s), ${n.aulas} aula(s) vista(s), ${n.conversas} mensagem(ns). No próximo acesso ela começa do primeiro acesso.` };
+  } catch (e) {
+    return { error: errMsg(e) };
+  }
+}
+
+/** AD03 · Senha provisória: mostra uma vez (pra mandar no WhatsApp) e, se tiver e-mail configurado, envia. No 1º login ela cria a definitiva. */
+export async function senhaProvisoriaAction(studentId: string, enviarPorEmail: boolean): Promise<{ ok?: boolean; error?: string; senha?: string; mensagem?: string; emailEnviado?: boolean }> {
+  const admin = await requireAdmin(["suporte"]);
+  const id = z.string().uuid().parse(studentId);
+  const student = await db().query.students.findFirst({ where: eq(schema.students.id, id) });
+  if (!student) return { error: "Aluna não encontrada." };
+  let authId = student.authUserId;
+  if (!authId) {
+    authId = await ensureAuthUser(student.email);
+    if (!authId) return { error: "Não deu pra criar o login dela agora." };
+    await db().update(schema.students).set({ authUserId: authId }).where(eq(schema.students.id, id));
+  }
+  try {
+    const senha = await definirSenhaProvisoria(authId);
+    const t = textoAcesso(student.nome, student.email, senha);
+    let emailEnviado = false;
+    if (enviarPorEmail) emailEnviado = (await enviarEmail({ para: student.email, assunto: t.assunto, html: t.html, texto: t.texto })).ok;
+    await audit(admin.id, "aluna.senha_provisoria", { tipo: "student", id: student.code }, { emailEnviado });
+    return { ok: true, senha, mensagem: t.texto, emailEnviado };
   } catch (e) {
     return { error: errMsg(e) };
   }

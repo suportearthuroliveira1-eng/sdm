@@ -230,7 +230,7 @@ export function ProprioPlataforma({ p, proxima }: { p: P; proxima: string }) {
         <span className="tx">4. Copiar o link do checkout e colar aqui embaixo.</span>
         <span className="mu">[prints do passo a passo quando o time definir a plataforma]</span>
       </div>
-      <LinkTester pastaId={p.id} url={ck?.url} campo rotulo="Link do checkout" label="Colar e conferir se abre" />
+      <LinkTester pastaId={p.id} url={ck?.url} campo rotulo="Link do checkout" label="Colar e conferir se abre" permitirConfirmar />
       {ck?.ok ? <a href={proxima} className="b1 no-underline">Próxima etapa</a> : null}
     </>
   );

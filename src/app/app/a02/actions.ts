@@ -9,6 +9,9 @@ import { whatsappSender } from "@/lib/integrations/whatsapp";
 import { rateLimit } from "@/lib/server/rate-limit";
 import { getFlag } from "@/lib/server/settings";
 import { findStudentByEmail, issueAccessLink } from "@/lib/server/students";
+import { enviarAcessoPorEmail } from "@/lib/server/senha-provisoria";
+import { emailConfigurado } from "@/lib/integrations/email";
+import { supabaseAdmin } from "@/lib/supabase/server";
 
 export type TicketState = { ok: boolean; error?: string; msg?: string };
 
@@ -35,7 +38,15 @@ export async function requestResend(_p: TicketState, form: FormData): Promise<Ti
   const { email, whatsapp } = parsed.data;
   const student = await findStudentByEmail(email);
   let sent = false;
-  if (student?.ativo && student.whatsapp && (await getFlag("whatsapp_auto_send"))) {
+  // e-mail com senha provisória: só pra conta que ainda não entrou ou que ainda está com a provisória
+  // (assim ninguém troca a senha de quem já usa o app)
+  if (student?.ativo && student.authUserId && (await emailConfigurado()) && (await rateLimit(`resend-mail:${email}`, 3, 3600)).ok) {
+    const ents = await db().query.entitlements.findMany({ where: eq(schema.entitlements.studentId, student.id) });
+    const u = (await supabaseAdmin().auth.admin.getUserById(student.authUserId)).data.user;
+    const pendente = !student.ultimoAcesso || (u?.user_metadata as { trocar_senha?: boolean } | undefined)?.trocar_senha === true;
+    if (canEnterApp(ents) && pendente) sent = (await enviarAcessoPorEmail({ authUserId: student.authUserId, nome: student.nome, email: student.email }).catch(() => ({ enviado: false }))).enviado;
+  }
+  if (!sent && student?.ativo && student.whatsapp && (await getFlag("whatsapp_auto_send"))) {
     const ents = await db().query.entitlements.findMany({ where: eq(schema.entitlements.studentId, student.id) });
     if (canEnterApp(ents)) {
       const link = await issueAccessLink(student.id);
@@ -49,7 +60,7 @@ export async function requestResend(_p: TicketState, form: FormData): Promise<Ti
       texto: `[A02 reenviar acesso] WhatsApp informado: ${whatsapp ?? "—"}`,
     });
   }
-  return { ok: true, msg: "Pedido recebido. Se esse e-mail tiver compra aprovada, o link chega no WhatsApp cadastrado. Se não chegar, o time te chama." };
+  return { ok: true, msg: "Pedido recebido. Se esse e-mail tiver compra aprovada, o acesso chega no seu e-mail (confira o spam). Se não chegar, o time te chama." };
 }
 
 const ticketInput = z.object({ email: z.string().trim().toLowerCase().email(), texto: z.string().trim().min(5).max(2000) });

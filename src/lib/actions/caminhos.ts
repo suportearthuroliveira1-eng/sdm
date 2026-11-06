@@ -117,22 +117,32 @@ export async function novaPasta(tipo: "sdm" | "proprio") {
 /** Marca/desmarca uma etapa ou item como feito (Entenda, conta, regras, revisão...). */
 export async function marcarFeito(pastaId: string, chave: string, valor = true) {
   const { pasta: p } = await pasta(pastaId);
-  const feito = { ...((p.dados as { feito?: Record<string, boolean> }).feito ?? {}), [z.string().max(40).parse(chave)]: valor };
-  await salvarDados(p.id, { feito });
+  const k = z.string().max(40).parse(chave);
+  const col = schema.studentProducts.dados;
+  // atômico: muda só feito.<chave> (dois toques seguidos não apagam um ao outro)
+  await db()
+    .update(schema.studentProducts)
+    .set({ dados: sql`jsonb_set(${col} || case when ${col} ? 'feito' then '{}'::jsonb else '{"feito":{}}'::jsonb end, array['feito', ${k}::text], to_jsonb(${valor}::boolean), true)` })
+    .where(eq(schema.studentProducts.id, p.id));
   await db().update(schema.students).set({ produtoAtivo: p.id }).where(eq(schema.students.id, p.studentId));
   reval();
   return { ok: true };
 }
 
-/** Item de checklist (índice) ligado/desligado. */
+/** Item de checklist (índice) ligado/desligado. Atômico no banco: marcar vários seguidos não perde nenhum. */
 export async function marcarItem(pastaId: string, lista: string, idx: number, on: boolean) {
   const { pasta: p } = await pasta(pastaId);
-  const checks = { ...((p.dados as { checks?: Record<string, number[]> }).checks ?? {}) };
-  const atual = new Set(checks[lista] ?? []);
-  if (on) atual.add(idx);
-  else atual.delete(idx);
-  checks[z.string().max(40).parse(lista)] = [...atual].sort((a, b) => a - b);
-  await salvarDados(p.id, { checks });
+  const l = z.string().max(40).parse(lista);
+  const i = z.number().int().min(0).max(200).parse(idx);
+  const col = schema.studentProducts.dados;
+  const atual = sql`coalesce(${col} #> array['checks', ${l}::text], '[]'::jsonb)`;
+  const novo = on
+    ? sql`(select coalesce(jsonb_agg(v order by v), '[]'::jsonb) from (select distinct e::int as v from jsonb_array_elements_text(${atual} || to_jsonb(${i}::int)) as e) t)`
+    : sql`(select coalesce(jsonb_agg(v order by v), '[]'::jsonb) from (select distinct e::int as v from jsonb_array_elements_text(${atual}) as e where e::int <> ${i}::int) t)`;
+  await db()
+    .update(schema.studentProducts)
+    .set({ dados: sql`jsonb_set(${col} || case when ${col} ? 'checks' then '{}'::jsonb else '{"checks":{}}'::jsonb end, array['checks', ${l}::text], ${novo}, true)` })
+    .where(eq(schema.studentProducts.id, p.id));
   reval();
   return { ok: true };
 }
@@ -364,6 +374,34 @@ export async function testarCheckout(pastaId: string, _p: R | null, form: FormDa
   reval();
   if (!r.ok) return { erro: r.erro };
   return ok ? { ok: true, final: r.final, status: r.status } : { erro: `O link respondeu ${r.status}. Confira se copiou o link certo do checkout.` };
+}
+
+/** B8 · o teste automático falhou (site bloqueia robô), mas ela confere que o link abre: segue assim mesmo. */
+export async function confirmarCheckout(pastaId: string): Promise<R> {
+  const { pasta: p } = await pasta(pastaId);
+  const ck = (p.dados as { checkout?: { url?: string } }).checkout;
+  if (!ck?.url) return { erro: "Cole o link do checkout primeiro." };
+  await salvarDados(p.id, { checkout: { ...ck, ok: true, confirmadoPelaAluna: true, confirmadoEm: new Date().toISOString() } });
+  reval();
+  return { ok: true };
+}
+
+const linkSchema = z.object({ texto: z.string().trim().min(1).max(40), url: z.string().trim().url().max(500).refine((u) => /^https?:\/\//.test(u), "Use um link que comece com https://") });
+const bioPaginaSchema = z.object({
+  nome: z.string().trim().max(40).optional(),
+  frase: z.string().trim().max(240).optional(),
+  botao: z.string().trim().max(40).optional(),
+  links: z.array(linkSchema).max(4).optional(),
+});
+
+/** DO1 · página de links da bio (o que aparece em /l/código). */
+export async function salvarBioPagina(pastaId: string, v: unknown): Promise<R> {
+  const r = bioPaginaSchema.safeParse(v);
+  if (!r.success) return { erro: r.error.issues[0]?.message ?? "Confira os campos." };
+  const { pasta: p } = await pasta(pastaId);
+  await salvarDados(p.id, { bioPagina: r.data });
+  reval();
+  return { ok: true };
 }
 
 // ---------- Caminho A · afiliada do SDM ----------

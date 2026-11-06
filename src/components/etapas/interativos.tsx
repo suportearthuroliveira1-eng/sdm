@@ -17,7 +17,9 @@ export function Checklist({ pastaId, lista, titulo, itens, marcados, etapa, feit
     else n.delete(i);
     return n;
   });
-  const tudo = itens.length > 0 && itens.every((_, i) => otim.has(i));
+  const tudo = itens.every((_, i) => otim.has(i)); // lista vazia não trava
+  const faltam = itens.filter((_, i) => !otim.has(i));
+  const [forcar, setForcar] = useState(false);
   return (
     <div className="flex flex-col gap-2">
       {titulo ? <span className="kk">{titulo.toUpperCase()}</span> : null}
@@ -44,7 +46,18 @@ export function Checklist({ pastaId, lista, titulo, itens, marcados, etapa, feit
         ))}
       </ul>
       <span className="mu">{otim.size} de {itens.length} feitos</span>
-      {etapa ? <MarcarFeito pastaId={pastaId} etapa={etapa} feita={feita} habilitado={tudo} proxima={proxima} pending={pending} /> : null}
+      {etapa && !feita && !tudo ? (
+        <div className="flex flex-col gap-1.5 rounded-[14px] border border-line bg-surface-2 p-3">
+          <span className="text-sm font-bold">{faltam.length === 1 ? "Falta 1 item pra concluir:" : `Faltam ${faltam.length} itens pra concluir:`}</span>
+          <span className="mu">{faltam.join(" · ")}</span>
+          {!forcar ? (
+            <button type="button" className="b3 self-start px-0 text-sm" onClick={() => setForcar(true)}>Não consigo marcar agora: concluir assim mesmo</button>
+          ) : (
+            <span className="text-sm text-warn-text">Tudo bem. Você pode voltar aqui e marcar depois. Toque no botão abaixo pra seguir.</span>
+          )}
+        </div>
+      ) : null}
+      {etapa ? <MarcarFeito pastaId={pastaId} etapa={etapa} feita={feita} habilitado={tudo || forcar} proxima={proxima} pending={pending} /> : null}
     </div>
   );
 }

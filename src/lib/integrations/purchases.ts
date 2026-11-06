@@ -9,6 +9,7 @@ import { hotmartWebhook } from "./webhooks/hotmart";
 import { hublaWebhook } from "./webhooks/hubla";
 import type { PurchaseEvent, PurchaseWebhook } from "./webhooks/types";
 import { whatsappSender } from "./whatsapp";
+import { enviarAcessoPorEmail } from "@/lib/server/senha-provisoria";
 
 export const WEBHOOKS: Record<"hubla" | "hotmart", PurchaseWebhook> = { hubla: hublaWebhook, hotmart: hotmartWebhook };
 
@@ -39,11 +40,17 @@ export async function applyPurchase(ev: PurchaseEvent): Promise<ProcessResult> {
       acessos: [map.produto],
     });
     await upsertEntitlements(student.id, [map.produto], ev.provider, "active", ev.transactionId ?? undefined);
+    // conta nova: senha provisória por e-mail (ela cria a definitiva no 1º acesso)
+    let entrega = "";
+    if (created && student.authUserId) {
+      const r = await enviarAcessoPorEmail({ authUserId: student.authUserId, nome: student.nome, email: student.email }).catch((e) => ({ enviado: false, erro: errMsg(e) }));
+      entrega = r.enviado ? " · acesso enviado por e-mail" : ` · acesso NÃO enviado (${r.erro}): gere a senha em Admin → Alunas`;
+    }
     if (created && map.produto === "sdm" && student.whatsapp && (await getFlag("whatsapp_auto_send"))) {
       const link = await issueAccessLink(student.id);
       await whatsappSender().send({ to: student.whatsapp, text: link.message });
     }
-    return { status: "processado", detalhe: `${student.code} +${map.produto}` };
+    return { status: "processado", detalhe: `${student.code} +${map.produto}${entrega}` };
   }
 
   const student = await findStudentByEmail(ev.email);

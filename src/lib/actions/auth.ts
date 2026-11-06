@@ -91,7 +91,8 @@ export async function setPassword(_p: FormState, form: FormData): Promise<FormSt
   const sb = await supabaseServer();
   const { data } = await sb.auth.getUser();
   if (!data.user) return { error: "Sua sessão acabou. Entre de novo." };
-  const { error } = await sb.auth.updateUser({ password: senha.data });
+  const { error } = await sb.auth.updateUser({ password: senha.data, data: { trocar_senha: false } });
+  if (!error) await sb.auth.refreshSession(); // o JWT novo já sai sem a marca de senha provisória
   if (error) {
     log("error", "updateUser senha falhou", { err: error.message });
     return { error: /different|same/i.test(error.message) ? "Escolha uma senha diferente da atual." : "Não deu pra salvar a senha agora. Tente de novo." };

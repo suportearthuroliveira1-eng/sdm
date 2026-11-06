@@ -1,6 +1,6 @@
 # Estado do projeto
 
-> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-06 (16ª tarefa: tela Tudo pronto e ebook/PDF bem maior e estilizado)** · branch `claude/intelligent-bohr-54teds`.
+> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-06 (17ª tarefa: Hubla com senha provisória, varredura de todas as etapas, link da bio como página, criativos em passo a passo, Alunas no admin corrigida)** · branch `claude/intelligent-bohr-54teds`.
 
 ## Fase atual
 **O app segue `docs/App_SDM_Fluxo_Ideal.pdf`** (dois caminhos + divulgação). **IA ligada em produção** (chave da OpenAI em Admin → Chaves e variáveis, tabela `app_secrets`). Quase tudo do app é configurável no admin, sem deploy: perguntas do diagnóstico e regras de decisão, regras do primeiro acesso, textos, IA (modelos, limites, regras base, Professora, prompt de cada agente com versões).
@@ -77,6 +77,10 @@
 ## Pendências que dependem de você
 | Desde | Pendência |
 |---|---|
+| 2026-11-06 | **Hubla**: colar o Hubla Webhook Token em Admin → Chaves, cadastrar a URL do webhook na Hubla, mapear o ID do produto em Acessos e webhooks e ligar |
+| 2026-11-06 | **E-mail de acesso**: criar conta no Resend, verificar o domínio, colar a chave em Admin → Chaves e definir o remetente (`email_remetente`) |
+| 2026-11-06 | Ficha do SDM (`sdm.ficha.en/es`) pra IA gerar criativos e roteiros pra afiliada (hoje ela segue com o kit) |
+| 2026-11-06 | Novo token do Supabase (o de 1 dia venceu) se quiser que eu aplique migrations em produção |
 | 2026-11-05 | Subir `docs/SDM_contexto_completo_v6.md` (protótipos já chegaram) |
 | 2026-11-05 | Revogar/rotacionar a chave da OpenAI depois (foi colada no chat) |
 | 2026-11-05 | Definir: comissão do SDM (`sdm_comissao`), regras de pausa/escala (sinal dos números), plataforma de venda e onde a página do produto próprio fica publicada, regras da afiliação (`afiliacao.regras`), ficha do SDM (`sdm.ficha.en/es`) |
@@ -88,7 +92,6 @@
 | 2026-11-05 | Liberar `hcknrrgbmhnqtmenovmk.supabase.co` na rede do ambiente cloud (opcional: aí eu testo o login daqui) |
 | 2026-11-05 | No Supabase: Auth → Email Templates → "Magic Link": incluir `{{ .Token }}` pra o código de 6 dígitos aparecer |
 | 2026-11-05 | Liberar acesso de rede a platform.openai.com (ou conferir você) pra fixar os modelos mais baratos e preços em `ai_models` |
-| 2026-11-05 | Doc/exemplo de payload do webhook da Hubla (nomes de evento e header de autenticação) |
 | 2026-11-05 | Contexto seção 13: ferramenta de página (`PAGE_TOOL_NAME`), links dos modelos do SDM, comissão CPA ou %, rede de afiliação, validação da 1ª venda, grupo interno/externo, provedor de WhatsApp, serviço de rastreamento (`TRACKING_API_KEY`) |
 | 2026-11-05 | Valores de regra: verba mínima, regras de pausa, escada de escala, dias de aprendizado e aquecimento, frequência de posts, cotas de IA, teto de custo |
 | 2026-11-05 | Arte oficial do ícone do app |

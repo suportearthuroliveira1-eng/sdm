@@ -15,9 +15,10 @@ import { marcarOndeParou } from "@/lib/server/onde-parou";
 export const metadata: Metadata = { title: "Etapa" };
 
 // Etapas das pastas (fluxo ideal): cada uma abre com "Entenda" e a aula, depois a ferramenta.
-export default async function Etapa({ params }: PageProps<"/app/p/[id]/[etapa]">) {
+export default async function Etapa({ params, searchParams }: PageProps<"/app/p/[id]/[etapa]">) {
   const { id, etapa: slug } = await params;
-  if (slug === "criativos" || slug === "roteiros") redirect(`/app/dv01/${id}${slug === "roteiros" ? "#h-r" : ""}`);
+  const parte = String((await searchParams).parte ?? "");
+  if (slug === "criativos" || slug === "roteiros") redirect(`/app/dv01/${id}?aba=${slug === "roteiros" ? "roteiros" : "anuncios"}`);
   const ctx = await pastaDaAluna(id);
   if (!ctx) notFound();
   const { pasta, etapas } = ctx;
@@ -75,7 +76,7 @@ export default async function Etapa({ params }: PageProps<"/app/p/[id]/[etapa]">
   if (slug === "divulgar") corpo = <Divulgar p={p} />;
   if (slug === "base-anuncios") corpo = <BaseAnuncios p={p} proxima={proxima} />;
   if (slug === "pixel") corpo = <Pixel p={p} proxima={proxima} />;
-  if (slug === "perfil") corpo = <Perfil p={p} proxima={proxima} />;
+  if (slug === "perfil") corpo = <Perfil p={p} proxima={proxima} parte={parte || undefined} />;
   if (slug === "numeros") corpo = <Numeros p={p} org={false} />;
   if (slug === "numeros-org") corpo = <Numeros p={p} org />;
 

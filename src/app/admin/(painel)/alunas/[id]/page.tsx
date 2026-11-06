@@ -8,6 +8,8 @@ import { db, schema } from "@/lib/db";
 import { isActive, PRODUCTS, PRODUCT_LABEL } from "@/lib/domain/entitlements";
 import { StudentActions } from "./student-actions";
 import { ZerarAluna } from "./zerar";
+import { SenhaProvisoria } from "./senha-provisoria";
+import { emailConfigurado } from "@/lib/integrations/email";
 
 export const metadata = { title: "Ficha da aluna" };
 
@@ -49,6 +51,8 @@ export default async function AD03({ params }: PageProps<"/admin/alunas/[id]">) 
       </dl>
 
       <StudentActions studentId={student.id} ativo={student.ativo} active={active} labels={PRODUCT_LABEL} />
+
+      <SenhaProvisoria studentId={student.id} emailOk={await emailConfigurado()} />
 
       <dl className="acd grid grid-cols-2 gap-4 text-sm sm:grid-cols-4">
         <div><dt className="text-muted">Primeiro acesso</dt><dd>{student.diagnosticoEm ? "feito" : student.boasVindasEm ? "em andamento" : "não começou"}</dd></div>

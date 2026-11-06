@@ -79,11 +79,11 @@ export function pronta(slug: string, e: EstadoPasta): boolean {
     case "teste": return marcado(e, "teste");
     case "divulgar": return Boolean(e.divulgacao);
     case "base-anuncios": return marcado(e, "base-anuncios");
-    case "criativos": return e.temCriativos;
+    case "criativos": return e.temCriativos || marcado(e, "criativos");
     case "pixel": return marcado(e, "pixel");
     case "numeros": case "numeros-org": return e.temNumeros;
     case "perfil": return marcado(e, "perfil");
-    case "roteiros": return e.temRoteiros;
+    case "roteiros": return e.temRoteiros || marcado(e, "roteiros");
     default: return false;
   }
 }

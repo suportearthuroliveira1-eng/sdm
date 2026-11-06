@@ -50,7 +50,7 @@ export default async function AD02({ searchParams }: PageProps<"/admin/alunas">)
       AND (${f} <> 'sem7' OR s.ultimo_acesso IS NULL OR s.ultimo_acesso < now() - interval '7 days')
       AND (${f} <> 'semfunil' OR NOT EXISTS (SELECT 1 FROM student_products x WHERE x.student_id = s.id AND x.publicado))
       AND (${f} <> 'venda' OR EXISTS (SELECT 1 FROM sales v JOIN student_products x ON x.id = v.student_product_id WHERE x.student_id = s.id))
-    ORDER BY s.criado_em DESC
+    ORDER BY s.created_at DESC
     LIMIT 200
   `)).rows as unknown as Linha[];
 

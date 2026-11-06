@@ -9,6 +9,8 @@ import { db, schema } from "@/lib/db";
  */
 export const SEGREDOS_EDITAVEIS = {
   OPENAI_API_KEY: { nome: "Chave da OpenAI", ajuda: "Liga toda a IA do app (diagnóstico, produto, ebook, anúncios, Professora, imagens). Começa com sk-.", prefixo: "sk-" },
+  HUBLA_WEBHOOK_TOKEN: { nome: "Token do webhook da Hubla", ajuda: "Na Hubla: Integrações → Webhook → aba Autenticação → \"Hubla Webhook Token\". O app só aceita avisos de venda que chegam com esse token.", prefixo: "" },
+  RESEND_API_KEY: { nome: "Chave do Resend (e-mail)", ajuda: "Envia o e-mail de acesso com a senha provisória pra quem comprou. Crie grátis em resend.com (API Keys). Começa com re_.", prefixo: "re_" },
 } as const;
 export type SegredoKey = keyof typeof SEGREDOS_EDITAVEIS;
 

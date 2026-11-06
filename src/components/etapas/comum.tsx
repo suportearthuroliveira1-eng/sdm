@@ -90,7 +90,7 @@ export async function EtapaHead({ pastaId, pastaNome, etapa, etapas, children }:
 }
 
 /** Mesmo endereço de hrefEtapa (server), sem importar código de servidor aqui. */
-const hrefEtapaCliente = (pastaId: string, slug: string) => (slug === "criativos" || slug === "roteiros" ? `/app/dv01/${pastaId}${slug === "roteiros" ? "#h-r" : ""}` : `/app/p/${pastaId}/${slug}`);
+const hrefEtapaCliente = (pastaId: string, slug: string) => (slug === "criativos" || slug === "roteiros" ? `/app/dv01/${pastaId}?aba=${slug === "roteiros" ? "roteiros" : "anuncios"}` : `/app/p/${pastaId}/${slug}`);
 
 /** Rodapé de toda etapa: anterior / próxima (só se a próxima estiver aberta). */
 export function NavEtapas({ pastaId, etapas, slug }: { pastaId: string; etapas: EtapaStatus[]; slug: string }) {
@@ -171,4 +171,30 @@ export async function itensChecklist(chave: string): Promise<{ titulo: string; i
 
 export function Proxima({ href, children = "Próxima etapa" }: { href: string; children?: ReactNode }) {
   return <Link href={href} className="b1 mt-2 no-underline">{children}</Link>;
+}
+
+/** Subpassos dentro de uma etapa (uma parte por vez): abas com ✓, conteúdo da parte e "anterior/próxima parte". */
+export function SubPassos({ base, partes, atual, children }: { base: string; partes: { k: string; nome: string; ok: boolean }[]; atual: string; children: ReactNode }) {
+  const i = Math.max(0, partes.findIndex((x) => x.k === atual));
+  const ant = partes[i - 1];
+  const prox = partes[i + 1];
+  return (
+    <div className="flex flex-col gap-3">
+      <nav aria-label="Partes desta etapa" className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${partes.length}, minmax(0, 1fr))` }}>
+        {partes.map((x, k) => (
+          <Link key={x.k} href={`${base}?parte=${x.k}`} aria-current={k === i ? "step" : undefined} className={`flex min-h-12 flex-col justify-center rounded-xl border px-2.5 py-1.5 no-underline ${k === i ? "border-accent bg-sel" : "border-line bg-surface"}`}>
+            <span className={`text-[10px] font-bold uppercase tracking-wider ${x.ok ? "text-ok" : k === i ? "text-accent-2" : "text-muted"}`}>{x.ok ? "✓ feito" : `parte ${k + 1}`}</span>
+            <span className="truncate text-xs font-semibold text-text">{x.nome}</span>
+          </Link>
+        ))}
+      </nav>
+      <div key={atual} className="surge flex flex-col gap-3">{children}</div>
+      {ant || prox ? (
+        <div className="grid grid-cols-2 gap-2">
+          {ant ? <Link href={`${base}?parte=${ant.k}`} className="b2 no-underline">← {ant.nome}</Link> : <span />}
+          {prox ? <Link href={`${base}?parte=${prox.k}`} className="b1 no-underline">{prox.nome} →</Link> : null}
+        </div>
+      ) : null}
+    </div>
+  );
 }

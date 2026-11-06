@@ -11,12 +11,16 @@ export default async function Senha({ searchParams }: PageProps<"/app/senha">) {
   const user = await getAuthUser();
   if (!user) redirect("/app/a01");
   const sp = await searchParams;
-  const primeiro = sp.primeiro === "1";
+  const primeiro = sp.primeiro === "1" || user.trocarSenha;
   const to = typeof sp.to === "string" && sp.to.startsWith("/admin") ? "/admin" : "/app";
   return (
     <Screen id="SENHA" head={{ k: "Acesso", t: primeiro ? "Crie sua senha" : "Trocar senha" }} back={to}>
       <p className="tx">
-        {primeiro ? "Pronto, você entrou. Crie uma senha pra entrar das próximas vezes só com e-mail e senha." : `Conta: ${user.email}`}
+        {user.trocarSenha
+          ? "Você entrou com a senha provisória. Crie agora a sua senha definitiva: é com ela que você vai entrar das próximas vezes."
+          : primeiro
+            ? "Pronto, você entrou. Crie uma senha pra entrar das próximas vezes só com e-mail e senha."
+            : `Conta: ${user.email}`}
       </p>
       <PasswordForm to={to} primeiro={primeiro} />
     </Screen>
