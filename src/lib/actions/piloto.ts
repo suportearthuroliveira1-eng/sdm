@@ -8,14 +8,14 @@ import { db, schema } from "@/lib/db";
 import { MERCADOS } from "@/lib/domain/mercados";
 import { pastaDaAluna } from "@/lib/server/pastas";
 import { definirMercado, gerarFicha, gerarIdeias, gerarOferta, rascunhoFicha } from "./caminhos";
-import { gerarCapitulo, gerarSumario, salvarSumario } from "./ebook";
+import { gerarCapitulo, gerarExtras, gerarSumario, salvarSumario } from "./ebook";
 
 /**
  * "A IA faz tudo": a tela chama um passo por vez (cada um cabe no tempo da Vercel)
  * e mostra o progresso real. Cada passo pula o que já está feito, então dá pra tentar de novo.
  * Para antes da Revisão: ali é ela quem confere e aprova (regra 4).
  */
-type Passo = "fim" | "inicio" | "ideias" | "escolha" | "rascunho" | "ficha" | "oferta" | "mercado" | "sumario" | `capitulo:${number}`;
+type Passo = "fim" | "extras" | "inicio" | "ideias" | "escolha" | "rascunho" | "ficha" | "oferta" | "mercado" | "sumario" | `capitulo:${number}`;
 export type RespPiloto = { ok?: boolean; erro?: string; capitulos?: number; ideia?: string };
 
 async function salvar(id: string, patch: Record<string, unknown>) {
@@ -82,9 +82,9 @@ export async function pilotoPasso(pastaId: string, passo: Passo): Promise<RespPi
         const eb = await db().query.ebooks.findFirst({ where: and(eq(schema.ebooks.studentProductId, p.id), eq(schema.ebooks.studentId, p.studentId)) });
         if (!eb) {
           const f = new FormData();
-          f.set("capitulos", "5");
+          f.set("capitulos", "6");
           f.set("tom", "amiga");
-          f.set("tamanho", "10");
+          f.set("tamanho", "20");
           const g = await gerarSumario(p.id, null, f);
           if (g.erro) return g;
         }
@@ -95,6 +95,10 @@ export async function pilotoPasso(pastaId: string, passo: Passo): Promise<RespPi
           if (s.erro) return s;
         }
         return { ok: true, capitulos: caps.length };
+      }
+      case passo === "extras": {
+        const eb = await db().query.ebooks.findFirst({ where: and(eq(schema.ebooks.studentProductId, p.id), eq(schema.ebooks.studentId, p.studentId)) });
+        return (eb?.ideia as { extras?: unknown } | null)?.extras ? { ok: true } : gerarExtras(p.id);
       }
       case passo.startsWith("capitulo:"): {
         const i = Number(passo.split(":")[1]);

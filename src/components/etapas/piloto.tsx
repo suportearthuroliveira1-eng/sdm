@@ -42,7 +42,7 @@ export function PilotoAutomatico({ pastaId, revisaoHref, titulo = "A IA faz tudo
       }
       if (r.ideia) setIdeia(r.ideia);
       if (passo === "sumario" && r.capitulos && !l.some((e) => e.id.startsWith("capitulo:"))) {
-        l = [...l, ...Array.from({ length: r.capitulos }, (_, k) => ({ id: `capitulo:${k}`, nome: `Capítulo ${k + 1} de ${r.capitulos}`, fazendo: `Escrevendo o capítulo ${k + 1} de ${r.capitulos}, com tradução` }))];
+        l = [...l, ...Array.from({ length: r.capitulos }, (_, k) => ({ id: `capitulo:${k}`, nome: `Capítulo ${k + 1} de ${r.capitulos}`, fazendo: `Escrevendo o capítulo ${k + 1} de ${r.capitulos}, com tradução` })), { id: "extras", nome: "Introdução e conclusão", fazendo: "Escrevendo a introdução, a conclusão e os próximos passos" }];
         setEtapas(l);
       }
     }
@@ -61,7 +61,7 @@ export function PilotoAutomatico({ pastaId, revisaoHref, titulo = "A IA faz tudo
         <span className="flex flex-col gap-0.5">
           <span className="text-[17px] font-bold">{titulo}</span>
           <span className="text-sm text-text-2">{descricao}</span>
-          <span className="text-xs font-bold text-c-amber">{continuar ? "Ela continua de onde parou" : "Leva uns 2 a 3 minutos"}</span>
+          <span className="text-xs font-bold text-c-amber">{continuar ? "Ela continua de onde parou" : "Leva uns 4 a 5 minutos"}</span>
         </span>
       </button>
 
@@ -77,7 +77,7 @@ export function PilotoAutomatico({ pastaId, revisaoHref, titulo = "A IA faz tudo
                   <p className="mu m-0 text-sm">Vou fazer estes passos, um de cada vez. O que já está pronto eu pulo. Tudo fica salvo e você pode mudar qualquer coisa depois.</p>
                 </div>
                 <ol className="m-0 flex list-none flex-col gap-1.5 p-0">
-                  {[...BASE.slice(1).map((e) => e.nome), "Capítulos do ebook"].map((t, i) => (
+                  {[...BASE.slice(1).map((e) => e.nome), "Capítulos do ebook", "Introdução e conclusão"].map((t, i) => (
                     <li key={t} className="surge flex items-center gap-2 text-sm" style={{ animationDelay: `${i * 50}ms` }}>
                       <span className="grid size-6 shrink-0 place-items-center rounded-full bg-c-amber/20 text-xs font-bold text-c-amber">{i + 1}</span>
                       {t}
@@ -96,7 +96,8 @@ export function PilotoAutomatico({ pastaId, revisaoHref, titulo = "A IA faz tudo
                 <h2 className="m-0 text-xl font-bold">Pronto! Seu produto está montado</h2>
                 {ideia ? <p className="m-0 font-bold text-c-amber">{ideia}</p> : null}
                 <p className="mu m-0 text-sm">Agora é com você: confira a ficha, a oferta e o ebook, e faça a Revisão antes de vender.</p>
-                <button type="button" className="b1" onClick={() => router.push(revisaoHref)}>Ir pra Revisão</button>
+                <button type="button" className="b1" onClick={() => router.push(revisaoHref.replace(/\/revisao$/, "/pronto"))}>Ver tudo que ficou pronto</button>
+                <button type="button" className="b2" onClick={() => router.push(revisaoHref)}>Ir pra Revisão</button>
                 <button type="button" className="b3" onClick={() => { setFase("fechado"); router.refresh(); }}>Ver tudo na pasta</button>
               </div>
             ) : (

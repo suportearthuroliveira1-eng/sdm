@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // Upload de imagem por server action (a Vercel aceita até 4,5 MB por requisição).
   experimental: { serverActions: { bodySizeLimit: "4.5mb" } },
+  // fontes do PDF do ebook (lidas do disco na função da Vercel)
+  outputFileTracingIncludes: { "/api/ebook/*": ["./public/fonts/**/*"] },
   async headers() {
     return [
       {
@@ -23,6 +25,8 @@ const nextConfig: NextConfig = {
           { key: "X-Frame-Options", value: "DENY" },
         ],
       },
+      // o PDF do ebook aparece dentro do app (prévia), só no próprio site
+      { source: "/api/ebook/:path*", headers: [{ key: "X-Frame-Options", value: "SAMEORIGIN" }] },
     ];
   },
 };

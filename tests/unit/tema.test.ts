@@ -19,3 +19,14 @@ describe("aparência", () => {
     expect(cssDoTema(TEMA_PADRAO)).toContain("--accent:#a98bff");
   });
 });
+
+describe("título do capítulo", () => {
+  it("tira a numeração que a IA põe", async () => {
+    const { limparTitulo } = await import("@/lib/domain/temas");
+    expect(limparTitulo("1. Where to Begin")).toBe("Where to Begin");
+    expect(limparTitulo("Capítulo 2: Comece pelo canto")).toBe("Comece pelo canto");
+    expect(limparTitulo("Chapter 3 - Plan")).toBe("Plan");
+    expect(limparTitulo("7 Days to a Tidy Home")).toBe("7 Days to a Tidy Home");
+    expect(limparTitulo("2) Make a plan")).toBe("Make a plan");
+  });
+});

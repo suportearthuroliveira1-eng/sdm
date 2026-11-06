@@ -90,9 +90,22 @@ export const AGENTES = {
     id: "AGT-ebook",
     nome: "Ebook · capítulo",
     classe: "text_mid",
-    maxTokens: 4000,
+    maxTokens: 7000,
     schema: S.capituloOut,
-    tarefa: `Tarefa: escrever UM capítulo do ebook no idioma de venda, no tom pedido, para caber em cerca de 1 página (tamanho "5") ou 2 páginas (tamanho "10" ou mais). Parágrafos curtos, linguagem simples, passos práticos. "lista" pode ser vazia. Entregue também a versão em português em "pt". Se receber "ajuste", reescreva seguindo o pedido (mais simples, mais curto, mais exemplos).`,
+    tarefa: `Tarefa: escrever UM capítulo completo do ebook no idioma de venda, no tom pedido, com cerca de "palavras_alvo" palavras (somando introdução, seções, lista, na prática, erros comuns e resumo).
+- Estrutura: abertura (1 frase forte), introdução curta, 3 a 4 seções com subtítulo, passo a passo ou dicas em "lista", um exemplo concreto em "na_pratica", "erros_comuns", um "destaque" (frase pra guardar), "resumo" (3 a 5 pontos) e um "exercicio" prático pra quem lê fazer.
+- Parágrafos curtos (2 a 4 frases), linguagem simples, nada de enrolação: cada parágrafo ensina algo.
+- Nunca invente número, estudo, depoimento ou resultado. Exemplo é cena do dia a dia, não caso de sucesso.
+- Entregue a versão em português completa em "pt" (mesma estrutura).
+- Se receber "ajuste", reescreva seguindo o pedido (mais simples, mais curto, mais exemplos).`,
+  }),
+  extras_ebook: def({
+    id: "AGT-ebook-extras",
+    nome: "Ebook · introdução e conclusão",
+    classe: "text_mid",
+    maxTokens: 4000,
+    schema: S.extrasEbookOut,
+    tarefa: `Tarefa: escrever as partes de fora dos capítulos do ebook, no idioma de venda e no tom pedido: introdução (pra quem é, o que vai aprender, por que nesta ordem), como usar o ebook, conclusão (retoma a promessa sem exagero) e próximos passos práticos. Use o sumário recebido. Nada de credencial da autora, número ou resultado inventado. "aviso" curto e honesto. Entregue também em português em "pt".`,
   }),
   pagina: def({
     id: "AGT-pagina",

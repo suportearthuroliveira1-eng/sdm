@@ -6,10 +6,10 @@ import { Spinner, SubmitButton } from "@/components/ux/submit-button";
 import { toast } from "@/components/ux/toaster";
 import { IaTrabalhando } from "@/components/ux/ia-trabalhando";
 import { Icone } from "@/components/ui/icone";
-import { escolherTema, gerarCapitulo, gerarSumario, salvarSumario } from "@/lib/actions/ebook";
-import { TEMAS, TONS, type CapEbook, type TemaKey } from "@/lib/domain/temas";
+import { escolherTema, gerarCapitulo, gerarExtras, gerarSumario, salvarSumario } from "@/lib/actions/ebook";
+import { TAMANHOS, TEMAS, TONS, type CapEbook, type TemaKey } from "@/lib/domain/temas";
 
-type Eb = { capitulos: CapEbook[]; aprovado: boolean; tema: string; tom: string; tamanho: number; titulo: string; subtitulo: string; idioma: string } | null;
+type Eb = { capitulos: CapEbook[]; aprovado: boolean; tema: string; tom: string; tamanho: number; titulo: string; subtitulo: string; idioma: string; temExtras?: boolean } | null;
 
 export function Ebook({ pastaId, eb, proxima }: { pastaId: string; eb: Eb; proxima: string }) {
   if (!eb) return <Opcoes pastaId={pastaId} />;
@@ -32,14 +32,14 @@ function Opcoes({ pastaId, refazer }: { pastaId: string; refazer?: boolean }) {
     <div className="flex flex-col gap-3">
       <span className="kk">PARTE 1 · SUMÁRIO {refazer ? "(REFAZER)" : ""}</span>
       <form action={action}>
-        <input type="hidden" name="capitulos" value="5" />
-        <input type="hidden" name="tamanho" value="10" />
+        <input type="hidden" name="capitulos" value="6" />
+        <input type="hidden" name="tamanho" value="20" />
         <input type="hidden" name="tom" value="amiga" />
         <button disabled={pend} className="press surge flex w-full items-center gap-4 rounded-2xl border-[1.5px] border-c-amber/70 p-4 text-left text-text" style={{ background: "linear-gradient(135deg, color-mix(in srgb, var(--c-amber) 16%, var(--surface)), color-mix(in srgb, var(--ok) 12%, var(--surface)))" }}>
           <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-c-amber text-accent-ink">{pend ? <Spinner /> : <Icone nome="varinha" tamanho={24} />}</span>
           <span className="flex flex-col gap-0.5">
             <span className="font-bold">A IA escolhe tudo por mim</span>
-            <span className="text-sm text-text-2">5 capítulos, uns 10 páginas, tom de amiga: o formato que mais funciona pra ebook de entrada.</span>
+            <span className="text-sm text-text-2">6 capítulos, uns 25 páginas, tom de amiga, com introdução, exemplos, resumos e exercícios.</span>
           </span>
         </button>
       </form>
@@ -50,11 +50,11 @@ function Opcoes({ pastaId, refazer }: { pastaId: string; refazer?: boolean }) {
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="flex flex-col gap-1.5">
               <label htmlFor="eb-caps" className="lb">Capítulos</label>
-              <select id="eb-caps" name="capitulos" defaultValue="5" className="in">{[4, 5, 6, 7, 8, 9, 10].map((n) => <option key={n} value={n}>{n}{n === 5 ? " (sugerido)" : ""}</option>)}</select>
+              <select id="eb-caps" name="capitulos" defaultValue="6" className="in">{[4, 5, 6, 7, 8, 9, 10].map((n) => <option key={n} value={n}>{n}{n === 6 ? " (sugerido)" : ""}</option>)}</select>
             </div>
             <div className="flex flex-col gap-1.5">
               <label htmlFor="eb-tam" className="lb">Tamanho</label>
-              <select id="eb-tam" name="tamanho" defaultValue="10" className="in"><option value="5">Curto (5 páginas)</option><option value="10">Médio (10 páginas, sugerido)</option></select>
+              <select id="eb-tam" name="tamanho" defaultValue="20" className="in">{TAMANHOS.map((t) => <option key={t.v} value={t.v}>{t.nome} ({t.paginas}){t.v === 20 ? ", sugerido" : ""}</option>)}</select>
             </div>
             <div className="flex flex-col gap-1.5">
               <label htmlFor="eb-tom" className="lb">Tom</label>
@@ -143,8 +143,16 @@ function Capitulos({ pastaId, eb, proxima }: { pastaId: string; eb: NonNullable<
       router.refresh();
     }
     setRodando(null);
+    // depois dos capítulos: introdução, como usar, conclusão e próximos passos
+    if (!eb.temExtras) {
+      setExtras(true);
+      const r = await gerarExtras(pastaId).catch(() => ({ erro: "Sem conexão." }));
+      setExtras(false);
+      if (r.erro) setErro(`Introdução e conclusão: ${r.erro} Toque em "Escrever introdução e conclusão" pra tentar de novo.`);
+    }
     router.refresh();
   };
+  const [extras, setExtras] = useState(false);
   const ajustar = (i: number, aj: string) =>
     start(async () => {
       setRodando(i);
@@ -187,8 +195,18 @@ function Capitulos({ pastaId, eb, proxima }: { pastaId: string; eb: NonNullable<
               </button>
               {aberto === i && t ? (
                 <div className="flex flex-col gap-2 px-4 pb-4">
+                  {t.abertura ? <p className="m-0 text-[15px] font-semibold italic text-accent-2">{t.abertura}</p> : null}
                   {t.paragrafos.map((p, k) => <p key={k} className="tx m-0">{p}</p>)}
+                  {(t.secoes ?? []).map((sc, k) => (
+                    <div key={`s${k}`} className="flex flex-col gap-1.5">
+                      <h4 className="m-0 mt-1 text-[15px] font-bold">{sc.titulo}</h4>
+                      {sc.paragrafos.map((p, j) => <p key={j} className="tx m-0">{p}</p>)}
+                    </div>
+                  ))}
                   {t.lista.length ? <ul className="m-0 pl-5">{t.lista.map((l, k) => <li key={k} className="tx">{l}</li>)}</ul> : null}
+                  {t.na_pratica ? <p className="m-0 rounded-lg bg-surface-2 p-3 text-sm"><b className="text-c-teal">Na prática:</b> {t.na_pratica}</p> : null}
+                  {t.erros_comuns?.length ? <div className="rounded-lg border border-warn-line bg-warn-bg p-3 text-sm text-warn-text"><b>Erros comuns</b><ul className="m-0 mt-1 pl-5">{t.erros_comuns.map((e, k) => <li key={k}>{e}</li>)}</ul></div> : null}
+                  {t.resumo?.length ? <div className="rounded-lg border border-ok-line bg-ok-bg p-3 text-sm text-ok-text"><b>Pra lembrar</b><ul className="m-0 mt-1 pl-5">{t.resumo.map((e, k) => <li key={k}>{e}</li>)}</ul></div> : null}
                   {t.destaque ? <p className="m-0 rounded-lg border-l-4 border-accent bg-surface-2 p-3 text-sm font-semibold">{t.destaque}</p> : null}
                   {t.exercicio ? <p className="m-0 rounded-lg border border-line-2 p-3 text-sm"><b>Exercício:</b> {t.exercicio}</p> : null}
                   <div className="flex flex-wrap gap-2 pt-1">
@@ -203,6 +221,10 @@ function Capitulos({ pastaId, eb, proxima }: { pastaId: string; eb: NonNullable<
         })}
       </section>
 
+      <IaTrabalhando key={extras ? "extras" : String(rodando)} ativo={rodando !== null || extras} modo="cartao" titulo={extras ? "Escrevendo a introdução e a conclusão" : `Escrevendo o capítulo ${(rodando ?? 0) + 1} de ${eb.capitulos.length}`} passos={extras ? ["Lendo o sumário", "Escrevendo a introdução", "Escrevendo a conclusão", "Listando os próximos passos"] : ["Lendo a ficha e o sumário", "Escrevendo as seções", "Criando o exemplo e o exercício", "Fazendo o resumo", "Traduzindo pra você"]} duracao={extras ? 20 : 30} />
+      {feitos === eb.capitulos.length && !eb.temExtras && rodando === null && !extras ? (
+        <button type="button" className="b2" onClick={async () => { setExtras(true); const r = await gerarExtras(pastaId).catch(() => ({ erro: "Sem conexão." })); setExtras(false); if (r.erro) setErro(r.erro); else router.refresh(); }}>Escrever introdução e conclusão</button>
+      ) : null}
       {feitos === eb.capitulos.length ? (
         <>
           <Tema pastaId={pastaId} eb={eb} />
@@ -214,6 +236,7 @@ function Capitulos({ pastaId, eb, proxima }: { pastaId: string; eb: NonNullable<
               <a href={`/api/ebook/${pastaId}?lang=pt`} target="_blank" rel="noreferrer" className="b2 no-underline">Versão em português</a>
             </div>
             <span className="mu">A versão em português é só pra você conferir. Venda a versão no idioma do país.</span>
+            <iframe title="Prévia do PDF" src={`/api/ebook/${pastaId}#view=FitH&pagemode=none`} className="mt-1 hidden h-[640px] w-full rounded-xl border border-line bg-white md:block" />
           </section>
           <a href={proxima} className="b1 no-underline">Ebook pronto, próxima etapa</a>
         </>

@@ -85,6 +85,13 @@ export default async function Inicio() {
               <span className="text-[13px] font-semibold text-accent-2">Abrir a pasta</span>
             </Link>
           ) : null}
+          {principal && principal.etapas.some((e) => e.ok && e.slug !== "entenda") ? (
+            <Link href={`/app/p/${principal.id}/pronto`} className="flex items-center gap-3 rounded-2xl border border-ok-line bg-ok-bg px-4 py-3 text-ok-text no-underline">
+              <Icone nome="olho" tamanho={18} />
+              <span className="flex-1 text-sm font-bold">Ver tudo que já está pronto</span>
+              <span aria-hidden>→</span>
+            </Link>
+          ) : null}
 
           <div className="cd">
             <div className="flex items-center justify-between">

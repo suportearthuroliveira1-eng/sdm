@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-06 · Tudo pronto num lugar só e ebook bem maior
+- **Tudo pronto** (`/app/p/[id]/pronto`): ebook com capa, PDF aberto na tela (computador), abrir/baixar/ver em português; página de vendas montada como página (celular/computador, idioma/português, copiar tudo); oferta com preço; ficha; anúncios com imagem e "copiar texto". Atalhos no painel, no Início, no topo de cada etapa e no fim do "A IA faz tudo".
+- **Ebook maior**: capítulo com abertura, introdução, 3–4 seções, passo a passo, "na prática", erros comuns, destaque, resumo e exercício (`capituloOut`), com palavras-alvo pelo tamanho (Curto/Médio/Grande/Completo: 5/10/20/30); agente novo `extras_ebook` (introdução, como usar, conclusão, próximos passos, aviso). "A IA escolhe por mim" = 6 capítulos, Grande. Teste real: 6 capítulos, ~3.900 palavras, **36 páginas**; capítulo 31 s em média (máx. 42 s).
+- **PDF novo** (`src/lib/gen/ebook-pdf.tsx`): fontes de verdade (Plus Jakarta Sans, Lora, Playfair Display em `public/fonts`, OFL), capa com formas, créditos, sumário clicável, introdução com "como usar", abertura colorida por capítulo com número grande, cabeçalho e rodapé, subtítulos que não ficam sozinhos, caixas (na prática, erros comuns, pra lembrar), citação, exercício com linhas, conclusão com checklist e página final. Títulos sem numeração duplicada (`limparTitulo`).
+- `X-Frame-Options: SAMEORIGIN` só em `/api/ebook/*` (prévia do PDF dentro do app); `outputFileTracingIncludes` leva as fontes pra função da Vercel.
+
 ## 2026-11-06 · Preço sugerido com moeda, A IA escolhe tudo e voltar de onde parou
 - **Preço**: regra por moeda (`src/lib/domain/precos.ts`: USD/EUR US$ 9 · faixa 7–17 · teto 27; GBP £ 8 · 6–15 · 24; BRL R$ 27 · 19–47 · 67), editável no admin (setting `precos_ebook`). A oferta usa o sugerido (não o número da IA); `CampoPreco` mostra símbolo, "Usar o sugerido", faixa e teto; preço acima do teto é recusado na tela e no servidor (oferta e Idioma e país). Trocar de país troca a moeda e volta pro sugerido.
 - **A IA escolhe por mim**: no ebook, botão que cria o sumário com 5 capítulos, ~10 páginas, tom amiga ("Prefiro escolher eu mesma" abre as opções, já com a sugestão marcada). No painel do produto: "Deixe a IA fazer o resto" (piloto pula o que já está feito).

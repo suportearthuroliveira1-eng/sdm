@@ -21,8 +21,15 @@ export async function EtapaHead({ pastaId, pastaNome, etapa, etapas, children }:
         <Link href={`/app/p/${pastaId}`} className="flex min-h-11 items-center gap-1.5 self-start text-sm font-semibold text-muted no-underline hover:text-text">
           <span aria-hidden>←</span> {pastaNome}
         </Link>
-        <span className="shrink-0 rounded-full bg-sel px-3 py-1 text-xs font-bold text-accent-2">
-          Passo {i + 1} de {etapas.length}
+        <span className="flex shrink-0 items-center gap-2">
+          {feitas > 1 ? (
+            <Link href={`/app/p/${pastaId}/pronto`} className="flex min-h-9 items-center gap-1 rounded-full border border-ok-line px-3 text-xs font-bold text-ok no-underline">
+              <Icone nome="olho" tamanho={14} /> Tudo pronto
+            </Link>
+          ) : null}
+          <span className="rounded-full bg-sel px-3 py-1 text-xs font-bold text-accent-2">
+            Passo {i + 1} de {etapas.length}
+          </span>
         </span>
       </div>
       <nav aria-label={`Passos de ${pastaNome}: ${feitas} de ${etapas.length} prontos`} className="flex flex-col gap-2">

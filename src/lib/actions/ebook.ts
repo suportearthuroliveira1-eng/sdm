@@ -8,7 +8,7 @@ import type { capituloOut } from "@/lib/ai/schemas";
 import { db, schema } from "@/lib/db";
 import { pastaDaAluna } from "@/lib/server/pastas";
 import { idiomaDaPasta } from "./caminhos";
-import { TONS } from "@/lib/domain/temas";
+import { limparTitulo, palavrasPorCapitulo, TONS } from "@/lib/domain/temas";
 
 export type R = { ok?: boolean; erro?: string };
 type Bi = { x: string; pt: string };
@@ -31,11 +31,11 @@ export async function gerarSumario(pastaId: string, _p: R | null, form: FormData
   if (!dados.ficha) return { erro: "Complete a ficha do produto antes." };
   const n = z.coerce.number().int().min(4).max(10).catch(6).parse(form.get("capitulos"));
   const tom = z.enum(TONS).catch("amiga").parse(form.get("tom"));
-  const tamanho = z.coerce.number().int().refine((v) => v === 5 || v === 10).catch(10).parse(form.get("tamanho"));
+  const tamanho = z.coerce.number().int().refine((v) => [5, 10, 20, 30].includes(v)).catch(20).parse(form.get("tamanho"));
   const idioma = await idiomaDaPasta(pasta.paisVenda);
   try {
     const r = await rodar("sumario", { idioma_venda: idioma, capitulos: n, tom, ficha: dados.ficha, oferta: dados.oferta ?? null }, { studentId: student.id, semCache: Boolean(eb) });
-    const capitulos: Cap[] = r.saida.capitulos.slice(0, n).map((c) => ({ titulo: c.titulo, objetivo: c.objetivo, texto: null }));
+    const capitulos: Cap[] = r.saida.capitulos.slice(0, n).map((c) => ({ titulo: { x: limparTitulo(c.titulo.x), pt: limparTitulo(c.titulo.pt) }, objetivo: c.objetivo, texto: null }));
     const vals = { titulo: r.saida.titulo.x, idioma, tamanho, tom, capitulos, ideia: { titulo: r.saida.titulo, subtitulo: r.saida.subtitulo, sumarioAprovado: false }, status: "fila" as const, progresso: 0 };
     if (eb) await db().update(schema.ebooks).set(vals).where(eq(schema.ebooks.id, eb.id));
     else await db().insert(schema.ebooks).values({ ...vals, studentId: student.id, studentProductId: pasta.id, temaVisual: "lilas" });
@@ -82,6 +82,7 @@ export async function gerarCapitulo(pastaId: string, idx: number, ajuste: string
         idioma_venda: eb.idioma,
         tom: eb.tom,
         tamanho: String(eb.tamanho),
+        palavras_alvo: aj === "mais curto" ? Math.round(palavrasPorCapitulo(eb.tamanho ?? 10, caps.length) * 0.6) : palavrasPorCapitulo(eb.tamanho ?? 10, caps.length),
         ebook: (eb.ideia as { titulo?: Bi })?.titulo ?? eb.titulo,
         sumario: caps.map((c) => c.titulo.x),
         capitulo: { numero: idx + 1, titulo: cap.titulo.x, objetivo: cap.objetivo },
@@ -112,4 +113,23 @@ export async function escolherTema(pastaId: string, tema: string): Promise<R> {
   await db().update(schema.ebooks).set({ temaVisual: z.string().max(20).parse(tema) }).where(eq(schema.ebooks.id, eb.id));
   reval();
   return { ok: true };
+}
+
+/** Introdução, como usar, conclusão e próximos passos (depois dos capítulos). Entra no PDF. */
+export async function gerarExtras(pastaId: string): Promise<R> {
+  const { pasta, student, eb } = await ctx(pastaId);
+  if (!eb) return { erro: "Gere o sumário antes." };
+  const caps = (eb.capitulos ?? []) as Cap[];
+  try {
+    const r = await rodar(
+      "extras_ebook",
+      { idioma_venda: eb.idioma, tom: eb.tom, ebook: (eb.ideia as { titulo?: Bi })?.titulo ?? eb.titulo, sumario: caps.map((c) => c.titulo.x), ficha: (pasta.dados as { ficha?: unknown }).ficha ?? null },
+      { studentId: student.id },
+    );
+    await db().update(schema.ebooks).set({ ideia: { ...((eb.ideia as object) ?? {}), extras: r.saida } }).where(eq(schema.ebooks.id, eb.id));
+    reval();
+    return { ok: true };
+  } catch (e) {
+    return { erro: erroIa(e) };
+  }
 }

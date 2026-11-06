@@ -59,6 +59,17 @@ export default async function Pasta({ params }: PageProps<"/app/p/[id]">) {
         )}
       </section>
 
+      {feitas > 0 ? (
+        <Link href={`/app/p/${pasta.id}/pronto`} className="surge flex items-center gap-3 rounded-2xl border border-ok-line bg-ok-bg p-4 text-text no-underline transition-colors hover:border-ok">
+          <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-ok text-accent-ink"><Icone nome="olho" tamanho={20} /></span>
+          <span className="flex flex-1 flex-col">
+            <span className="font-bold">Ver tudo que está pronto</span>
+            <span className="text-sm text-ok-text">Ebook em PDF, página de vendas, oferta, ficha e anúncios, num lugar só.</span>
+          </span>
+          <span aria-hidden className="text-ok">→</span>
+        </Link>
+      ) : null}
+
       {pasta.tipo === "proprio" && !etapas.find((e) => e.slug === "ebook")?.ok ? (
         (() => {
           const pil = (pasta.dados as { piloto?: { em?: string; fim?: string | null } }).piloto;

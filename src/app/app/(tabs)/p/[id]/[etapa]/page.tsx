@@ -61,12 +61,12 @@ export default async function Etapa({ params }: PageProps<"/app/p/[id]/[etapa]">
     if (slug === "teste") corpo = <ProprioTeste p={p} proxima={proxima} />;
     if (slug === "ebook") {
       const eb = await db().query.ebooks.findFirst({ where: and(eq(schema.ebooks.studentProductId, pasta.id), eq(schema.ebooks.studentId, pasta.studentId)) });
-      const ideia = (eb?.ideia ?? {}) as { titulo?: { x: string }; subtitulo?: { x: string }; sumarioAprovado?: boolean };
+      const ideia = (eb?.ideia ?? {}) as { titulo?: { x: string }; subtitulo?: { x: string }; sumarioAprovado?: boolean; extras?: unknown };
       corpo = (
         <Ebook
           pastaId={pasta.id}
           proxima={proxima}
-          eb={eb ? { capitulos: (eb.capitulos ?? []) as CapEbook[], aprovado: Boolean(ideia.sumarioAprovado), tema: eb.temaVisual ?? "lilas", tom: eb.tom ?? "amiga", tamanho: eb.tamanho ?? 10, titulo: ideia.titulo?.x ?? eb.titulo ?? "", subtitulo: ideia.subtitulo?.x ?? "", idioma: eb.idioma ?? "en" } : null}
+          eb={eb ? { capitulos: (eb.capitulos ?? []) as CapEbook[], aprovado: Boolean(ideia.sumarioAprovado), tema: eb.temaVisual ?? "lilas", tom: eb.tom ?? "amiga", tamanho: eb.tamanho ?? 10, titulo: ideia.titulo?.x ?? eb.titulo ?? "", subtitulo: ideia.subtitulo?.x ?? "", idioma: eb.idioma ?? "en", temExtras: Boolean(ideia.extras) } : null}
         />
       );
     }

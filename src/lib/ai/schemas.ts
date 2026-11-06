@@ -75,15 +75,33 @@ export const sumarioOut = z.object({
   checagem,
 });
 
-export const capituloOut = z.object({
+const textoCap = {
   titulo: z.string(),
-  paragrafos: z.array(z.string()),
-  lista: z.array(z.string()),
+  abertura: z.string().describe("Uma frase forte de abertura do capítulo (vai em destaque na página de abertura)."),
+  paragrafos: z.array(z.string()).describe("Introdução do capítulo: 2 a 3 parágrafos curtos."),
+  secoes: z.array(z.object({ titulo: z.string(), paragrafos: z.array(z.string()) })).describe("3 a 4 seções com subtítulo, cada uma com 2 a 4 parágrafos curtos."),
+  lista: z.array(z.string()).describe("Passo a passo ou dicas práticas (pode ser vazia)."),
+  na_pratica: z.string().nullable().describe("Um exemplo concreto do dia a dia. Sem número, depoimento ou resultado inventado."),
+  erros_comuns: z.array(z.string()).describe("2 a 4 erros comuns e como evitar."),
   destaque: z.string().nullable(),
+  resumo: z.array(z.string()).describe("3 a 5 pontos pra lembrar."),
   exercicio: z.string().nullable(),
-  pt: z.object({ titulo: z.string(), paragrafos: z.array(z.string()), lista: z.array(z.string()), destaque: z.string().nullable(), exercicio: z.string().nullable() }),
+};
+export const capituloOut = z.object({
+  ...textoCap,
+  pt: z.object(textoCap),
   checagem,
 });
+
+/** Introdução, como usar, conclusão e próximos passos do ebook. */
+const textoExtras = {
+  introducao: z.object({ titulo: z.string(), paragrafos: z.array(z.string()) }),
+  como_usar: z.array(z.string()).describe("3 a 5 dicas de como aproveitar o ebook."),
+  conclusao: z.object({ titulo: z.string(), paragrafos: z.array(z.string()) }),
+  proximos_passos: z.array(z.string()).describe("3 a 6 ações práticas pra quem terminou de ler."),
+  aviso: z.string().describe("Aviso curto e honesto: o ebook é educativo, não substitui profissional quando o tema pedir (saúde, dinheiro, direito). Sem promessa."),
+};
+export const extrasEbookOut = z.object({ ...textoExtras, pt: z.object(textoExtras), checagem });
 
 export const paginaOut = z.object({
   blocos: z.array(z.object({ n: z.string(), porque: z.string(), x: z.string(), pt: z.string() })),

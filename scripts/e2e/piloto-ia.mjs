@@ -32,6 +32,10 @@ try {
   const pasta = p.url().split("/")[5];
   await p.goto(B + `/app/p/${pasta}`); log("5 painel:", await p.getByText(/DE \d+ PRONTAS/).innerText()); await shot("painel");
   await p.goto(B + `/app/p/${pasta}/ficha`); log("6 ficha:", (await p.locator("dl").first().innerText()).replace(/\n/g, " | ").slice(0, 200));
+  const pdf = await p.request.get(B + `/api/ebook/${pasta}`); const corpo = await pdf.body();
+  (await import("node:fs")).writeFileSync(`${S}/piloto.pdf`, corpo);
+  log("7 pdf:", pdf.status(), pdf.headers()["content-type"], corpo.length, "bytes");
+  await p.goto(B + `/app/p/${pasta}/pronto`); log("8 tudo pronto:", await p.getByRole("heading", { level: 2 }).allInnerTexts());
 } catch (e) {
   log("ERRO", e.message.split("\n")[0]); log("url", p.url()); await shot("erro");
 }
