@@ -6,12 +6,15 @@ import type { EtapaStatus } from "@/lib/domain/etapas";
 import { RolarAtual } from "./rolar-atual";
 import { Icone } from "@/components/ui/icone";
 import { visualEtapa } from "@/lib/domain/visual-etapas";
+import { guiaEtapa } from "@/lib/domain/explica-etapas";
 
 /**
  * Cabeçalho de toda etapa: onde ela está (passo X de N, trilha clicável), o título
  * e o "Entenda" com a aula (regra 2: explica antes de pedir). Etapa feita: o Entenda fica recolhido.
  */
-export async function EtapaHead({ pastaId, pastaNome, etapa, etapas, children }: { pastaId: string; pastaNome: string; etapa: EtapaStatus; etapas: EtapaStatus[]; children?: ReactNode }) {
+export async function EtapaHead({ pastaId, pastaNome, etapa, etapas, tipo = "", children }: { pastaId: string; pastaNome: string; etapa: EtapaStatus; etapas: EtapaStatus[]; tipo?: string; children?: ReactNode }) {
+  const guia = guiaEtapa(tipo, etapa.slug);
+  const cor = visualEtapa(etapa.slug).cor;
   const aula = etapa.aula ? await db().query.lessons.findFirst({ where: eq(schema.lessons.id, etapa.aula), columns: { id: true, titulo: true } }) : null;
   const i = etapas.findIndex((e) => e.slug === etapa.slug);
   const feitas = etapas.filter((e) => e.ok).length;
@@ -68,25 +71,58 @@ export async function EtapaHead({ pastaId, pastaNome, etapa, etapas, children }:
       <div className="-mt-2 flex flex-col gap-1">
         {etapa.ok ? <span className="text-sm font-bold text-ok">Etapa feita. Pode rever ou mudar o que quiser.</span> : null}
       </div>
-      <details open={!etapa.ok} className="group rounded-[14px] border border-line bg-surface-2">
-        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 px-3.5 py-2 [&::-webkit-details-marker]:hidden">
-          <span className="rounded-[10px] bg-warn-bg px-2 py-0.5 text-[11px] font-bold tracking-[0.5px] text-warn">ENTENDA</span>
-          <span className="mu text-xs transition group-open:rotate-90" aria-hidden>›</span>
-        </summary>
-        <div className="flex flex-col gap-1.5 px-3.5 pb-3.5">
-          <span className="tx">{etapa.entenda}</span>
-          {aula ? (
-            <Link href={`/app/l02/${encodeURIComponent(aula.id)}`} className="flex items-center gap-2 self-start text-[13px] font-semibold text-ok no-underline">
-              <span aria-hidden>▶</span> Aula {aula.id} · {aula.titulo}
-            </Link>
-          ) : etapa.aula ? (
-            <span className="mu">Aula {etapa.aula} · [vídeo em breve]</span>
-          ) : null}
-        </div>
-      </details>
+      {guia ? (
+        <details open={!etapa.ok} className="group surge rounded-2xl border-[1.5px] bg-surface" style={{ borderColor: `color-mix(in srgb, ${cor} 45%, transparent)` }}>
+          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 px-4 py-2.5 [&::-webkit-details-marker]:hidden">
+            <span className="flex items-center gap-2 text-sm font-bold" style={{ color: cor }}><Icone nome="info" tamanho={16} /> O que é {artigo(etapa.nome)}?</span>
+            <span className="mu text-xs transition group-open:rotate-90" aria-hidden>›</span>
+          </summary>
+          <div className="flex flex-col gap-2.5 px-4 pb-4">
+            <span className="text-[17px] font-bold leading-snug text-text">{guia.oQueE}</span>
+            <span className="tx">{guia.praQue}</span>
+            {guia.exemplo ? (
+              <span className="rounded-xl border-l-[3px] bg-surface-2 px-3 py-2 text-[13px] text-text-2" style={{ borderColor: cor }}><b className="text-text">Exemplo:</b> {guia.exemplo}</span>
+            ) : null}
+            <div className="grid grid-cols-2 gap-2">
+              <span className="flex flex-col gap-0.5 rounded-xl bg-surface-2 p-2.5"><span className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-text-2"><Icone nome="pessoa" tamanho={12} /> Você</span><span className="text-[13px] leading-snug text-text">{guia.voce}</span></span>
+              <span className="flex flex-col gap-0.5 rounded-xl bg-surface-2 p-2.5"><span className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide" style={{ color: cor }}><Icone nome="varinha" tamanho={12} /> A IA</span><span className="text-[13px] leading-snug text-text">{guia.ia}</span></span>
+            </div>
+            {aula ? (
+              <Link href={`/app/l02/${encodeURIComponent(aula.id)}`} className="flex items-center gap-2 self-start text-[13px] font-semibold text-ok no-underline">
+                <span aria-hidden>▶</span> Aula {aula.id} · {aula.titulo}
+              </Link>
+            ) : null}
+          </div>
+        </details>
+      ) : tipo === "proprio" && etapa.slug === "entenda" ? null : (
+        <details open={!etapa.ok} className="group rounded-[14px] border border-line bg-surface-2">
+          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 px-3.5 py-2 [&::-webkit-details-marker]:hidden">
+            <span className="rounded-[10px] bg-warn-bg px-2 py-0.5 text-[11px] font-bold tracking-[0.5px] text-warn">ENTENDA</span>
+            <span className="mu text-xs transition group-open:rotate-90" aria-hidden>›</span>
+          </summary>
+          <div className="flex flex-col gap-1.5 px-3.5 pb-3.5">
+            <span className="tx">{etapa.entenda}</span>
+            {aula ? (
+              <Link href={`/app/l02/${encodeURIComponent(aula.id)}`} className="flex items-center gap-2 self-start text-[13px] font-semibold text-ok no-underline">
+                <span aria-hidden>▶</span> Aula {aula.id} · {aula.titulo}
+              </Link>
+            ) : etapa.aula ? (
+              <span className="mu">Aula {etapa.aula} · [vídeo em breve]</span>
+            ) : null}
+          </div>
+        </details>
+      )}
       {children}
     </div>
   );
+}
+
+/** "a Oferta", "o Ebook", "a Ficha do produto"... (nome da etapa com artigo, minúsculo). */
+function artigo(nome: string) {
+  const n = nome.replace(/^(Pago|Orgânico) · /, "");
+  if (n.endsWith("?")) return "isso";
+  const art = /^(ideias|regras)/i.test(n) ? "as" : /^(números|criativos|roteiros)/i.test(n) ? "os" : /^(oferta|ficha|revis|página|plataforma|conta|base|rede)/i.test(n) ? "a" : "o";
+  return `${art} ${n.charAt(0).toLowerCase()}${n.slice(1)}`;
 }
 
 /** Mesmo endereço de hrefEtapa (server), sem importar código de servidor aqui. */

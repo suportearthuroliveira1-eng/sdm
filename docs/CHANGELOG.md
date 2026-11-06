@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-06 · Entenda mais simples, ficha com um botão só e "O que é?" em cada etapa
+- **Entenda do produto próprio** reorganizado em 3 blocos: abertura com o robô e um balão que mostra o que a IA pensa (uma frase por vez, lendo os dados do diagnóstico); **a escolha logo em cima** (A IA faz tudo / passo a passo); e o caminho em **4 fases** (A ideia, O produto, O ebook, Vender) numa trilha que se acende sozinha (toque numa fase pra parar nela). Saíram o fluxograma de 10 passos e o painel de 4 abas. A animação automática respeita "reduzir movimento" e "animações desligadas" do admin.
+- **Ficha**: um botão de IA só. "A IA monta a ficha pra mim" escreve o rascunho (se faltar) e já monta a ficha num clique. As 3 perguntas ficam atrás de "Prefiro contar com as minhas palavras antes" (com "Me ajuda a escrever esta" na primeira). O botão desligado "Gerar a ficha com a IA" saiu.
+- **"O que é ...?" em toda etapa** (`guiaEtapa` em `src/lib/domain/explica-etapas.ts`): o que é em uma frase, pra que serve, exemplo e "Você / A IA". Substitui o "Entenda" curto no topo das etapas (aberto até a etapa ficar feita).
+- **Diagnóstico**: pergunta quanto dá pra investir em anúncio por mês, se prefere pago, orgânico ou os dois, e se topa aparecer nos vídeos (10 perguntas). A regra de decisão cruza verba e preferência; Divulgar mostra a sugestão do diagnóstico.
+- `scripts/e2e/entenda-ficha.mjs` (prints no celular) e `fluxo-ia.mjs` atualizados.
+
 ## 2026-11-06 · Alunas no admin (de novo)
 - Segundo erro da tela: com o driver `pg`, `array_agg` de enum (acessos) vinha como texto `{sdm,up1}`, não lista, e quebrava a tela quando havia aluna com acesso. A consulta agora agrega `produto::text`. Conferidas todas as telas do admin e a ficha da aluna (senha provisória → 1º login obriga a criar a definitiva → provisória deixa de valer).
 

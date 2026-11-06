@@ -1,116 +1,111 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { Icone, type NomeIcone } from "@/components/ui/icone";
 import { Robo } from "@/components/ux/ia-trabalhando";
 
-type No = { slug: string; nome: string; cor: string; icone: NomeIcone; voce: string; ia: string; olha: string };
-
-/** Fluxograma do produto: um nó por passo, ligados por linha animada. Toque pra abrir o detalhe. */
-export function FluxoProduto({ nos }: { nos: No[] }) {
-  const [aberto, setAberto] = useState<string | null>(nos[0]?.slug ?? null);
-  return (
-    <ol className="m-0 flex list-none flex-col p-0" aria-label="Os passos pra criar o seu produto">
-      {nos.map((n, i) => {
-        const ab = aberto === n.slug;
-        const ultimo = i === nos.length - 1;
-        return (
-          <li key={n.slug} className="surge relative flex gap-3" style={{ animationDelay: `${i * 70}ms` }}>
-            <div className="flex flex-col items-center">
-              <span className={`relative z-[1] grid size-11 shrink-0 place-items-center rounded-2xl transition-transform ${ab ? "pulsa scale-110" : ""}`} style={{ color: n.cor, background: `color-mix(in srgb, ${n.cor} 18%, var(--bg))`, ["--cor" as string]: n.cor }}>
-                <Icone nome={n.icone} tamanho={22} />
-              </span>
-              {!ultimo ? (
-                <span aria-hidden className="fluxo-traco my-1 min-h-3 w-[2.5px] flex-1 rounded-full opacity-70" style={{ ["--cor" as string]: n.cor }} />
-              ) : null}
-            </div>
-            <div className={`mb-3 flex flex-1 flex-col rounded-2xl border transition-colors ${ab ? "bg-surface" : "border-transparent"}`} style={ab ? { borderColor: `color-mix(in srgb, ${n.cor} 50%, transparent)` } : undefined}>
-              <button type="button" aria-expanded={ab} onClick={() => setAberto(ab ? null : n.slug)} className="flex min-h-11 items-center justify-between gap-2 px-3 py-2 text-left">
-                <span className="flex flex-col">
-                  <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: n.cor }}>Passo {i + 1}</span>
-                  <span className="font-bold text-text">{n.nome}</span>
-                </span>
-                <span aria-hidden className={`text-muted transition-transform ${ab ? "rotate-90" : ""}`}>›</span>
-              </button>
-              {ab ? (
-                <div className="surge grid gap-2 px-3 pb-3 sm:grid-cols-3">
-                  <Quadro titulo="Você faz" icone="pessoa" cor="var(--text-2)" texto={n.voce} />
-                  <Quadro titulo="A IA faz" icone="varinha" cor={n.cor} texto={n.ia} />
-                  <Quadro titulo="O que a IA olha" icone="olho" cor="var(--c-amber)" texto={n.olha} />
-                </div>
-              ) : null}
-            </div>
-          </li>
-        );
-      })}
-    </ol>
+/** Animação automática só quando a pessoa (e o tema do admin) deixam. */
+const semInscricao = () => () => {};
+function useAutoPlay() {
+  return useSyncExternalStore(
+    semInscricao,
+    () => !window.matchMedia("(prefers-reduced-motion: reduce)").matches && document.documentElement.dataset.animacoes !== "off",
+    () => false,
   );
 }
 
-function Quadro({ titulo, icone, cor, texto }: { titulo: string; icone: NomeIcone; cor: string; texto: string }) {
+function useCiclo(total: number, ms: number, ligado: boolean) {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (!ligado || total < 2) return;
+    const t = setInterval(() => setI((x) => (x + 1) % total), ms);
+    return () => clearInterval(t);
+  }, [total, ms, ligado]);
+  return [i, setI] as const;
+}
+
+/** Robô com um balão que mostra o que a IA pensa, uma frase por vez, lendo os dados dela. */
+export function PensamentoIa({ dados, pensamentos }: { dados: { rotulo: string; valor: string }[]; pensamentos: string[] }) {
+  const auto = useAutoPlay();
+  const [i] = useCiclo(pensamentos.length, 3600, auto);
+  const [lendo] = useCiclo(Math.max(dados.length, 1), 1200, auto);
   return (
-    <div className="flex flex-col gap-1 rounded-xl bg-surface-2 p-3">
-      <span className="flex items-center gap-1.5 text-xs font-bold" style={{ color: cor }}>
-        <Icone nome={icone} tamanho={14} /> {titulo}
-      </span>
-      <span className="text-[13px] leading-snug text-text-2">{texto}</span>
+    <div className="flex flex-col gap-3">
+      <div className="flex items-end gap-3">
+        <div className="shrink-0"><Robo tamanho={84} /></div>
+        <div className="relative mb-4 flex-1 rounded-2xl rounded-bl-sm border border-c-teal/40 bg-[color-mix(in_srgb,var(--c-teal)_10%,var(--surface))] p-3">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-c-teal">A IA pensa</span>
+          <p key={i} className="ia-msg m-0 min-h-[2.8em] text-[14px] font-semibold leading-snug text-text">{pensamentos[i]}</p>
+          <span className="mt-1.5 flex gap-1" aria-hidden>
+            {pensamentos.map((_, k) => <span key={k} className={`h-1 rounded-full transition-all duration-500 ${k === i ? "w-5 bg-c-teal" : "w-1.5 bg-line-2"}`} />)}
+          </span>
+        </div>
+      </div>
+      {dados.length ? (
+        <div className="flex flex-col gap-1.5">
+          <span className="text-xs font-bold text-muted">Ela lê o que você contou no diagnóstico:</span>
+          <div className="flex flex-wrap gap-1.5">
+            {dados.map((d, k) => (
+              <span key={d.rotulo} className={`surge rounded-full border px-2.5 py-1 text-xs transition-all duration-500 ${auto && k === lendo ? "scale-105 border-c-teal bg-c-teal/15" : "border-line bg-surface-2"}`} style={{ animationDelay: `${k * 70}ms` }}>
+                <span className="text-muted">{d.rotulo}:</span> <b className="text-text">{d.valor}</b>
+              </span>
+            ))}
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
 
-/** "Como a IA pensa": os dados dela entram, a IA raciocina em 4 passos, saem as ideias. */
-export function ComoIaPensa({ dados, passos }: { dados: { rotulo: string; valor: string }[]; passos: { t: string; d: string }[] }) {
-  const [passo, setPasso] = useState(0);
+type Fase = { k: string; nome: string; frase: string; minutos: string; cor: string; icone: NomeIcone; passos: { nome: string; cor: string; icone: NomeIcone }[] };
+
+/** O caminho em 4 fases: uma trilha que se acende sozinha, fase por fase. Toque numa fase pra parar nela. */
+export function CaminhoFases({ fases }: { fases: Fase[] }) {
+  const auto = useAutoPlay();
+  const [parou, setParou] = useState(false);
+  const [i, setI] = useCiclo(fases.length, 3200, auto && !parou);
+  const f = fases[i]!;
+  const pct = fases.length > 1 ? (i / (fases.length - 1)) * 100 : 0;
   return (
-    <div className="flex flex-col gap-4">
-      <div className="grid items-center gap-3 lg:grid-cols-[1fr_auto_1fr]">
-        <div className="flex flex-col gap-1.5">
-          <span className="kk">O QUE ELA LÊ DE VOCÊ</span>
-          <div className="flex flex-wrap gap-1.5">
-            {dados.length ? (
-              dados.map((d, i) => (
-                <span key={d.rotulo} className="surge rounded-full border border-line bg-surface-2 px-2.5 py-1 text-xs" style={{ animationDelay: `${i * 80}ms` }}>
-                  <span className="text-muted">{d.rotulo}:</span> <b className="text-text">{d.valor}</b>
-                </span>
-              ))
-            ) : (
-              <span className="mu text-sm">Responda o diagnóstico pra ela te conhecer.</span>
-            )}
-          </div>
+    <div className="flex flex-col gap-3">
+      <div className="relative px-5 pt-1">
+        <div className="absolute left-[calc(1.25rem+22px)] right-[calc(1.25rem+22px)] top-[23px] h-1 rounded-full bg-line" aria-hidden>
+          <div className="h-full rounded-full transition-[width] duration-700 ease-out" style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${fases.map((x) => x.cor).join(", ")})` }} />
         </div>
-        <div className="flex flex-col items-center gap-1 py-2">
-          <svg width="120" height="16" viewBox="0 0 120 16" aria-hidden className="hidden lg:block">
-            <line x1="0" y1="8" x2="120" y2="8" stroke="var(--c-teal)" strokeWidth="2.5" strokeLinecap="round" className="fluxo-linha" />
-          </svg>
-          <Robo tamanho={92} />
-          <span className="text-xs font-bold text-c-teal">A IA pensa</span>
+        <ol className="relative m-0 flex list-none justify-between p-0" aria-label="As 4 fases do seu produto">
+          {fases.map((x, k) => {
+            const ativo = k === i;
+            const passou = k < i;
+            return (
+              <li key={x.k} className="flex w-11 flex-col items-center gap-1.5">
+                <button
+                  type="button"
+                  aria-pressed={ativo}
+                  aria-label={`Fase ${k + 1}: ${x.nome}`}
+                  onClick={() => { setParou(true); setI(k); }}
+                  className={`grid size-11 place-items-center rounded-2xl border-2 transition-all duration-500 ${ativo ? "pulsa scale-110" : ""}`}
+                  style={{ ["--cor" as string]: x.cor, color: ativo || passou ? "var(--accent-ink)" : x.cor, background: ativo || passou ? x.cor : "var(--surface)", borderColor: x.cor }}
+                >
+                  {passou ? <Icone nome="check" tamanho={18} espessura={3} /> : <Icone nome={x.icone} tamanho={20} />}
+                </button>
+                <span className={`whitespace-nowrap text-[11px] font-bold transition-colors ${ativo ? "text-text" : "text-muted"}`}>{x.nome}</span>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+      <div key={f.k} className="surge flex flex-col gap-2.5 rounded-2xl border-[1.5px] p-4" style={{ borderColor: `color-mix(in srgb, ${f.cor} 55%, transparent)`, background: `color-mix(in srgb, ${f.cor} 8%, var(--surface))` }}>
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: f.cor }}>Fase {i + 1} de {fases.length} · {f.nome}</span>
+          <span className="rounded-full bg-bg/60 px-2 py-0.5 text-[11px] font-bold text-text-2">{f.minutos}</span>
         </div>
-        <div className="flex flex-col gap-1.5">
-          <span className="kk">O QUE SAI</span>
-          {["3 ideias explicadas", "Ficha completa", "Oferta com o porquê", "Ebook e página"].map((t, i) => (
-            <span key={t} className="surge flex items-center gap-2 text-sm" style={{ animationDelay: `${300 + i * 90}ms` }}>
-              <span className="grid size-5 place-items-center rounded-full bg-ok text-accent-ink"><Icone nome="check" tamanho={12} espessura={3} /></span>
-              {t}
+        <p className="m-0 text-[15px] font-semibold leading-snug text-text">{f.frase}</p>
+        <div className="flex flex-wrap gap-1.5">
+          {f.passos.map((s, k) => (
+            <span key={s.nome} className="surge flex items-center gap-1.5 rounded-full bg-bg/60 px-2.5 py-1 text-xs font-semibold" style={{ color: s.cor, animationDelay: `${120 + k * 90}ms` }}>
+              <Icone nome={s.icone} tamanho={13} /> <span className="text-text">{s.nome}</span>
             </span>
           ))}
-        </div>
-      </div>
-      <div className="flex flex-col gap-2">
-        <span className="kk">COMO ELA RACIOCINA</span>
-        <div className="flex gap-1.5" role="tablist" aria-label="Passos do raciocínio">
-          {passos.map((p, i) => (
-            <button key={p.t} type="button" role="tab" aria-selected={passo === i} onClick={() => setPasso(i)} className={`h-11 flex-1 rounded-xl border text-sm font-bold transition-colors ${passo === i ? "border-c-teal bg-c-teal/15 text-c-teal" : "border-line text-muted hover:text-text"}`}>
-              {i + 1}
-            </button>
-          ))}
-        </div>
-        <div key={passo} role="tabpanel" className="surge flex flex-col gap-1 rounded-2xl border border-line bg-surface-2 p-4">
-          <span className="font-bold">{passos[passo]?.t}</span>
-          <span className="tx text-sm">{passos[passo]?.d}</span>
-          <div className="mt-1 flex justify-between">
-            <button type="button" className="b3 min-h-9 px-0 text-sm" disabled={passo === 0} onClick={() => setPasso(passo - 1)}>← Anterior</button>
-            <button type="button" className="b3 min-h-9 px-0 text-sm" disabled={passo === passos.length - 1} onClick={() => setPasso(passo + 1)}>Próximo →</button>
-          </div>
         </div>
       </div>
     </div>

@@ -12,9 +12,9 @@ import { tabelaPrecos } from "@/lib/server/config-app";
 import { LinkTester } from "./link-tester";
 import { BarraAcao, PassoAPasso } from "./comum";
 import { ETAPAS_PROPRIO } from "@/lib/domain/etapas";
-import { COMO_A_IA_PENSA, EXPLICA_PROPRIO } from "@/lib/domain/explica-etapas";
+import { FASES_PROPRIO, PENSAMENTOS_IA } from "@/lib/domain/explica-etapas";
 import { visualEtapa } from "@/lib/domain/visual-etapas";
-import { ComoIaPensa, FluxoProduto } from "./entenda-produto";
+import { CaminhoFases, PensamentoIa } from "./entenda-produto";
 import { PilotoAutomatico } from "./piloto";
 
 type P = { id: string; dados: Record<string, unknown>; studentId: string; paisVenda: string | null };
@@ -27,7 +27,7 @@ async function AvisoIa() {
   return <div className="warn">A IA ainda não está ligada neste app. Assim que o time colocar a chave, os botões de IA funcionam.</div>;
 }
 
-/** B0 · antes de criar: o caminho inteiro (fluxograma), como a IA pensa e a escolha: a IA faz tudo ou passo a passo. */
+/** B0 · antes de criar: o que vai acontecer (4 fases que se acendem), o que a IA pensa e a escolha logo no começo. */
 export async function ProprioEntenda({ p, proxima }: { p: P; proxima: string }) {
   const d = await db().query.diagnostics.findFirst({ where: eq(schema.diagnostics.studentId, p.studentId), orderBy: desc(schema.diagnostics.versao) });
   const r = (d?.respostas ?? {}) as Record<string, string | string[]>;
@@ -37,50 +37,46 @@ export async function ProprioEntenda({ p, proxima }: { p: P; proxima: string }) 
     ["Mora em", r.pais],
     ["Fala", r.idiomas],
     ["Tempo por dia", r.tempo],
-    ["Já vendeu?", r.exp],
     ["Quer", r.objetivo],
   ]
     .map(([rotulo, v]) => ({ rotulo: rotulo as string, valor: txt(v as string | string[] | undefined) }))
     .filter((x) => x.valor);
-  const nos = EXPLICA_PROPRIO.map((e) => {
-    const def = ETAPAS_PROPRIO.find((x) => x.slug === e.slug);
-    const v = visualEtapa(e.slug);
-    return { ...e, nome: def?.nome ?? e.slug, cor: v.cor, icone: v.icone };
+  const fases = FASES_PROPRIO.map((f) => {
+    const v = visualEtapa(f.etapas[0]);
+    return {
+      k: f.k,
+      nome: f.nome,
+      frase: f.frase,
+      minutos: f.minutos,
+      cor: v.cor,
+      icone: v.icone,
+      passos: f.etapas.map((slug) => ({ nome: ETAPAS_PROPRIO.find((x) => x.slug === slug)?.nome ?? slug, ...visualEtapa(slug) })),
+    };
   });
   const jaComecou = feito(p, "entenda");
   return (
     <>
       <section className="surge relative overflow-hidden rounded-3xl border border-line p-5" style={{ background: "radial-gradient(120% 120% at 100% 0%, color-mix(in srgb, var(--c-teal) 16%, transparent), transparent 55%), radial-gradient(120% 120% at 0% 100%, color-mix(in srgb, var(--c-pink) 14%, transparent), transparent 55%), var(--surface)" }}>
-        <div className="flex flex-col gap-2">
-          <span className="kk">ANTES DE COMEÇAR</span>
-          <h2 className="m-0 text-[22px] font-bold leading-snug">Você vai criar um ebook simples, sobre um assunto que você já conhece</h2>
-          <p className="tx m-0">A IA faz o trabalho pesado. Você escolhe, confere e aprova. Nada é publicado nem vendido sem você.</p>
-        </div>
-        <div className="mt-3 flex items-start gap-2 rounded-xl bg-bg/60 p-3">
-          <span className="text-c-sky"><Icone nome="idioma" tamanho={18} /></span>
-          <span className="text-sm text-text-2"><b className="text-text">Tudo em português primeiro.</b> Ideia, ficha e oferta saem em português pra você entender cada detalhe. Só depois você escolhe o país e o idioma de venda.</span>
-        </div>
-      </section>
-
-      <section className="cd gap-3" aria-labelledby="como-pensa">
-        <h2 id="como-pensa" className="m-0 flex items-center gap-2 text-lg font-bold"><span className="text-c-teal"><Icone nome="cerebro" tamanho={22} /></span> Como a IA pensa</h2>
-        <ComoIaPensa dados={dados} passos={COMO_A_IA_PENSA} />
-      </section>
-
-      <section className="flex flex-col gap-2" aria-labelledby="o-caminho">
-        <h2 id="o-caminho" className="m-0 flex items-center gap-2 text-lg font-bold"><span className="text-c-amber"><Icone nome="passos" tamanho={22} /></span> O caminho, passo a passo</h2>
-        <p className="mu m-0 text-sm">Toque em cada passo pra ver o que você faz, o que a IA faz e o que ela olha.</p>
-        <FluxoProduto nos={nos} />
+        <h2 className="m-0 text-[22px] font-bold leading-snug">Você vai criar um ebook curto, sobre algo que você já conhece</h2>
+        <p className="tx m-0 mt-1.5">A IA faz o trabalho pesado. Você escolhe e aprova. Tudo em português primeiro: o país de venda vem depois.</p>
+        <div className="mt-4"><PensamentoIa dados={dados} pensamentos={PENSAMENTOS_IA} /></div>
       </section>
 
       <section className="flex flex-col gap-2.5" aria-labelledby="como-quer">
         <h2 id="como-quer" className="m-0 text-lg font-bold">Como você quer fazer?</h2>
-        <PilotoAutomatico pastaId={p.id} revisaoHref={`/app/p/${p.id}/revisao`} />
-        <div className="flex flex-col gap-1.5 rounded-2xl border border-line bg-surface p-4">
-          <span className="flex items-center gap-2 font-bold"><span className="text-accent"><Icone nome="passos" tamanho={20} /></span> Vou fazendo com a IA, passo a passo</span>
-          <span className="mu text-sm">Você vê e decide cada etapa. Leva mais tempo, mas você entende tudo.</span>
-          <div className="mt-1"><MarcarFeito pastaId={p.id} etapa="entenda" feita={jaComecou} proxima={proxima}>Começar passo a passo</MarcarFeito></div>
+        <div className="grid gap-2.5 lg:grid-cols-2">
+          <PilotoAutomatico pastaId={p.id} revisaoHref={`/app/p/${p.id}/revisao`} />
+          <div className="flex flex-col gap-1.5 rounded-2xl border border-line bg-surface p-4">
+            <span className="flex items-center gap-2 font-bold"><span className="text-accent"><Icone nome="passos" tamanho={20} /></span> Quero ir junto, passo a passo</span>
+            <span className="mu text-sm">Você vê e decide cada etapa. Cada uma explica o que é antes de pedir algo.</span>
+            <div className="mt-auto pt-1"><MarcarFeito pastaId={p.id} etapa="entenda" feita={jaComecou} proxima={proxima}>Começar passo a passo</MarcarFeito></div>
+          </div>
         </div>
+      </section>
+
+      <section className="cd gap-3" aria-labelledby="o-caminho">
+        <h2 id="o-caminho" className="m-0 flex items-center gap-2 text-lg font-bold"><span className="text-c-amber"><Icone nome="passos" tamanho={22} /></span> O que vai acontecer, em 4 fases</h2>
+        <CaminhoFases fases={fases} />
       </section>
     </>
   );
@@ -130,23 +126,6 @@ export async function ProprioFicha({ p, proxima }: { p: P; proxima: string }) {
   return (
     <>
       <AvisoIa />
-      <div className="cd gap-3">
-        <div className="flex items-start gap-3">
-          <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-c-teal/15 text-c-teal"><Icone nome="ficha" tamanho={22} /></span>
-          <div className="flex flex-col gap-1">
-            <span className="font-bold">Pra que serve a ficha</span>
-            <span className="tx">É o RG do seu produto: pra quem é, que problema resolve e o que promete (sem exagero). Tudo que vem depois sai daqui: oferta, ebook, página e anúncios.</span>
-          </div>
-        </div>
-        <ol className="m-0 grid list-none gap-2 p-0 sm:grid-cols-3">
-          {[["Você responde 3 perguntas", "só a primeira é obrigatória"], ["A IA completa a ficha", "público, dor, promessa, objeções, ganchos"], ["Você confere e corrige", "qualquer campo, quando quiser"]].map(([t, d], i) => (
-            <li key={t} className="surge flex items-start gap-2 rounded-xl bg-surface-2 p-3" style={{ animationDelay: `${i * 90}ms` }}>
-              <span className="grid size-6 shrink-0 place-items-center rounded-full bg-c-teal text-xs font-bold text-accent-ink">{i + 1}</span>
-              <span className="flex flex-col"><span className="text-sm font-bold">{t}</span><span className="mu text-xs">{d}</span></span>
-            </li>
-          ))}
-        </ol>
-      </div>
       {ideia ? <div className="cd border-c-amber/40"><span className="kk">IDEIA ESCOLHIDA</span><span className="text-[15px] font-bold">{ideia.nome_provisorio}</span><span className="mu">{ideia.promessa.pt}</span></div> : null}
       <FichaPerguntas pastaId={p.id} inicial={resp} temFicha={Boolean(ficha)} />
       {ficha ? (

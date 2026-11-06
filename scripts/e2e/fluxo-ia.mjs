@@ -36,9 +36,10 @@ try {
   await p.getByRole("button", { name: /Ver 3 ideias/ }).click();
   await p.getByRole("button", { name: "Escolher esta" }).first().waitFor(); log("6 ideias:", await p.locator("article span.text-\\[17px\\]").allInnerTexts()); await shot("ideias");
   await p.getByRole("button", { name: "Escolher esta" }).first().click(); await p.waitForURL(/\/ficha/); log("7 ficha");
+  await p.getByRole("button", { name: /Prefiro contar/ }).click();
   await p.getByLabel("O que você sabe desse assunto?").fill("Cozinho todo dia pra minha família depois do trabalho, faço marmitas no domingo e congelo. Sei aproveitar sobras e fazer lista de compras barata.");
   await p.getByLabel("O que você NÃO quer prometer?").fill("Emagrecimento e economia de valor certo.");
-  await p.getByRole("button", { name: /Gerar a ficha com a IA/ }).click();
+  await p.getByRole("button", { name: /Montar a ficha com as minhas respostas/ }).click();
   await p.getByText("SUA FICHA", { exact: true }).waitFor(); log("8 ficha IA:", (await p.locator("dl").first().innerText()).replace(/\n/g, " | ").slice(0, 220)); await shot("ficha");
   await p.getByRole("link", { name: /Ficha certa/ }).click(); await p.waitForURL(/\/oferta/);
   await p.getByRole("button", { name: /Montar a oferta/ }).click(); await p.getByText("PREÇO SUGERIDO").waitFor(); log("9 oferta:", (await p.locator(".cd").filter({ hasText: "PREÇO SUGERIDO" }).innerText()).replace(/\n/g, " ")); await shot("oferta");

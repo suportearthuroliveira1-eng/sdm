@@ -1,21 +1,58 @@
-/** Explicação didática de cada passo do produto próprio (fluxograma do "Entenda"). */
-export const EXPLICA_PROPRIO: { slug: string; voce: string; ia: string; olha: string }[] = [
-  { slug: "ideias", voce: "Escolhe 1 entre 3 ideias (ou manda a sua pra IA avaliar).", ia: "Sugere 3 ideias de ebook ligadas ao que você gosta, com o porquê de cada uma.", olha: "Seus assuntos, o seu tempo, a sua experiência e o que já está saturado." },
-  { slug: "ficha", voce: "Responde 3 perguntas curtas (a IA pode escrever um rascunho).", ia: "Completa a ficha: pra quem é, a dor, a promessa, objeções e ganchos.", olha: "A ideia escolhida e o que você contou. Prova só se você contou: nada inventado." },
-  { slug: "oferta", voce: "Confere nome, promessa e preço. Muda o que quiser e aprova.", ia: "Monta a oferta: nome, promessa honesta, preço sugerido com o porquê, bônus e garantia.", olha: "A ficha do produto e o que costuma funcionar pra ebook curto." },
-  { slug: "mercado", voce: "Escolhe pra quem vender: país e idioma.", ia: "A partir daqui escreve no idioma de quem compra, sempre com tradução pra você.", olha: "A sugestão do seu diagnóstico (onde você mora e o que você fala)." },
-  { slug: "ebook", voce: "Aprova o sumário, escolhe o estilo da capa e baixa o PDF.", ia: "Escreve o sumário e cada capítulo, um por um, com a tradução do lado.", olha: "A ficha, a oferta, o tom que você escolheu e o tamanho do ebook." },
-  { slug: "revisao", voce: "Confere um checklist antes de vender.", ia: "Nada: aqui é você quem aprova.", olha: "Promessa exagerada, cura, ganho e coisa copiada (você confere)." },
-  { slug: "pagina", voce: "Lê, edita bloco por bloco e aprova.", ia: "Escreve a página de vendas com o porquê de cada bloco.", olha: "Ficha + oferta + o formato (página, pré-venda ou quiz)." },
-  { slug: "plataforma", voce: "Cria a conta na plataforma, sobe o ebook e pega o link do checkout.", ia: "Te mostra o passo a passo e confere o link.", olha: "Se o link abre e chega no pagamento." },
-  { slug: "conta", voce: "Abre a conta pra receber.", ia: "Explica qual conta e como abrir.", olha: "O país que você escolheu." },
-  { slug: "teste", voce: "Faz o caminho do cliente até a compra.", ia: "Te guia no teste.", olha: "Página, botão, checkout e entrega do ebook." },
-];
+/**
+ * Explicação simples de cada etapa ("O que é isso?"), mostrada no topo da etapa.
+ * Linguagem de quem nunca vendeu nada: o que é, pra que serve, um exemplo, quem faz o quê.
+ */
+export type GuiaEtapa = { oQueE: string; praQue: string; exemplo?: string; voce: string; ia: string };
 
-/** "Como a IA pensa": os passos de raciocínio mostrados antes de começar. */
-export const COMO_A_IA_PENSA = [
-  { t: "Junta o que você sabe com o que as pessoas procuram", d: "Ela começa pelo que você gosta e entende. Produto de assunto que você domina é mais fácil de criar e de divulgar." },
-  { t: "Escolhe um problema pequeno e específico", d: "Ebook curto vende quando resolve uma coisa só, bem explicada. Nada de \"guia de tudo\"." },
-  { t: "Escreve uma promessa honesta", d: "Sem cura, sem ganho garantido, sem número inventado. Faltou dado, ela deixa [valor] pra você completar." },
-  { t: "Confere as regras antes de te mostrar", d: "Toda resposta passa por uma checagem. Se falhar, ela refaz sozinha." },
+const COMUM: Record<string, GuiaEtapa> = {
+  conta: { oQueE: "A conta onde o dinheiro das vendas cai.", praQue: "Quem compra paga em dólar (ou euro). Você precisa de uma conta que receba nessa moeda e mande pro Brasil quando quiser.", voce: "Abre a conta, seguindo o passo a passo.", ia: "Nada aqui: é só você. O app mostra o caminho." },
+  divulgar: { oQueE: "O jeito que as pessoas vão ficar sabendo do produto.", praQue: "Sem divulgação ninguém compra. Anúncio pago é mais rápido, mas custa. Vídeo orgânico é de graça, mas demora mais.", exemplo: "Pago: você paga a Meta pra mostrar um anúncio. Orgânico: você posta vídeos no Instagram ou TikTok.", voce: "Escolhe pago, orgânico ou os dois.", ia: "Sugere o melhor caminho a partir do seu diagnóstico." },
+  "base-anuncios": { oQueE: "A estrutura que a Meta exige antes de anunciar.", praQue: "Sem perfil seguro, portfólio e conta de anúncios, a Meta bloqueia. Fazer certo uma vez evita dor de cabeça.", voce: "Segue o checklist e marca o que fez.", ia: "Nada aqui: são configurações na Meta." },
+  criativos: { oQueE: "As peças do anúncio: imagem e texto.", praQue: "É o que a pessoa vê rolando o feed. Um bom criativo faz parar e clicar.", voce: "Escolhe, baixa e sobe na Meta.", ia: "Escreve os textos e cria as imagens." },
+  pixel: { oQueE: "Um código que conta quem clicou e quem comprou.", praQue: "Com ele a Meta aprende quem compra e mostra o anúncio pra pessoas parecidas.", voce: "Instala seguindo o passo a passo.", ia: "Nada aqui: o app só confere." },
+  numeros: { oQueE: "Os resultados da sua campanha.", praQue: "Os números dizem se é pra continuar, mudar ou pausar.", voce: "Digita os números que aparecem na Meta.", ia: "Lê e diz o próximo passo." },
+  perfil: { oQueE: "A sua vitrine na rede social.", praQue: "Quem gosta do vídeo olha o perfil antes de clicar. Bio clara e link certo fazem a pessoa comprar.", voce: "Ajusta nome, bio e link.", ia: "Escreve a bio e monta a página de links." },
+  roteiros: { oQueE: "O texto de cada vídeo, cena por cena.", praQue: "Com roteiro você grava rápido e não trava. Dá pra fazer sem aparecer.", voce: "Grava e posta.", ia: "Escreve os roteiros e os ganchos do começo." },
+  "numeros-org": { oQueE: "Visualizações e cliques de cada vídeo.", praQue: "Mostra qual vídeo funcionou pra você fazer mais parecidos.", voce: "Digita os números de cada vídeo.", ia: "Aponta o vídeo campeão." },
+};
+
+const PROPRIO: Record<string, GuiaEtapa> = {
+  ideias: { oQueE: "O assunto do seu ebook.", praQue: "Ebook bom resolve um problema pequeno de um jeito simples. Assunto que você já conhece é mais fácil de criar e de vender.", exemplo: "\"Maquiagem em 10 minutos com 5 produtos\" em vez de \"tudo sobre maquiagem\".", voce: "Escolhe 1 entre 3 ideias, ou manda a sua.", ia: "Sugere 3 ideias ligadas ao que você gosta, com o porquê." },
+  ficha: { oQueE: "O RG do seu produto.", praQue: "Diz pra quem é, qual problema resolve e o que promete. Tudo depois sai daqui: oferta, ebook, página e anúncios.", exemplo: "Pra quem: mães sem tempo. Dor: não sabem se arrumar rápido. Promessa: maquiagem pronta em 10 minutos.", voce: "Confere e corrige o que quiser.", ia: "Escreve a ficha inteira (ou usa o que você contar)." },
+  oferta: { oQueE: "O pacote que a pessoa compra.", praQue: "Não é só o ebook: é o nome, a promessa, o preço, os bônus e a garantia. Uma oferta clara faz a pessoa sentir que vale a pena.", exemplo: "Ebook + checklist de bônus por US$ 9, com 7 dias de garantia.", voce: "Confere, muda o que quiser e aprova.", ia: "Monta tudo com um preço baixo, fácil de comprar." },
+  mercado: { oQueE: "Pra quem você vai vender: país e idioma.", praQue: "Vender em dólar ou euro rende mais. O ebook e a página saem no idioma de quem compra, com tradução pra você.", voce: "Escolhe o país (o app já sugere).", ia: "Passa a escrever no idioma escolhido." },
+  ebook: { oQueE: "O produto em si: um PDF curto e bonito.", praQue: "É o que a pessoa recebe depois de pagar. Curto e direto: ela lê num dia e já usa.", voce: "Aprova o sumário, escolhe a capa e baixa.", ia: "Escreve cada capítulo, com tradução do lado." },
+  revisao: { oQueE: "Uma conferida final antes de vender.", praQue: "Garante que o ebook entrega o que promete e que não tem promessa proibida (cura, ganho garantido).", voce: "Lê e marca o checklist.", ia: "Nada: aqui quem aprova é você." },
+  pagina: { oQueE: "A página que convence a pessoa a comprar.", praQue: "Quem clica no anúncio cai aqui. Ela explica o problema, mostra a solução e leva pro botão de compra.", voce: "Lê, edita e copia pra ferramenta de página.", ia: "Escreve a página bloco por bloco." },
+  plataforma: { oQueE: "Onde a pessoa paga e recebe o ebook.", praQue: "A plataforma cobra, entrega o PDF por e-mail e te repassa o dinheiro.", voce: "Cria a conta, cadastra o produto e cola o link do pagamento.", ia: "Confere se o link abre." },
+  teste: { oQueE: "Você fazendo o caminho de quem compra.", praQue: "Pra ter certeza de que nada quebra: página, botão, pagamento e entrega.", voce: "Faz uma compra teste e marca cada passo.", ia: "Nada: o app só te guia." },
+};
+
+const SDM: Record<string, GuiaEtapa> = {
+  afiliacao: { oQueE: "O pedido pra vender o SDM como afiliada.", praQue: "Afiliada vende o produto de outra pessoa e ganha uma comissão por venda. Você não cria nada.", voce: "Pede a afiliação.", ia: "Nada: o time aprova." },
+  link: { oQueE: "O seu link de afiliada.", praQue: "É ele que marca que a venda veio de você. Sem o link certo, a comissão não cai.", voce: "Copia e usa um link por canal.", ia: "Nada: o app gera os links." },
+  kit: { oQueE: "Peças prontas pra divulgar.", praQue: "Você não começa do zero: o time já entrega textos e imagens que funcionam.", voce: "Escolhe e baixa.", ia: "Adapta pro seu país, sem mudar a promessa." },
+  regras: { oQueE: "As regras da afiliação.", praQue: "Protegem a sua conta e a marca. Quebrar uma regra pode cortar a comissão.", voce: "Lê e marca que entendeu.", ia: "Nada aqui." },
+};
+
+/** Guia da etapa pro tipo de pasta (proprio, sdm/vitrine). Sem guia: null. */
+export function guiaEtapa(tipo: string, slug: string): GuiaEtapa | null {
+  if (slug === "entenda") return null;
+  return (tipo === "proprio" ? PROPRIO[slug] : SDM[slug]) ?? COMUM[slug] ?? null;
+}
+
+/** As 4 fases do produto próprio (o "Entenda" mostra o caminho assim, em vez de 10 passos soltos). */
+export const FASES_PROPRIO = [
+  { k: "ideia", nome: "A ideia", frase: "A IA sugere 3 ideias ligadas ao que você gosta. Você escolhe uma.", etapas: ["ideias"], minutos: "1 min" },
+  { k: "produto", nome: "O produto", frase: "Ficha, oferta e preço, tudo em português. Depois você escolhe o país de venda.", etapas: ["ficha", "oferta", "mercado"], minutos: "2 min" },
+  { k: "ebook", nome: "O ebook", frase: "A IA escreve capítulo por capítulo, com tradução. Você confere e aprova.", etapas: ["ebook", "revisao"], minutos: "3 min" },
+  { k: "vender", nome: "Vender", frase: "Página de vendas, onde receber e um teste de compra antes de divulgar.", etapas: ["pagina", "plataforma", "conta", "teste"], minutos: "com você" },
+] as const;
+
+/** O que a IA "pensa" (balão do robô no Entenda, um por vez). */
+export const PENSAMENTOS_IA = [
+  "Junto o que você sabe com o que as pessoas procuram.",
+  "Escolho um problema pequeno: ebook curto vende quando resolve uma coisa só.",
+  "Escrevo uma promessa honesta: sem cura, sem ganho garantido, sem número inventado.",
+  "Confiro as regras antes de te mostrar. Se falhar, refaço sozinha.",
 ];

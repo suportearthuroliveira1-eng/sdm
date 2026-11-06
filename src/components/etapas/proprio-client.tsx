@@ -310,58 +310,80 @@ export function FichaPerguntas({ pastaId, inicial, temFicha }: { pastaId: string
       setDica(r.dica ?? "");
       toast("Rascunho pronto: confira e mude o que quiser");
     });
+  /** Um botão só: se faltar a resposta 1, a IA escreve o rascunho e já monta a ficha. */
   const gerar = () =>
     startG(async () => {
       setErro("");
+      let vals = v;
+      if (vals.o_que_sabe.trim().length < 10) {
+        const r = await rascunhoFicha(pastaId).catch(() => ({ erro: "Sem conexão. Tente de novo." }) as { erro: string; o_que_sabe?: string; nao_prometer?: string });
+        if (r.erro) return setErro(r.erro);
+        vals = { ...vals, o_que_sabe: r.o_que_sabe ?? vals.o_que_sabe, nao_prometer: vals.nao_prometer || r.nao_prometer || "" };
+        setV(vals);
+      }
       const f = new FormData();
-      Object.entries(v).forEach(([k, x]) => f.set(k, x));
+      Object.entries(vals).forEach(([k, x]) => f.set(k, x));
       const r: R = await gerarFicha(pastaId, null, f).catch(() => ({ erro: "Não deu certo agora. Confira a internet e tente de novo." }));
       if (r.erro) return setErro(r.erro);
       toast("Ficha pronta");
       router.refresh();
       setTimeout(() => document.getElementById("sua-ficha")?.scrollIntoView({ behavior: "smooth", block: "start" }), 400);
     });
+  const [abrir, setAbrir] = useState(Boolean(temFicha || inicial.o_que_sabe || inicial.historia_real || inicial.nao_prometer));
+  const ocupado = preenchendo || gerando;
 
   return (
     <div className="flex flex-col gap-4">
-      <button type="button" onClick={preencher} disabled={preenchendo || gerando} className="press surge flex items-center gap-3 rounded-2xl border-[1.5px] border-dashed border-c-teal/70 bg-[color-mix(in_srgb,var(--c-teal)_8%,transparent)] p-4 text-left text-text hover:bg-[color-mix(in_srgb,var(--c-teal)_14%,transparent)]">
-        <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-c-teal text-accent-ink">{preenchendo ? <Spinner /> : <Icone nome="varinha" tamanho={22} />}</span>
-        <span className="flex flex-col">
-          <span className="font-bold">{preenchendo ? "A IA está escrevendo um rascunho..." : "Não sabe o que escrever? A IA preenche pra mim"}</span>
-          <span className="mu text-sm">Ela usa o seu diagnóstico e a ideia escolhida. Você confere e muda o que quiser.</span>
-        </span>
-      </button>
-      {dica ? <div className="good surge">Dica da IA: {dica}</div> : null}
+      {!temFicha ? (
+        <button type="button" onClick={gerar} disabled={ocupado} className="press surge flex items-center gap-4 rounded-2xl border-[1.5px] border-c-teal/70 p-4 text-left text-text" style={{ background: "linear-gradient(135deg, color-mix(in srgb, var(--c-teal) 18%, var(--surface)), color-mix(in srgb, var(--c-sky) 12%, var(--surface)))" }}>
+          <span className="flutua grid size-12 shrink-0 place-items-center rounded-2xl bg-c-teal text-accent-ink">{gerando ? <Spinner /> : <Icone nome="varinha" tamanho={24} />}</span>
+          <span className="flex flex-col gap-0.5">
+            <span className="text-[17px] font-bold">{abrir && !falta ? "Montar a ficha com as minhas respostas" : "A IA monta a ficha pra mim"}</span>
+            <span className="text-sm text-text-2">{abrir && !falta ? "A IA usa o que você escreveu + a ideia escolhida." : "Ela usa o seu diagnóstico e a ideia escolhida. Você confere tudo depois."}</span>
+            <span className="text-xs font-bold text-c-teal">Leva uns 15 segundos</span>
+          </span>
+        </button>
+      ) : null}
 
-      {PERGUNTAS_FICHA.map((q) => {
-        const ok = v[q.k].trim().length >= (q.obrigatoria ? 10 : 1);
-        return (
-          <div key={q.k} className="flex gap-3">
-            <span className={`mt-0.5 grid size-8 shrink-0 place-items-center rounded-full border-2 text-sm font-bold transition-colors ${ok ? "border-ok bg-ok text-accent-ink" : "border-c-teal text-c-teal"}`} aria-hidden>
-              {ok ? <Icone nome="check" tamanho={15} espessura={3} /> : q.n}
-            </span>
-            <div className="flex flex-1 flex-col gap-1.5">
-              <label htmlFor={`f-${q.k}`} className="flex flex-wrap items-center gap-2 text-[15px] font-bold">
-                {q.t}
-                <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${q.obrigatoria ? "bg-c-teal/15 text-c-teal" : "bg-surface-2 text-muted"}`}>{q.obrigatoria ? "obrigatória" : "opcional"}</span>
-                {salvo === q.k ? <span className="text-[11px] font-normal text-ok">salvo</span> : null}
-              </label>
-              <span className="mu text-sm">{q.ajuda}</span>
-              <textarea id={`f-${q.k}`} value={v[q.k]} maxLength={1500} placeholder={q.ex} onChange={(e) => setV({ ...v, [q.k]: e.target.value })} onBlur={() => salvar(q.k)} className="ta min-h-24" />
-              {q.obrigatoria && falta ? <span className="text-xs text-muted">{v[q.k].trim().length}/10 letras no mínimo</span> : null}
-            </div>
-          </div>
-        );
-      })}
+      {!abrir ? (
+        <button type="button" className="b3 self-center text-sm" onClick={() => setAbrir(true)}>Prefiro contar com as minhas palavras antes</button>
+      ) : (
+        <div className="surge flex flex-col gap-4 rounded-2xl border border-line bg-surface p-4">
+          <span className="text-sm text-text-2">{temFicha ? "As suas respostas. Mudou algo? Refaça a ficha embaixo." : "Opcional. Quanto mais real, melhor a ficha. A IA nunca inventa história ou prova."}</span>
+          {dica ? <div className="good surge">Dica da IA: {dica}</div> : null}
+          {PERGUNTAS_FICHA.map((q) => {
+            const ok = v[q.k].trim().length >= (q.obrigatoria ? 10 : 1);
+            return (
+              <div key={q.k} className="flex gap-3">
+                <span className={`mt-0.5 grid size-8 shrink-0 place-items-center rounded-full border-2 text-sm font-bold transition-colors ${ok ? "border-ok bg-ok text-accent-ink" : "border-c-teal text-c-teal"}`} aria-hidden>
+                  {ok ? <Icone nome="check" tamanho={15} espessura={3} /> : q.n}
+                </span>
+                <div className="flex flex-1 flex-col gap-1.5">
+                  <label htmlFor={`f-${q.k}`} className="flex flex-wrap items-center gap-2 text-[15px] font-bold">
+                    {q.t}
+                    {salvo === q.k ? <span className="text-[11px] font-normal text-ok">salvo</span> : null}
+                  </label>
+                  <span className="mu text-sm">{q.ajuda}</span>
+                  <textarea id={`f-${q.k}`} value={v[q.k]} maxLength={1500} placeholder={q.ex} onChange={(e) => setV({ ...v, [q.k]: e.target.value })} onBlur={() => salvar(q.k)} className="ta min-h-24" />
+                  {q.k === "o_que_sabe" && !v.o_que_sabe.trim() ? (
+                    <button type="button" className="b3 min-h-9 self-start px-0 text-sm" onClick={preencher} disabled={ocupado}>
+                      {preenchendo ? "Escrevendo um rascunho..." : "Me ajuda a escrever esta"}
+                    </button>
+                  ) : null}
+                </div>
+              </div>
+            );
+          })}
+          {temFicha ? (
+            <button type="button" className="b2" onClick={gerar} disabled={ocupado}>
+              <Icone nome="varinha" tamanho={18} /> Refazer a ficha com estas respostas
+            </button>
+          ) : null}
+        </div>
+      )}
 
       {erro ? <span role="alert" className="text-sm text-danger">{erro}</span> : null}
-      <div className="sticky bottom-[calc(64px+max(env(safe-area-inset-bottom),12px))] z-10 -mx-4 flex flex-col gap-1.5 border-t border-line bg-bg/95 px-4 py-3 backdrop-blur lg:bottom-0 lg:mx-0 lg:rounded-t-2xl lg:border-x">
-        <button type="button" className="b1" onClick={gerar} disabled={falta || gerando || preenchendo}>
-          <Icone nome="varinha" tamanho={18} /> {temFicha ? "Refazer a ficha com a IA" : "Gerar a ficha com a IA"}
-        </button>
-        <span className="text-center text-xs text-muted">{falta ? "Responda a pergunta 1 (ou toque em \"A IA preenche pra mim\") pra liberar." : "A IA usa as suas respostas + a ideia escolhida. Leva uns 10 segundos."}</span>
-      </div>
-      <IaTrabalhando ativo={gerando} titulo="A IA está montando a sua ficha" passos={["Lendo a ideia escolhida", "Lendo o que você sabe", "Definindo pra quem é e qual a dor", "Escrevendo a promessa sem exagero", "Listando objeções e ganchos", "Conferindo: só prova que você contou"]} duracao={12} />
+      <IaTrabalhando ativo={gerando} titulo="A IA está montando a sua ficha" passos={["Lendo a ideia escolhida", "Lendo o seu diagnóstico", "Definindo pra quem é e qual a dor", "Escrevendo a promessa sem exagero", "Listando objeções e ganchos", "Conferindo: só prova que você contou"]} duracao={15} />
     </div>
   );
 }
