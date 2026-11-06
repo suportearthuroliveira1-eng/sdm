@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-11-06 · Produto mais explicado, IA que faz tudo, robô e Aparência
+- **Antes de criar** (Entenda do produto próprio): abertura, "tudo em português primeiro", **Como a IA pensa** (o que ela lê do diagnóstico, robô, o que sai, 4 passos do raciocínio), **fluxograma** animado e clicável (você faz / a IA faz / o que a IA olha) e a escolha: **A IA faz tudo pra mim** ou **passo a passo**. "+ Criar produto" abre direto nessa tela.
+- **A IA faz tudo** (`src/lib/actions/piloto.ts` + `components/etapas/piloto.tsx`): confirma, roda um passo por vez (ideias → escolha → rascunho → ficha → oferta → idioma e país → sumário → capítulos) com progresso real, tenta de novo do passo que falhou e para na Revisão (ela aprova). ~2 min no teste.
+- **Português primeiro**: ideias, ficha e oferta saem em português; etapa nova **Idioma e país** (`mercado`, depois da oferta) define país e idioma (EUA, Reino Unido, Latinos nos EUA, Espanha, Brasil); ebook e página saem nesse idioma.
+- **Ficha**: pra que serve, 3 passos, perguntas numeradas (obrigatória/opcional, salva ao sair do campo), **A IA preenche pra mim** (agente novo `rascunho_ficha`, sem inventar experiência), botão que diz o que falta.
+- **Robô da IA** (`components/ux/ia-trabalhando.tsx`): tela com robô animado, o que a IA está fazendo, passos e progresso em toda ação de IA.
+- **Mais cor**: cada etapa com cor e ícone (`visual-etapas.ts`, `components/ui/icone.tsx`); paleta de apoio (verde-água, âmbar, rosa, azul, laranja).
+- **Admin → Aparência**: 5 temas prontos, cores, cantos, animações liga/desliga, prévia ao vivo e aviso de contraste AA (setting `tema`, injetado no layout raiz).
+- `maxDuration = 60` nos layouts (ações de IA não são cortadas pela Vercel); erros de rede viram mensagem em vez de tela parada. Toast no topo.
+- Testes: 50 unitários; `scripts/e2e/piloto-ia.mjs` (IA faz tudo) e `fluxo-ia.mjs` atualizados.
+
 ## 2026-11-06 · Personalizar no admin, primeiro acesso obrigatório e passos do produto
 - **IA ligada em produção** sem Vercel: tabela `app_secrets` (migration 0008, RLS sem política) + Admin → Chaves e variáveis (salva testando na OpenAI). `segredo()` lê banco → env (ADR-016).
 - **Velocidade**: funções na região do banco (`vercel.json` → pdx1; antes iad1, ~70 ms por consulta); login conferido localmente com `getClaims()` (JWT ES256) no proxy e no servidor.

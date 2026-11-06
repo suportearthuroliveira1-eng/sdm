@@ -8,6 +8,7 @@ import { requireAdmin } from "@/lib/auth/admin";
 import { db, schema } from "@/lib/db";
 import { configDiagnosticoSchema, fluxoSchema, textosAppSchema } from "@/lib/domain/config-schemas";
 import { audit } from "@/lib/server/audit";
+import { temaSchema } from "@/lib/domain/tema";
 
 export type ConfigState = { ok?: boolean; erro?: string; msg?: string } | null;
 
@@ -29,6 +30,7 @@ const CONFIGS = {
   quota_ia_dia: { schema: z.number().int().min(1).max(5000), grupo: "ia", descricao: "Usos de IA por aluna por dia." },
   quota_professora_dia: { schema: z.number().int().min(1).max(1000), grupo: "ia", descricao: "Perguntas à Professora por aluna por dia." },
   cadastro_aberto: { schema: z.boolean(), grupo: "acesso", descricao: "Qualquer pessoa pode criar conta." },
+  tema: { schema: temaSchema, grupo: "personalizar", descricao: "Cores, raio e animações do app (Admin → Aparência)." },
 } as const;
 export type ConfigKey = keyof typeof CONFIGS;
 

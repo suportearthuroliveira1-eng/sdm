@@ -47,7 +47,7 @@ src/app/app/(primeiro)/  primeiro acesso: a04 boas-vindas, a07 combinado, a05 di
 src/app/app/(tabs)/      app logado com menu (AppShell): Início, v01 Produtos, l01 Aulas, q01 Professora, u01 Perfil
 src/app/app/(tabs)/p/[id]/[etapa]  pastas dos caminhos (sdm | proprio) e divulgação; slug da etapa em src/lib/domain/etapas.ts
 src/app/app/<id>/        demais telas pelo ID do protótipo (a01, v02, v05 e f02/f04/dv01 pras pastas da vitrine)
-src/app/admin/(painel)/  telas AD01–AD13 + Personalizar: fluxo, diagnostico, ia, chaves (layout checa papel); admin/entrar = login do time
+src/app/admin/(painel)/  telas AD01–AD13 + Personalizar: fluxo, diagnostico, ia, aparencia, chaves (layout checa papel); admin/entrar = login do time
 src/app/acesso/[token]   link de acesso (uso único, 72h)
 src/app/api/             webhooks (hubla, hotmart), inngest, app/*
 src/proxy.ts             renova sessão Supabase e barra /app e /admin sem login

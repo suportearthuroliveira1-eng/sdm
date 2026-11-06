@@ -15,6 +15,18 @@ export type AgenteDef<T extends z.ZodType = z.ZodType> = {
 const def = <T extends z.ZodType>(a: AgenteDef<T>) => a;
 
 export const AGENTES = {
+  rascunho_ficha: def({
+    id: "AGT-rascunho-ficha",
+    nome: "Ficha · rascunho das respostas",
+    classe: "text_cheap",
+    maxTokens: 700,
+    schema: S.rascunhoFichaOut,
+    tarefa: `Tarefa: escrever um RASCUNHO das respostas da aluna pra ficha do produto, em português do Brasil, na primeira pessoa, do jeito simples que ela falaria.
+- Use só o que está no diagnóstico (assuntos, experiência, país, idiomas) e na ideia escolhida. Escreva como gosto e costume ("eu gosto de", "eu costumo", "no meu dia a dia"), nunca como experiência profissional, curso, certificado ou resultado.
+- Não invente história, número, cliente, venda, depoimento ou prova. Se não sabe, deixe genérico.
+- nao_prometer: o que é perigoso prometer nesse tema (saúde, corpo, dinheiro, prazo, garantia de resultado).
+- dica: diga o que ela pode acrescentar de verdade pra ficha ficar com a cara dela.`,
+  }),
   diagnostico: def({
     id: "AGT-diagnostico",
     nome: "Diagnóstico",

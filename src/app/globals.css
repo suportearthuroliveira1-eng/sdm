@@ -25,6 +25,13 @@
   --warn-line: #5c4a22;
   --warn-text: #f2ddb0;
   --danger: #ff8a8a;
+  /* cores de apoio (etapas, ilustrações, IA) — editáveis em Admin → Aparência */
+  --c-teal: #5ee0cf;
+  --c-amber: #ffc861;
+  --c-pink: #ff8fc4;
+  --c-sky: #7cc4ff;
+  --c-orange: #ffa36b;
+  --raio: 14px;
 }
 
 @theme inline {
@@ -51,6 +58,11 @@
   --color-warn-line: var(--warn-line);
   --color-warn-text: var(--warn-text);
   --color-danger: var(--danger);
+  --color-c-teal: var(--c-teal);
+  --color-c-amber: var(--c-amber);
+  --color-c-pink: var(--c-pink);
+  --color-c-sky: var(--c-sky);
+  --color-c-orange: var(--c-orange);
   --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -80,10 +92,10 @@ body {
 
 /* Botões do protótipo: b1 principal, b2 contorno, b3 texto */
 @utility b1 {
-  @apply inline-flex min-h-[52px] w-full cursor-pointer items-center justify-center rounded-[14px] border-0 bg-accent px-4 text-base font-bold text-accent-ink hover:brightness-110 disabled:cursor-default disabled:opacity-50;
+  @apply inline-flex min-h-[52px] w-full cursor-pointer items-center justify-center gap-2 rounded-[var(--raio)] border-0 bg-accent px-4 text-base font-bold text-accent-ink shadow-[0_6px_20px_-8px_var(--accent)] transition-[filter,transform,box-shadow] hover:brightness-110 hover:shadow-[0_10px_26px_-8px_var(--accent)] disabled:cursor-default disabled:opacity-50;
 }
 @utility b2 {
-  @apply inline-flex min-h-[46px] cursor-pointer items-center justify-center rounded-xl border border-line-2 bg-transparent px-3.5 text-sm font-semibold text-text hover:bg-surface-2 disabled:cursor-default disabled:opacity-50;
+  @apply inline-flex min-h-[46px] cursor-pointer items-center justify-center gap-2 rounded-[calc(var(--raio)-2px)] border border-line-2 bg-transparent px-3.5 text-sm font-semibold text-text hover:bg-surface-2 disabled:cursor-default disabled:opacity-50;
 }
 @utility b3 {
   @apply inline-flex min-h-11 cursor-pointer items-center justify-center border-0 bg-transparent px-2 text-sm font-semibold text-accent-2 hover:text-text disabled:opacity-50;
@@ -96,7 +108,7 @@ body {
   @apply inline-flex min-h-11 cursor-pointer items-center justify-center rounded-xl border border-line-2 bg-transparent px-3.5 text-[13px] font-semibold text-text hover:bg-surface-2 disabled:opacity-50;
 }
 @utility cd {
-  @apply flex flex-col gap-1.5 rounded-2xl bg-surface p-3.5;
+  @apply flex flex-col gap-1.5 rounded-[calc(var(--raio)+2px)] border border-line-3 bg-surface p-3.5;
 }
 @utility acd {
   @apply flex flex-col gap-2 rounded-2xl border border-line bg-surface p-[18px];
@@ -114,10 +126,10 @@ body {
   @apply text-[13px] font-semibold;
 }
 @utility in {
-  @apply box-border block min-h-[46px] w-full rounded-xl border border-line-2 bg-surface px-3 text-[15px] text-text placeholder:text-muted/70 focus:border-accent focus:outline-none;
+  @apply box-border block min-h-[46px] w-full rounded-[calc(var(--raio)-2px)] border border-line-2 bg-surface px-3 text-[15px] text-text placeholder:text-muted/70 focus:border-accent focus:outline-none;
 }
 @utility ta {
-  @apply box-border block min-h-[84px] w-full resize-y rounded-xl border border-line-2 bg-surface px-3 py-2.5 text-sm leading-[1.45] text-text focus:border-accent focus:outline-none;
+  @apply box-border block min-h-[84px] w-full resize-y rounded-[calc(var(--raio)-2px)] border border-line-2 bg-surface px-3 py-2.5 text-sm leading-[1.45] text-text focus:border-accent focus:outline-none;
 }
 @utility warn {
   @apply rounded-[14px] border border-warn-line bg-warn-bg px-3.5 py-3 text-[13px] leading-[1.45] text-warn-text;
@@ -245,7 +257,50 @@ body {
   to { transform: rotate(360deg); }
 }
 
+/* ---------- IA trabalhando (robô) ---------- */
+.robo-corpo { animation: robo-flutua 2.4s ease-in-out infinite; transform-origin: 60px 60px; }
+.robo-sombra { animation: robo-sombra 2.4s ease-in-out infinite; transform-origin: 60px 112px; }
+.robo-olhos { animation: robo-pisca 3.6s infinite; transform-origin: 60px 49px; }
+.robo-boca { animation: robo-fala 0.45s ease-in-out infinite alternate; transform-origin: 60px 60px; }
+.robo-antena { animation: robo-luz 1.2s ease-in-out infinite; }
+.robo-braco-e { animation: robo-braco 0.9s ease-in-out infinite alternate; transform-origin: 30px 85px; }
+.robo-braco-d { animation: robo-braco 0.9s ease-in-out infinite alternate-reverse; transform-origin: 90px 85px; }
+.robo-brilhos { animation: robo-brilho 2s ease-in-out infinite; }
+@keyframes robo-flutua { 50% { transform: translateY(-5px); } }
+@keyframes robo-sombra { 50% { transform: scaleX(0.8); opacity: 0.1; } }
+@keyframes robo-pisca { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+@keyframes robo-fala { from { transform: scaleX(0.4); } to { transform: scaleX(1.3); } }
+@keyframes robo-luz { 50% { opacity: 0.35; } }
+@keyframes robo-braco { from { transform: rotate(-14deg); } to { transform: rotate(14deg); } }
+@keyframes robo-brilho { 50% { opacity: 0.2; transform: scale(0.9); } }
+.ia-fundo { animation: toast-in 180ms ease-out both; }
+.ia-cartao { animation: ia-entra 260ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
+@keyframes ia-entra { from { opacity: 0; transform: translateY(14px) scale(0.96); } }
+.ia-msg { animation: page-in 260ms ease-out both; }
+.ia-barra {
+  background: linear-gradient(90deg, var(--accent), var(--c-teal), var(--c-amber), var(--accent));
+  background-size: 300% 100%;
+  animation: ia-onda 2.4s linear infinite;
+  transition: width 0.4s ease-out;
+}
+@keyframes ia-onda { to { background-position: -300% 0; } }
+
+/* ---------- fluxograma e ilustrações ---------- */
+.fluxo-linha { stroke-dasharray: 6 6; animation: fluxo-anda 1.2s linear infinite; }
+@keyframes fluxo-anda { to { stroke-dashoffset: -24; } }
+.fluxo-traco { background: repeating-linear-gradient(to bottom, var(--cor, var(--accent)) 0 6px, transparent 6px 12px); background-size: 100% 24px; animation: fluxo-desce 1.2s linear infinite; }
+@keyframes fluxo-desce { to { background-position: 0 24px; } }
+.surge { animation: surge 420ms cubic-bezier(0.2, 0.9, 0.3, 1.1) both; }
+@keyframes surge { from { opacity: 0; transform: translateY(10px) scale(0.98); } }
+.pulsa { animation: pulsa 2.2s ease-in-out infinite; }
+@keyframes pulsa { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--cor, var(--accent)) 45%, transparent); } 50% { box-shadow: 0 0 0 8px transparent; } }
+.flutua { animation: robo-flutua 3s ease-in-out infinite; }
+
+/* tema sem animações (Admin → Aparência) */
+:root[data-animacoes="off"] *, :root[data-animacoes="off"] *::before, :root[data-animacoes="off"] *::after { animation: none !important; transition-duration: 0ms !important; }
+
 @media (prefers-reduced-motion: reduce) {
+  .robo-corpo, .robo-sombra, .robo-olhos, .robo-boca, .robo-antena, .robo-braco-e, .robo-braco-d, .robo-brilhos, .ia-barra, .fluxo-linha, .fluxo-traco, .surge, .pulsa, .flutua, .ia-cartao, .ia-msg { animation: none !important; }
   .page-in, .toast-in, .skeleton, .nav-progress.is-on > div { animation: none !important; }
   .nav-progress.is-on > div { width: 60%; }
   * { transition-duration: 0ms !important; }

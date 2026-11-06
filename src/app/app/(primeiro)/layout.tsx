@@ -1,5 +1,8 @@
 import { requireStudent } from "@/lib/auth/session";
 
+/** Ações com IA (ficha, oferta, capítulos) podem levar 10–40 s: sem isso a Vercel corta antes. */
+export const maxDuration = 60;
+
 /** Primeiro acesso: telas sem o menu de abas, uma coisa por vez. */
 export default async function PrimeiroLayout({ children }: LayoutProps<"/app">) {
   await requireStudent();

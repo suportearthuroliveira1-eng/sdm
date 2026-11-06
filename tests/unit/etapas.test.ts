@@ -40,3 +40,21 @@ describe("etapas da pasta (fluxo ideal)", () => {
     expect(faseAtual({ ...pronto, divulgacao: "org" })).toBe(3);
   });
 });
+
+describe("produto próprio · idioma e país", () => {
+  const base = { tipo: "proprio" as const, divulgacao: null, temEbookPronto: false, temPagina: false, temCriativos: false, temRoteiros: false, temNumeros: false, temVenda: false };
+  it("ebook só abre depois de escolher o país e o idioma", async () => {
+    const { etapasDaPasta } = await import("@/lib/domain/etapas");
+    const dados = { feito: { entenda: true }, ideia: { x: 1 }, ficha: { x: 1 }, oferta: { aprovada: true } };
+    const sem = etapasDaPasta({ ...base, dados });
+    expect(sem.find((e) => e.slug === "mercado")!.agora).toBe(true);
+    expect(sem.find((e) => e.slug === "ebook")!.travada).toContain("Idioma e país");
+    const com = etapasDaPasta({ ...base, dados: { ...dados, mercado: { pais: "eua" } } });
+    expect(com.find((e) => e.slug === "ebook")!.agora).toBe(true);
+  });
+  it("textos do admin trocam nome e explicação da etapa", async () => {
+    const { etapasDaPasta } = await import("@/lib/domain/etapas");
+    const l = etapasDaPasta({ ...base, dados: {} }, { ideias: { nome: "Ideias com a IA" } });
+    expect(l.find((e) => e.slug === "ideias")!.nome).toBe("Ideias com a IA");
+  });
+});

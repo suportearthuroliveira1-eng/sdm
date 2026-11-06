@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { LockIcon } from "@/components/app/ui";
+import { Icone } from "@/components/ui/icone";
+import { visualEtapa } from "@/lib/domain/visual-etapas";
 import { FASES } from "@/lib/domain/etapas";
 import { hrefEtapa, pastaDaAluna } from "@/lib/server/pastas";
 
@@ -22,7 +24,7 @@ export default async function Pasta({ params }: PageProps<"/app/p/[id]">) {
     const div = ["divulgar", "base-anuncios", "criativos", "pixel", "numeros", "perfil", "roteiros", "numeros-org"];
     if (div.includes(slug)) return "Divulgar";
     if (pasta.tipo === "sdm") return "Começar como afiliada";
-    return ["entenda", "ideias", "ficha", "oferta", "ebook", "revisao"].includes(slug) ? "Criar o produto" : "Preparar a venda";
+    return ["entenda", "ideias", "ficha", "oferta", "mercado", "ebook", "revisao"].includes(slug) ? "Criar o produto" : "Preparar a venda";
   };
   const grupos = [...new Set(etapas.map((e) => grupo(e.slug)))];
   let motivoMostrado = false;
@@ -60,7 +62,7 @@ export default async function Pasta({ params }: PageProps<"/app/p/[id]">) {
         <section key={g} className="flex flex-col gap-2" aria-label={g}>
           <h2 className="m-0 mt-1 text-xs font-bold uppercase tracking-wider text-muted">{g}</h2>
           <ol className="m-0 flex list-none flex-col gap-2 p-0">
-            {etapas.map((e, i) => {
+            {etapas.map((e) => {
               if (grupo(e.slug) !== g) return null;
               let sub = e.ok ? "feita · toque pra rever" : e.agora ? "agora: comece por aqui" : "";
               if (e.travada) {
@@ -69,8 +71,9 @@ export default async function Pasta({ params }: PageProps<"/app/p/[id]">) {
               } else if (!e.ok && !e.agora) sub = "aberta";
               const inner = (
                 <>
-                  <span className={`dot size-7 border-2 ${e.ok ? "border-ok bg-ok text-accent-ink" : e.agora ? "border-accent bg-accent text-accent-ink" : "border-line-2 text-muted"}`} aria-hidden>
-                    {e.ok ? "✓" : e.travada ? LockIcon : i + 1}
+                  <span className={`relative grid size-10 shrink-0 place-items-center rounded-xl ${e.agora ? "pulsa" : ""}`} aria-hidden style={e.travada ? { color: "var(--muted)", background: "var(--surface-2)" } : { color: visualEtapa(e.slug).cor, background: `color-mix(in srgb, ${visualEtapa(e.slug).cor} 16%, transparent)`, ["--cor" as string]: visualEtapa(e.slug).cor }}>
+                    {e.travada ? LockIcon : <Icone nome={visualEtapa(e.slug).icone} tamanho={20} />}
+                    {e.ok ? <span className="absolute -bottom-1 -right-1 grid size-[18px] place-items-center rounded-full border-2 border-bg bg-ok text-accent-ink"><Icone nome="check" tamanho={11} espessura={3} /></span> : null}
                   </span>
                   <span className="flex flex-1 flex-col gap-0.5">
                     <span className="text-[15px] font-semibold">{e.nome}</span>

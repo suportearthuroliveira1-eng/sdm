@@ -4,6 +4,8 @@ import type { ReactNode } from "react";
 import { db, schema } from "@/lib/db";
 import type { EtapaStatus } from "@/lib/domain/etapas";
 import { RolarAtual } from "./rolar-atual";
+import { Icone } from "@/components/ui/icone";
+import { visualEtapa } from "@/lib/domain/visual-etapas";
 
 /**
  * Cabeçalho de toda etapa: onde ela está (passo X de N, trilha clicável), o título
@@ -26,21 +28,22 @@ export async function EtapaHead({ pastaId, pastaNome, etapa, etapas, children }:
       <nav aria-label={`Passos de ${pastaNome}: ${feitas} de ${etapas.length} prontos`} className="flex flex-col gap-2">
         <div className="flex gap-1" aria-hidden>
           {etapas.map((e) => (
-            <span key={e.slug} className={`h-1.5 flex-1 rounded-full ${e.slug === etapa.slug ? "bg-accent" : e.ok ? "bg-ok" : "bg-line"}`} />
+            <span key={e.slug} className={`h-1.5 flex-1 rounded-full transition-colors ${e.slug === etapa.slug || e.ok ? "" : "bg-line"}`} style={e.slug === etapa.slug ? { background: visualEtapa(e.slug).cor } : e.ok ? { background: "var(--ok)" } : undefined} />
           ))}
         </div>
         <ol className="-mx-4 flex list-none gap-1.5 overflow-x-auto px-4 pb-1 [scrollbar-width:none] lg:mx-0 lg:flex-wrap lg:px-0">
-          {etapas.map((e, j) => {
+          {etapas.map((e) => {
             const atual = e.slug === etapa.slug;
             const cls = `flex min-h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3 text-xs font-semibold no-underline ${atual ? "border-accent bg-sel text-text" : e.ok ? "border-line bg-surface text-text-2" : "border-line text-muted"}`;
-            const marca = e.ok ? "✓" : e.travada ? "·" : `${j + 1}`;
+            const v = visualEtapa(e.slug);
+            const marca = e.ok ? <Icone nome="check" tamanho={14} espessura={2.4} className="text-ok" /> : <Icone nome={v.icone} tamanho={14} />;
             return (
-              <li key={e.slug}>
+              <li key={e.slug} style={{ color: e.travada && !atual ? undefined : v.cor }}>
                 {e.travada && !atual ? (
                   <span className={`${cls} opacity-60`} title={e.travada}>{marca} {e.nome}</span>
                 ) : (
-                  <Link href={hrefEtapaCliente(pastaId, e.slug)} aria-current={atual ? "step" : undefined} className={cls}>
-                    <span className={e.ok ? "text-ok" : ""} aria-hidden>{marca}</span> {e.nome}
+                  <Link href={hrefEtapaCliente(pastaId, e.slug)} aria-current={atual ? "step" : undefined} className={cls} style={atual ? { borderColor: v.cor } : undefined}>
+                    {marca} <span className="text-text">{e.nome}</span>
                   </Link>
                 )}
               </li>
@@ -49,8 +52,13 @@ export async function EtapaHead({ pastaId, pastaNome, etapa, etapas, children }:
         </ol>
         <RolarAtual />
       </nav>
-      <div className="flex flex-col gap-1">
+      <div className="flex items-center gap-3">
+        <span className="flutua grid size-12 shrink-0 place-items-center rounded-2xl" style={{ color: visualEtapa(etapa.slug).cor, background: `color-mix(in srgb, ${visualEtapa(etapa.slug).cor} 16%, transparent)` }}>
+          <Icone nome={visualEtapa(etapa.slug).icone} tamanho={26} />
+        </span>
         <h1 className="m-0 text-[24px] font-bold leading-tight lg:text-[30px]">{etapa.nome}</h1>
+      </div>
+      <div className="-mt-2 flex flex-col gap-1">
         {etapa.ok ? <span className="text-sm font-bold text-ok">Etapa feita. Pode rever ou mudar o que quiser.</span> : null}
       </div>
       <details open={!etapa.ok} className="group rounded-[14px] border border-line bg-surface-2">

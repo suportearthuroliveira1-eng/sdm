@@ -36,6 +36,7 @@ export const ETAPAS_PROPRIO: EtapaDef[] = [
   { slug: "ideias", nome: "Ideias de produto", aula: "B1.3", entenda: "A IA sugere 3 ideias ligadas ao que você conhece. Você escolhe entre opções explicadas, não numa tela em branco." },
   { slug: "ficha", nome: "Ficha do produto", aula: "B1.3", entenda: "Poucas perguntas sobre o que você sabe. A IA completa a ficha: público, dor, promessa, provas reais e objeções." },
   { slug: "oferta", nome: "Oferta", aula: "B1.5", entenda: "Nome, promessa, preço sugerido com o porquê, bônus reais e garantia." },
+  { slug: "mercado", nome: "Idioma e país", aula: "B1.5", entenda: "Até aqui tudo foi em português, pra você entender cada detalhe. Agora você escolhe pra quem vai vender: o país e o idioma. O ebook e a página saem nesse idioma, sempre com a tradução do lado." },
   { slug: "ebook", nome: "Ebook", aula: "B1.6", entenda: "Sumário, capítulos um por um (com tradução), capa e estilo, e o PDF final." },
   { slug: "revisao", nome: "Revisão", aula: "B1.7", entenda: "Um checklist antes de vender: entrega o que promete, sem promessa de cura ou ganho, nada copiado." },
   { slug: "pagina", nome: "Página de vendas", aula: "B2.2", entenda: "A IA escreve a página bloco por bloco, com o porquê de cada bloco. Você edita e aprova." },
@@ -70,6 +71,7 @@ export function pronta(slug: string, e: EstadoPasta): boolean {
     case "ideias": return Boolean(d(e, "ideia"));
     case "ficha": return Boolean(d(e, "ficha"));
     case "oferta": return Boolean((d(e, "oferta") as { aprovada?: boolean } | undefined)?.aprovada);
+    case "mercado": return Boolean(d(e, "mercado"));
     case "ebook": return e.temEbookPronto;
     case "revisao": return marcado(e, "revisao");
     case "pagina": return e.temPagina;

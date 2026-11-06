@@ -116,3 +116,10 @@ export const bioOut = z.object({
 });
 
 export const adaptarOut = z.object({ texto: bi, por_que_funciona: z.string(), checagem });
+
+/** Rascunho das respostas da ficha (a aluna confere e muda antes de gerar). */
+export const rascunhoFichaOut = z.object({
+  o_que_sabe: z.string().describe("Primeira pessoa, 2 a 4 frases, em português, só a partir do diagnóstico e da ideia. Sem inventar experiência, número ou certificado."),
+  nao_prometer: z.string().describe("O que não prometer nesse tema, separado por vírgula."),
+  dica: z.string().describe("Uma frase pra aluna: o que ela pode acrescentar com as palavras dela pra ficha ficar mais forte."),
+});

@@ -94,3 +94,11 @@
 ## ADR-018 · Região pdx1 e login conferido localmente
 - **Decisão:** `vercel.json` `regions: ["pdx1"]` (banco em us-west-2). `getClaims()` no lugar de `getUser()` (JWT ES256 com JWKS em cache), sem ida ao Supabase a cada pedido.
 - **Consequência:** sessão revogada em outro lugar vale até o JWT vencer (1 h); aluna desativada continua barrada pelo banco.
+
+## ADR-019 · Produto próprio em português primeiro e "A IA faz tudo"
+- **Contexto:** a dona pediu o produto em português e só depois escolher país e idioma; e um botão pra IA fazer o produto inteiro.
+- **Decisão:** até a etapa `mercado` (Idioma e país, depois da oferta) os agentes recebem `idioma_venda: "pt"`; ebook e página usam o idioma do país escolhido. Isso ajusta a regra 9 (conteúdo do comprador no idioma de venda) só pras etapas antes da escolha. "A IA faz tudo" é orquestrado pela tela (um passo por chamada, cada um < 60 s), idempotente, e aprova oferta e sumário em nome dela porque ela pediu; para na Revisão, que só ela faz (regra 4: nada publicado sem ela).
+- **Consequência:** trocar o país depois marca `mercadoMudou` e avisa pra refazer ebook/página.
+
+## ADR-020 · Tema editável (Admin → Aparência)
+- **Decisão:** setting `tema` validado (#RRGGBB, raio 6–28, animações) vira CSS variables no layout raiz; o resto das cores deriva com `color-mix`. Vazio = visual do protótipo (regra 8). Temas prontos passam AA (teste); o editor avisa quando uma cor quebra o contraste.

@@ -25,7 +25,7 @@ export function Toaster() {
     };
   }, []);
   return (
-    <div role="status" aria-live="polite" className="pointer-events-none fixed inset-x-0 bottom-24 z-50 flex justify-center px-5 lg:bottom-8">
+    <div role="status" aria-live="polite" className="pointer-events-none fixed inset-x-0 top-[max(env(safe-area-inset-top),14px)] z-[60] flex justify-center px-5">
       {msg ? (
         <div key={key} className="toast-in max-w-sm rounded-[14px] bg-text px-4 py-3 text-sm font-semibold text-accent-ink shadow-[0_8px_24px_rgba(0,0,0,0.4)]">
           {msg}

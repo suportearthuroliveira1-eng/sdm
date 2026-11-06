@@ -3,6 +3,7 @@ import { cache } from "react";
 import { CONFIG_PADRAO, type ConfigDiagnostico } from "@/lib/domain/diagnostico";
 import { configDiagnosticoSchema, fluxoSchema, textosAppSchema, type Fluxo, type TextosApp } from "@/lib/domain/config-schemas";
 import { getSetting } from "@/lib/server/settings";
+import { temaSchema, type Tema } from "@/lib/domain/tema";
 
 /** Configurações do app editáveis no admin. Valor inválido ou ausente → padrão do código. */
 export const configDiagnostico = cache(async (): Promise<ConfigDiagnostico> => {
@@ -21,4 +22,15 @@ export const textosApp = cache(async (): Promise<TextosApp> => {
   const v = await getSetting<unknown>("textos_app", {});
   const r = textosAppSchema.safeParse(v ?? {});
   return r.success ? r.data : textosAppSchema.parse({});
+});
+
+/** Aparência salva no admin (null = visual padrão do protótipo). Nunca derruba a página. */
+export const temaApp = cache(async (): Promise<Tema | null> => {
+  try {
+    const v = await getSetting<unknown>("tema", null);
+    const r = temaSchema.safeParse(v);
+    return r.success ? r.data : null;
+  } catch {
+    return null;
+  }
 });

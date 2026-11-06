@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useOptimistic, useState, useTransition, type ReactNode } from "react";
 import { Spinner } from "@/components/ux/submit-button";
 import { toast } from "@/components/ux/toaster";
+import { IaTrabalhando } from "@/components/ux/ia-trabalhando";
 import { marcarFeito, marcarItem } from "@/lib/actions/caminhos";
 
 /** Checklist com salvamento na hora; libera "marcar etapa como feita" quando tudo está marcado. */
@@ -78,8 +79,26 @@ export function MarcarFeito({ pastaId, etapa, feita, habilitado = true, proxima,
   );
 }
 
-/** Botão que chama a IA (ou outra ação demorada), mostra o carregamento e o erro amigável. */
-export function AcaoIa({ acao, children, className = "b1", ok, carregando = "A IA está trabalhando..." }: { acao: () => Promise<{ ok?: boolean; erro?: string }>; children: ReactNode; className?: string; ok?: string; carregando?: string }) {
+/** Botão que chama a IA (ou outra ação demorada): mostra o robô trabalhando, o progresso e o erro amigável. */
+export function AcaoIa({
+  acao,
+  children,
+  className = "b1",
+  ok,
+  carregando = "A IA está trabalhando",
+  passos,
+  duracao = 15,
+  semTela = false,
+}: {
+  acao: () => Promise<{ ok?: boolean; erro?: string }>;
+  children: ReactNode;
+  className?: string;
+  ok?: string;
+  carregando?: string;
+  passos?: string[];
+  duracao?: number;
+  semTela?: boolean;
+}) {
   const router = useRouter();
   const [pending, start] = useTransition();
   const [erro, setErro] = useState("");
@@ -110,13 +129,14 @@ export function AcaoIa({ acao, children, className = "b1", ok, carregando = "A I
       >
         {pending ? (
           <>
-            <Spinner /> {carregando}
+            <Spinner /> {carregando.replace(/\.+$/, "")}...
           </>
         ) : (
           children
         )}
       </button>
       {erro ? <span role="alert" className="text-sm text-danger">{erro}</span> : null}
+      {!semTela ? <IaTrabalhando ativo={pending} titulo={carregando.replace(/\.+$/, "")} passos={passos} duracao={duracao} /> : null}
     </div>
   );
 }

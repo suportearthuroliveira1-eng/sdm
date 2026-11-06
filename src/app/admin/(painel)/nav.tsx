@@ -13,6 +13,7 @@ export const ADMIN_SCREENS: { id: string; label: string; href?: string; fase?: s
   { id: "FLUXO", label: "Fluxo e textos", href: "/admin/fluxo", grupo: "Personalizar" },
   { id: "DIAG", label: "Diagnóstico e decisão", href: "/admin/diagnostico", grupo: "Personalizar" },
   { id: "AD04", label: "Inteligência artificial", href: "/admin/ia", grupo: "Personalizar" },
+  { id: "APAR", label: "Aparência", href: "/admin/aparencia", grupo: "Personalizar" },
   { id: "CHAVES", label: "Chaves e variáveis", href: "/admin/chaves", grupo: "Personalizar" },
   { id: "AD11", label: "Todas as configurações", href: "/admin/config", grupo: "Personalizar" },
   { id: "AD05", label: "Aulas", fase: "em breve", grupo: "Em breve" },

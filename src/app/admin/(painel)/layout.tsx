@@ -3,6 +3,9 @@ import { requireAdmin } from "@/lib/auth/admin";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { AdminNav } from "./nav";
 
+/** Ações com IA (ficha, oferta, capítulos) podem levar 10–40 s: sem isso a Vercel corta antes. */
+export const maxDuration = 60;
+
 export const metadata: Metadata = { title: { default: "Admin", template: "%s · Admin SDM" }, robots: { index: false } };
 
 export default async function AdminLayout({ children }: LayoutProps<"/admin">) {

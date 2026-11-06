@@ -5,7 +5,7 @@ import { notFound, redirect } from "next/navigation";
 import { EtapaHead, NavEtapas } from "@/components/etapas/comum";
 import { BaseAnuncios, Divulgar, Numeros, Perfil, Pixel } from "@/components/etapas/divulgacao";
 import { Ebook } from "@/components/etapas/ebook";
-import { ProprioEntenda, ProprioFicha, ProprioIdeias, ProprioOferta, ProprioPagina, ProprioPlataforma, ProprioRevisao, ProprioTeste } from "@/components/etapas/proprio";
+import { ProprioEntenda, ProprioFicha, ProprioIdeias, ProprioMercado, ProprioOferta, ProprioPagina, ProprioPlataforma, ProprioRevisao, ProprioTeste } from "@/components/etapas/proprio";
 import { Conta, SdmAfiliacao, SdmEntenda, SdmKit, SdmLink, SdmRegras } from "@/components/etapas/sdm";
 import { db, schema } from "@/lib/db";
 import type { CapEbook } from "@/lib/domain/temas";
@@ -52,6 +52,7 @@ export default async function Etapa({ params }: PageProps<"/app/p/[id]/[etapa]">
     if (slug === "ideias") corpo = <ProprioIdeias p={p} />;
     if (slug === "ficha") corpo = <ProprioFicha p={p} proxima={proxima} />;
     if (slug === "oferta") corpo = <ProprioOferta p={p} proxima={proxima} />;
+    if (slug === "mercado") corpo = <ProprioMercado p={p} proxima={proxima} />;
     if (slug === "revisao") corpo = <ProprioRevisao p={p} proxima={proxima} />;
     if (slug === "pagina") corpo = <ProprioPagina p={p} proxima={proxima} />;
     if (slug === "plataforma") corpo = <ProprioPlataforma p={p} proxima={proxima} />;

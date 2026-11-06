@@ -9,6 +9,7 @@ import { erroIa, rodar } from "@/lib/ai/run";
 import { requireStudent } from "@/lib/auth/session";
 import { db, schema } from "@/lib/db";
 import type { Resultado } from "@/lib/domain/diagnostico";
+import { INFO_MERCADO, MERCADOS } from "@/lib/domain/mercados";
 import { fetchSeguro } from "@/lib/server/safe-fetch";
 import { pastaDaAluna } from "@/lib/server/pastas";
 import { rateLimit } from "@/lib/server/rate-limit";
@@ -37,9 +38,42 @@ async function contextoAluna(studentId: string) {
   return { respostas: d?.respostas ?? {}, resultado: (d?.resultado as Resultado | null) ?? null };
 }
 
-const IDIOMA_PAIS: Record<string, string> = { eua: "en", uk: "en", latam: "es", esp: "es" };
+const IDIOMA_PAIS: Record<string, string> = { eua: "en", uk: "en", latam: "es", esp: "es", br: "pt" };
 export async function idiomaDaPasta(paisVenda: string | null) {
   return IDIOMA_PAIS[paisVenda ?? ""] ?? "en";
+}
+
+/**
+ * Produto próprio: até a etapa "Idioma e país", tudo sai em português (a aluna entende cada detalhe).
+ * Depois, no idioma do país escolhido. Afiliada e divulgação seguem o país da pasta.
+ */
+function mercadoDefinido(p: { tipo: string; dados: unknown }) {
+  return p.tipo !== "proprio" || Boolean((p.dados as { mercado?: unknown }).mercado);
+}
+async function idiomaTrabalho(p: { tipo: string; dados: unknown; paisVenda: string | null }) {
+  return mercadoDefinido(p) ? idiomaDaPasta(p.paisVenda) : "pt-BR (português do Brasil). ATENÇÃO: o país de venda ainda não foi escolhido, então TODOS os textos, inclusive os campos x, saem em português do Brasil (x igual a pt).";
+}
+const paisTrabalho = (p: { tipo: string; dados: unknown; paisVenda: string | null }) => (mercadoDefinido(p) ? p.paisVenda : "a definir depois (escreva pensando em quem fala português; o país vem depois)");
+
+
+/** B · Idioma e país: escolhe pra quem vende. Ebook e página saem nesse idioma. */
+export async function definirMercado(pastaId: string, pais: string, preco?: number | null): Promise<R> {
+  const k = z.enum(MERCADOS).safeParse(pais);
+  if (!k.success) return { erro: "Escolha um país." };
+  if (preco != null && !(Number.isFinite(preco) && preco > 0 && preco < 10000)) return { erro: "Preço inválido." };
+  const { pasta: p } = await pasta(pastaId);
+  const idioma = await idiomaDaPasta(k.data);
+  const antes = (p.dados as { mercado?: { pais?: string } }).mercado;
+  const oferta = (p.dados as { oferta?: { preco?: Record<string, unknown> } }).oferta;
+  const moeda = INFO_MERCADO[k.data].moeda.match(/\((\w+)\)/)?.[1] ?? "USD";
+  await db().update(schema.studentProducts).set({ paisVenda: k.data, paisConfirmado: true }).where(eq(schema.studentProducts.id, p.id));
+  await salvarDados(p.id, {
+    mercado: { pais: k.data, idioma, em: new Date().toISOString() },
+    ...(antes?.pais && antes.pais !== k.data ? { mercadoMudou: true } : {}),
+    ...(oferta ? { oferta: { ...oferta, preco: { ...(oferta.preco ?? {}), moeda, ...(preco ? { valor: preco } : {}) } } } : {}),
+  });
+  reval();
+  return { ok: true };
 }
 
 /** P1 · "+ Criar produto com a IA" e "Quero ser afiliada do SDM". */
@@ -66,7 +100,8 @@ export async function novaPasta(tipo: "sdm" | "proprio") {
     .returning({ id: schema.studentProducts.id });
   await db().update(schema.students).set({ produtoAtivo: p!.id, ...(student.caminho ? {} : { caminho: t === "sdm" ? "afiliada" : "produto" }) }).where(eq(schema.students.id, student.id));
   reval();
-  redirect(`/app/p/${p!.id}`);
+  // produto próprio abre na explicação (fluxograma + como a IA pensa) antes de qualquer coisa
+  redirect(t === "proprio" ? `/app/p/${p!.id}/entenda` : `/app/p/${p!.id}`);
 }
 
 /** Marca/desmarca uma etapa ou item como feito (Entenda, conta, regras, revisão...). */
@@ -122,7 +157,7 @@ export async function gerarIdeias(pastaId: string, outras: boolean): Promise<R> 
   try {
     const r = await rodar(
       "ideias",
-      { idioma_venda: await idiomaDaPasta(p.paisVenda), pais_venda: p.paisVenda, diagnostico: ctx.respostas, evitar: outras ? anteriores : [] },
+      { idioma_venda: await idiomaTrabalho(p), pais_venda: paisTrabalho(p), diagnostico: ctx.respostas, evitar: outras ? anteriores : [] },
       { studentId: student.id, semCache: outras },
     );
     await salvarDados(p.id, { ideias: r.saida.ideias.slice(0, 3), ideiasPorque: r.saida.por_que_funciona });
@@ -140,7 +175,7 @@ export async function avaliarIdeia(pastaId: string, _p: R | null, form: FormData
   const { pasta: p, student } = await pasta(pastaId);
   const ctx = await contextoAluna(student.id);
   try {
-    const r = await rodar("avaliar_ideia", { idioma_venda: await idiomaDaPasta(p.paisVenda), pais_venda: p.paisVenda, ideia_da_aluna: texto.data, diagnostico: ctx.respostas }, { studentId: student.id });
+    const r = await rodar("avaliar_ideia", { idioma_venda: await idiomaTrabalho(p), pais_venda: paisTrabalho(p), ideia_da_aluna: texto.data, diagnostico: ctx.respostas }, { studentId: student.id });
     const ideias = [r.saida.ideia_ajustada, ...((p.dados as { ideias?: unknown[] }).ideias ?? [])].slice(0, 4);
     await salvarDados(p.id, { ideias, avaliacao: { veredito: r.saida.veredito, explicacao: r.saida.explicacao, ideia: texto.data } });
     reval();
@@ -161,6 +196,34 @@ export async function escolherIdeia(pastaId: string, idx: number) {
   redirect(`/app/p/${p.id}/ficha`);
 }
 
+const respFicha = z.object({ o_que_sabe: z.string().max(1500), historia_real: z.string().max(1500), nao_prometer: z.string().max(800) }).partial();
+
+/** B2 · salva as respostas da ficha enquanto ela escreve (nunca pedir duas vezes). */
+export async function salvarRespostasFicha(pastaId: string, resp: Record<string, string>): Promise<R> {
+  const v = respFicha.safeParse(resp);
+  if (!v.success) return { erro: "Texto grande demais." };
+  const { pasta: p } = await pasta(pastaId);
+  const atual = ((p.dados as { fichaRespostas?: Record<string, string> }).fichaRespostas ?? {}) as Record<string, string>;
+  await salvarDados(p.id, { fichaRespostas: { ...atual, ...v.data } });
+  return { ok: true };
+}
+
+/** B2 · "A IA preenche pra mim": rascunho a partir do diagnóstico e da ideia (ela confere antes de gerar). */
+export async function rascunhoFicha(pastaId: string): Promise<R & { o_que_sabe?: string; nao_prometer?: string; dica?: string }> {
+  const { pasta: p, student } = await pasta(pastaId);
+  const ideia = (p.dados as { ideia?: unknown }).ideia;
+  if (!ideia) return { erro: "Escolha uma ideia antes (etapa Ideias)." };
+  const ctx = await contextoAluna(student.id);
+  try {
+    const r = await rodar("rascunho_ficha", { ideia, diagnostico: ctx.respostas }, { studentId: student.id, semCache: true });
+    const atual = ((p.dados as { fichaRespostas?: Record<string, string> }).fichaRespostas ?? {}) as Record<string, string>;
+    await salvarDados(p.id, { fichaRespostas: { ...atual, o_que_sabe: r.saida.o_que_sabe, nao_prometer: r.saida.nao_prometer } });
+    return { ok: true, ...r.saida };
+  } catch (e) {
+    return { erro: erroIa(e) };
+  }
+}
+
 /** B2 · perguntas guiadas → a IA completa a ficha. */
 export async function gerarFicha(pastaId: string, _p: R | null, form: FormData): Promise<R> {
   const { pasta: p, student } = await pasta(pastaId);
@@ -171,9 +234,9 @@ export async function gerarFicha(pastaId: string, _p: R | null, form: FormData):
     historia_real: String(form.get("historia_real") ?? "").slice(0, 1500),
     nao_prometer: String(form.get("nao_prometer") ?? "").slice(0, 800),
   };
-  if (resp.o_que_sabe.trim().length < 5) return { erro: "Conte um pouco do que você sabe sobre o assunto." };
+  if (resp.o_que_sabe.trim().length < 10) return { erro: "Conte em pelo menos uma frase o que você sabe do assunto (ou toque em \"A IA preenche pra mim\")." };
   try {
-    const r = await rodar("ficha", { idioma_venda: await idiomaDaPasta(p.paisVenda), pais_venda: p.paisVenda, ideia, respostas_da_aluna: resp }, { studentId: student.id, semCache: true });
+    const r = await rodar("ficha", { idioma_venda: await idiomaTrabalho(p), pais_venda: paisTrabalho(p), ideia, respostas_da_aluna: resp }, { studentId: student.id, semCache: true });
     await salvarDados(p.id, { ficha: r.saida, fichaRespostas: resp, fichaMudou: Boolean((p.dados as { ficha?: unknown }).ficha) });
     await db().update(schema.studentProducts).set({ nome: r.saida.nome }).where(eq(schema.studentProducts.id, p.id));
     reval();
@@ -202,7 +265,7 @@ export async function gerarOferta(pastaId: string, outra: boolean): Promise<R> {
   const ficha = (p.dados as { ficha?: unknown }).ficha;
   if (!ficha) return { erro: "Complete a ficha do produto antes." };
   try {
-    const r = await rodar("oferta", { idioma_venda: await idiomaDaPasta(p.paisVenda), pais_venda: p.paisVenda, ficha }, { studentId: student.id, semCache: outra });
+    const r = await rodar("oferta", { idioma_venda: await idiomaTrabalho(p), pais_venda: paisTrabalho(p), ficha }, { studentId: student.id, semCache: outra });
     await salvarDados(p.id, { oferta: { ...r.saida, aprovada: false } });
     reval();
     return { ok: true };

@@ -41,7 +41,7 @@ export function SdmAfiliacao({ p, proxima }: { p: P; proxima: string }) {
     return (
       <>
         <p className="tx">Toque no botão e o time recebe o seu pedido. Quando aprovar, o seu link aparece aqui e você recebe um aviso.</p>
-        <AcaoIa acao={pedirAfiliacao.bind(null, p.id)} ok="Pedido enviado pro time" carregando="Enviando o pedido...">Quero ser afiliada</AcaoIa>
+        <AcaoIa acao={pedirAfiliacao.bind(null, p.id)} ok="Pedido enviado pro time" carregando="Enviando o pedido..." semTela>Quero ser afiliada</AcaoIa>
       </>
     );
   }
@@ -57,7 +57,7 @@ export function SdmAfiliacao({ p, proxima }: { p: P; proxima: string }) {
     return (
       <>
         <div className="warn">Pedido recusado. Motivo: {af.motivo ?? "[o time vai te explicar]"}</div>
-        <AcaoIa acao={pedirAfiliacao.bind(null, p.id)} className="b2" ok="Pedido enviado de novo">Pedir de novo</AcaoIa>
+        <AcaoIa acao={pedirAfiliacao.bind(null, p.id)} className="b2" ok="Pedido enviado de novo" semTela>Pedir de novo</AcaoIa>
       </>
     );
   }
@@ -126,7 +126,7 @@ export async function SdmKit({ p, proxima }: { p: P; proxima: string }) {
               <div className="flex flex-wrap gap-2">
                 {pc.texto ? <CopyButton text={pc.texto} label="Copiar texto" /> : null}
               </div>
-              {pc.texto ? <AcaoIa acao={adaptarPeca.bind(null, p.id, pc.id, false)} className="b2" ok="Adaptado">Adaptar pro meu país com a IA</AcaoIa> : null}
+              {pc.texto ? <AcaoIa acao={adaptarPeca.bind(null, p.id, pc.id, false)} className="b2" ok="Adaptado" carregando="A IA está adaptando a peça" passos={["Lendo a peça do time", "Ajustando pro seu país e idioma", "Mantendo a mesma promessa", "Conferindo as regras"]} duracao={10}>Adaptar pro meu país com a IA</AcaoIa> : null}
               {minhas.map((m) => {
                 const t = (m.conteudo as { texto: { x: string; pt: string } }).texto;
                 return (
@@ -136,7 +136,7 @@ export async function SdmKit({ p, proxima }: { p: P; proxima: string }) {
                   </div>
                 );
               })}
-              {minhas.length ? <AcaoIa acao={adaptarPeca.bind(null, p.id, pc.id, true)} className="b3 self-start" ok="Variação pronta">Pedir variação</AcaoIa> : null}
+              {minhas.length ? <AcaoIa acao={adaptarPeca.bind(null, p.id, pc.id, true)} className="b3 self-start" ok="Variação pronta" carregando="A IA está criando uma variação" passos={["Lendo a peça", "Mudando o jeito de dizer", "Conferindo as regras"]} duracao={10}>Pedir variação</AcaoIa> : null}
             </article>
           );
         })}
