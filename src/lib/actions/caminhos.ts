@@ -9,7 +9,9 @@ import { erroIa, rodar } from "@/lib/ai/run";
 import { requireStudent } from "@/lib/auth/session";
 import { db, schema } from "@/lib/db";
 import type { Resultado } from "@/lib/domain/diagnostico";
-import { INFO_MERCADO, MERCADOS } from "@/lib/domain/mercados";
+import { MERCADOS } from "@/lib/domain/mercados";
+import { checarPreco, faixa, moedaDoPais, porqueDoPreco, type Moeda } from "@/lib/domain/precos";
+import { tabelaPrecos } from "@/lib/server/config-app";
 import { fetchSeguro } from "@/lib/server/safe-fetch";
 import { pastaDaAluna } from "@/lib/server/pastas";
 import { rateLimit } from "@/lib/server/rate-limit";
@@ -60,17 +62,25 @@ const paisTrabalho = (p: { tipo: string; dados: unknown; paisVenda: string | nul
 export async function definirMercado(pastaId: string, pais: string, preco?: number | null): Promise<R> {
   const k = z.enum(MERCADOS).safeParse(pais);
   if (!k.success) return { erro: "Escolha um país." };
-  if (preco != null && !(Number.isFinite(preco) && preco > 0 && preco < 10000)) return { erro: "Preço inválido." };
+  const moedaNova = moedaDoPais(k.data);
+  const tabela = await tabelaPrecos();
+  if (preco != null) {
+    const e = checarPreco(preco, moedaNova, tabela);
+    if (e) return { erro: e };
+  }
   const { pasta: p } = await pasta(pastaId);
   const idioma = await idiomaDaPasta(k.data);
   const antes = (p.dados as { mercado?: { pais?: string } }).mercado;
   const oferta = (p.dados as { oferta?: { preco?: Record<string, unknown> } }).oferta;
-  const moeda = INFO_MERCADO[k.data].moeda.match(/\((\w+)\)/)?.[1] ?? "USD";
+  const moeda = moedaNova;
+  const precoAntes = oferta?.preco as { valor?: number; moeda?: string } | undefined;
+  // trocou de moeda e não digitou preço: usa o sugerido da moeda nova (não converte número por conta)
+  const valorFinal = preco ?? (precoAntes?.moeda === moeda && precoAntes?.valor ? precoAntes.valor : faixa(moeda, tabela).sugerido);
   await db().update(schema.studentProducts).set({ paisVenda: k.data, paisConfirmado: true }).where(eq(schema.studentProducts.id, p.id));
   await salvarDados(p.id, {
     mercado: { pais: k.data, idioma, em: new Date().toISOString() },
     ...(antes?.pais && antes.pais !== k.data ? { mercadoMudou: true } : {}),
-    ...(oferta ? { oferta: { ...oferta, preco: { ...(oferta.preco ?? {}), moeda, ...(preco ? { valor: preco } : {}) } } } : {}),
+    ...(oferta ? { oferta: { ...oferta, preco: { ...(oferta.preco ?? {}), moeda, valor: valorFinal, porque: porqueDoPreco(moeda, faixa(moeda, tabela)) } } } : {}),
   });
   reval();
   return { ok: true };
@@ -266,7 +276,10 @@ export async function gerarOferta(pastaId: string, outra: boolean): Promise<R> {
   if (!ficha) return { erro: "Complete a ficha do produto antes." };
   try {
     const r = await rodar("oferta", { idioma_venda: await idiomaTrabalho(p), pais_venda: paisTrabalho(p), ficha }, { studentId: student.id, semCache: outra });
-    await salvarDados(p.id, { oferta: { ...r.saida, aprovada: false } });
+    // preço sai da regra (sugestão de entrada + teto), não do chute da IA
+    const moeda = moedaDoPais(p.paisVenda);
+    const f = faixa(moeda, await tabelaPrecos());
+    await salvarDados(p.id, { oferta: { ...r.saida, preco: { valor: f.sugerido, moeda, porque: porqueDoPreco(moeda, f) }, aprovada: false } });
     reval();
     return { ok: true };
   } catch (e) {
@@ -281,6 +294,11 @@ export async function aprovarOferta(pastaId: string, _p: R | null, form: FormDat
   const nome = String(form.get("nome") ?? "").trim();
   const preco = Number(String(form.get("preco") ?? "").replace(",", "."));
   const promessa = String(form.get("promessa") ?? "").trim();
+  const moedaOferta = ((o.preco as { moeda?: string } | undefined)?.moeda ?? moedaDoPais(p.paisVenda)) as Moeda;
+  if (String(form.get("preco") ?? "").trim()) {
+    const e = checarPreco(preco, moedaOferta, await tabelaPrecos());
+    if (e) return { erro: e };
+  }
   const novo = {
     ...o,
     nome: { ...(o.nome as object), x: nome || (o.nome as { x: string }).x },

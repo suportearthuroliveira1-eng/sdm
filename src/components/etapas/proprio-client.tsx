@@ -9,6 +9,8 @@ import { toast } from "@/components/ux/toaster";
 import { IaTrabalhando } from "@/components/ux/ia-trabalhando";
 import { avaliarIdeia, definirMercado, editarBloco, editarFicha, escolherIdeia, gerarFicha, rascunhoFicha, salvarRespostasFicha } from "@/lib/actions/caminhos";
 import { Icone } from "@/components/ui/icone";
+import { CampoPreco } from "./campo-preco";
+import type { FaixaPreco, Moeda } from "@/lib/domain/precos";
 
 type R = { ok?: boolean; erro?: string };
 type Bi = { x: string; pt: string };
@@ -135,7 +137,7 @@ function CampoFicha({ pastaId, campo, label, x, pt }: { pastaId: string; campo: 
   );
 }
 
-export function OfertaForm({ acao, nome, nomePt, promessa, promessaPt, preco, aprovada, proxima }: { pastaId: string; acao: (p: R | null, f: FormData) => Promise<R>; nome: string; nomePt: string; promessa: string; promessaPt: string; preco: number; aprovada: boolean; proxima: string }) {
+export function OfertaForm({ acao, nome, nomePt, promessa, promessaPt, preco, aprovada, proxima, moeda, faixa }: { pastaId: string; acao: (p: R | null, f: FormData) => Promise<R>; nome: string; nomePt: string; promessa: string; promessaPt: string; preco: number; aprovada: boolean; proxima: string; moeda: Moeda; faixa: FaixaPreco }) {
   const router = useRouter();
   const [st, action] = useActionState(async (p: R | null, f: FormData) => {
     const r = await acao(p, f);
@@ -154,8 +156,8 @@ export function OfertaForm({ acao, nome, nomePt, promessa, promessaPt, preco, ap
       <label htmlFor="of-prom" className="lb">Promessa</label>
       <textarea id="of-prom" name="promessa" defaultValue={promessa} className="ta min-h-16" />
       {promessaPt !== promessa ? <span className="mu">{promessaPt}</span> : null}
-      <label htmlFor="of-preco" className="lb">Preço</label>
-      <input id="of-preco" name="preco" inputMode="decimal" defaultValue={preco > 0 ? preco : ""} placeholder="ex.: 9" className="in w-40" />
+      <CampoPreco id="of-preco" name="preco" moeda={moeda} faixa={faixa} inicial={preco} />
+      <span className="mu">A moeda segue o país de venda. Se mudar o país no próximo passo, o preço vem pra moeda nova.</span>
       {st?.erro ? <span role="alert" className="text-sm text-danger">{st.erro}</span> : null}
       <SubmitButton pendente="Aprovando...">{aprovada ? "Salvar e seguir" : "Aprovar a oferta"}</SubmitButton>
     </form>
@@ -229,12 +231,12 @@ export function PaginaEditor({ itemId, status, blocos, formato }: { itemId: stri
 }
 
 /** B · Idioma e país: escolher e confirmar (salva e segue). */
-export function MercadoEscolha({ pastaId, atual, sugerido, proxima, info, preco }: { pastaId: string; atual: string | null; sugerido: string | null; proxima: string; info: Record<string, { nome: string; idioma: string; moeda: string; porque: string }>; preco: number | null }) {
+export function MercadoEscolha({ pastaId, atual, sugerido, proxima, info, preco, precos, moedaPais, moedaAtual }: { pastaId: string; atual: string | null; sugerido: string | null; proxima: string; info: Record<string, { nome: string; idioma: string; moeda: string; porque: string }>; preco: number | null; precos: Record<Moeda, FaixaPreco>; moedaPais: Record<string, Moeda>; moedaAtual: Moeda | null }) {
   const router = useRouter();
   const [sel, setSel] = useState<string | null>(atual ?? sugerido);
   const [pend, start] = useTransition();
   const [erro, setErro] = useState("");
-  const [valor, setValor] = useState(preco && preco > 0 ? String(preco) : "");
+  const [valor, setValor] = useState("");
   const confirmar = () =>
     start(async () => {
       if (!sel) return;
@@ -263,10 +265,9 @@ export function MercadoEscolha({ pastaId, atual, sugerido, proxima, info, preco 
         })}
       </div>
       {sel ? (
-        <div className="surge cd gap-1.5">
-          <label htmlFor="mk-preco" className="lb">Preço do ebook em {info[sel]?.moeda} <span className="font-normal text-muted">(opcional, dá pra mudar depois)</span></label>
-          <input id="mk-preco" inputMode="decimal" value={valor} onChange={(e) => setValor(e.target.value)} placeholder="ex.: 9" className="in w-40" />
-          <span className="mu">Ebook curto costuma ter preço de entrada. Você decide: a IA não inventa número.</span>
+        <div key={sel} className="surge cd gap-1.5">
+          <CampoPreco id="mk-preco" moeda={moedaPais[sel] ?? "USD"} faixa={precos[moedaPais[sel] ?? "USD"]} inicial={moedaAtual === (moedaPais[sel] ?? "USD") ? preco : null} onChange={setValor} />
+          <span className="mu">Ebook curto vende melhor com preço de entrada. Dá pra mudar depois.</span>
         </div>
       ) : null}
       {erro ? <span role="alert" className="text-sm text-danger">{erro}</span> : null}

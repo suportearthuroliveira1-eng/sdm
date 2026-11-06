@@ -19,7 +19,7 @@ const BASE: Etapa[] = [
 ];
 
 /** "A IA faz tudo": confirma, roda passo a passo com progresso real e para antes da Revisão. */
-export function PilotoAutomatico({ pastaId, revisaoHref }: { pastaId: string; revisaoHref: string }) {
+export function PilotoAutomatico({ pastaId, revisaoHref, titulo = "A IA faz tudo pra mim", descricao = "Ela escolhe a ideia, completa a ficha, monta a oferta e escreve o ebook. Você revisa no final.", continuar = false }: { pastaId: string; revisaoHref: string; titulo?: string; descricao?: string; continuar?: boolean }) {
   const router = useRouter();
   const [fase, setFase] = useState<"fechado" | "confirmar" | "rodando" | "erro" | "pronto">("fechado");
   const [etapas, setEtapas] = useState<Etapa[]>(BASE);
@@ -46,6 +46,7 @@ export function PilotoAutomatico({ pastaId, revisaoHref }: { pastaId: string; re
         setEtapas(l);
       }
     }
+    await pilotoPasso(pastaId, "fim").catch(() => null);
     setAtual(l.length);
     setFase("pronto");
     router.refresh();
@@ -58,9 +59,9 @@ export function PilotoAutomatico({ pastaId, revisaoHref }: { pastaId: string; re
       <button type="button" onClick={() => setFase("confirmar")} className="press surge group relative flex w-full items-center gap-4 overflow-hidden rounded-2xl border-[1.5px] border-c-amber/70 p-4 text-left text-text" style={{ background: "linear-gradient(135deg, color-mix(in srgb, var(--c-amber) 18%, var(--surface)), color-mix(in srgb, var(--c-pink) 14%, var(--surface)))" }}>
         <span className="flutua grid size-14 shrink-0 place-items-center rounded-2xl bg-c-amber text-accent-ink"><Icone nome="varinha" tamanho={28} /></span>
         <span className="flex flex-col gap-0.5">
-          <span className="text-[17px] font-bold">A IA faz tudo pra mim</span>
-          <span className="text-sm text-text-2">Ela escolhe a ideia, completa a ficha, monta a oferta e escreve o ebook. Você revisa no final.</span>
-          <span className="text-xs font-bold text-c-amber">Leva uns 2 a 3 minutos</span>
+          <span className="text-[17px] font-bold">{titulo}</span>
+          <span className="text-sm text-text-2">{descricao}</span>
+          <span className="text-xs font-bold text-c-amber">{continuar ? "Ela continua de onde parou" : "Leva uns 2 a 3 minutos"}</span>
         </span>
       </button>
 
@@ -72,8 +73,8 @@ export function PilotoAutomatico({ pastaId, revisaoHref }: { pastaId: string; re
               <>
                 <div className="flex flex-col items-center gap-2 text-center">
                   <Robo tamanho={96} falando={false} />
-                  <h2 className="m-0 text-xl font-bold">Posso montar o seu produto?</h2>
-                  <p className="mu m-0 text-sm">Vou fazer estes passos, um de cada vez. Tudo fica salvo e você pode mudar qualquer coisa depois.</p>
+                  <h2 className="m-0 text-xl font-bold">{continuar ? "Posso continuar de onde parei?" : "Posso montar o seu produto?"}</h2>
+                  <p className="mu m-0 text-sm">Vou fazer estes passos, um de cada vez. O que já está pronto eu pulo. Tudo fica salvo e você pode mudar qualquer coisa depois.</p>
                 </div>
                 <ol className="m-0 flex list-none flex-col gap-1.5 p-0">
                   {[...BASE.slice(1).map((e) => e.nome), "Capítulos do ebook"].map((t, i) => (

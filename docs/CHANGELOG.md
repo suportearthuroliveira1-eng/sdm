@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-06 · Preço sugerido com moeda, A IA escolhe tudo e voltar de onde parou
+- **Preço**: regra por moeda (`src/lib/domain/precos.ts`: USD/EUR US$ 9 · faixa 7–17 · teto 27; GBP £ 8 · 6–15 · 24; BRL R$ 27 · 19–47 · 67), editável no admin (setting `precos_ebook`). A oferta usa o sugerido (não o número da IA); `CampoPreco` mostra símbolo, "Usar o sugerido", faixa e teto; preço acima do teto é recusado na tela e no servidor (oferta e Idioma e país). Trocar de país troca a moeda e volta pro sugerido.
+- **A IA escolhe por mim**: no ebook, botão que cria o sumário com 5 capítulos, ~10 páginas, tom amiga ("Prefiro escolher eu mesma" abre as opções, já com a sugestão marcada). No painel do produto: "Deixe a IA fazer o resto" (piloto pula o que já está feito).
+- **Voltar de onde parou**: `students.ultima_tela` (migration 0009) gravada em toda etapa e aula; o Início mostra "Você parou aqui · Continuar", ou o próximo passo vira "Continue de onde parou". Se a IA estava montando o produto e ela saiu (`dados.piloto` sem `fim`), Início e painel mostram "A IA parou no meio: continuar".
+- Testes: 53 unitários (preço: moeda, teto, faixa).
+
 ## 2026-11-06 · Zerar aluna
 - `src/lib/server/zerar.ts` (`zerarAluna`): apaga pastas (e tudo dentro), diagnósticos, aulas vistas, conversas, ebooks, itens, imagens (banco + Storage), favoritos, avisos, semanas e chamados; volta os campos do primeiro acesso pra vazio. Mantém login, e-mail, nome, acessos, papel de admin e custo da IA.
 - Admin → Alunas → ficha (AD03): resumo do progresso e "Zerar a aluna" (só papel admin, digitando ZERAR, com auditoria `aluna.zerar`).

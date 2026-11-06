@@ -8,6 +8,8 @@ import { minhasPastas } from "@/lib/server/pastas";
 import { proximoPasso } from "@/lib/server/proximo";
 import { configFluxo } from "@/lib/server/config-app";
 import { passoPendente } from "@/lib/domain/onboarding";
+import { ondeParouValido } from "@/lib/server/onde-parou";
+import { Icone } from "@/components/ui/icone";
 
 export const metadata: Metadata = { title: "Início" };
 
@@ -16,6 +18,13 @@ export default async function Inicio() {
   const [j, pastas, fluxo] = await Promise.all([getJornada(), minhasPastas(), configFluxo()]);
   if (!j.student.boasVindasEm && !fluxo.pularBoasVindas) redirect("/app/a04"); // primeira vez: boas-vindas
   const prox = proximoPasso(j, pastas, passoPendente(j.student, fluxo));
+  const parou = ondeParouValido(j.student.ultimaTela, prox.href);
+  // parou exatamente no próximo passo: o cartão vira "continue de onde parou"
+  const continuar = !parou && (j.student.ultimaTela as { path?: string } | null)?.path === prox.href;
+  const pilotoParado = pastas.find((p) => {
+    const pil = (p.estado.dados as { piloto?: { em?: string; fim?: string | null } }).piloto;
+    return p.tipo === "proprio" && pil?.em && !pil.fim && !p.estado.temEbookPronto;
+  });
   const aulaExiste = prox.aula && j.modulos.some((m) => m.aulas.some((a) => a.id === prox.aula));
   const principal = prox.pasta ?? pastas.find((p) => p.tipo !== "vitrine");
   const pct = j.total ? Math.round((j.vistas / j.total) * 100) : 0;
@@ -25,13 +34,35 @@ export default async function Inicio() {
       <PageTitle k={`Oi, ${j.student.nome.split(/\s+/)[0]}`}>Seu caminho</PageTitle>
       <div className="grid gap-3.5 lg:grid-cols-[1.4fr_1fr]">
         <div className="flex flex-col gap-3.5">
+          {pilotoParado ? (
+            <Link href={`/app/p/${pilotoParado.id}`} className="surge flex items-center gap-3 rounded-2xl border border-c-amber/60 bg-[color-mix(in_srgb,var(--c-amber)_10%,var(--surface))] p-4 text-text no-underline">
+              <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-c-amber text-accent-ink"><Icone nome="varinha" tamanho={22} /></span>
+              <span className="flex flex-1 flex-col">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-c-amber">A IA parou no meio</span>
+                <span className="font-bold leading-snug">{pilotoParado.nome}: toque pra ela terminar</span>
+              </span>
+              <span className="shrink-0 text-sm font-bold text-c-amber">Continuar →</span>
+            </Link>
+          ) : null}
+
+          {parou ? (
+            <Link href={parou.path} className="surge flex items-center gap-3 rounded-2xl border border-c-sky/50 bg-[color-mix(in_srgb,var(--c-sky)_10%,var(--surface))] p-4 text-text no-underline transition-colors hover:border-c-sky">
+              <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-c-sky/20 text-c-sky"><Icone nome={parou.tipo === "aula" ? "play" : "passos"} tamanho={22} /></span>
+              <span className="flex flex-1 flex-col">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-c-sky">Você parou aqui</span>
+                <span className="font-bold leading-snug">{parou.titulo}</span>
+              </span>
+              <span className="shrink-0 text-sm font-bold text-c-sky">Continuar →</span>
+            </Link>
+          ) : null}
+
           {/* I1 · próximo passo */}
           <section className="flex flex-col gap-3 rounded-2xl border border-accent bg-sel p-4" aria-labelledby="prox">
-            <span className="kk">SEU PRÓXIMO PASSO</span>
+            <span className="kk">{continuar ? "CONTINUE DE ONDE PAROU" : "SEU PRÓXIMO PASSO"}</span>
             <h2 id="prox" className="m-0 text-[19px] font-bold leading-snug">{prox.titulo}</h2>
             {prox.descricao ? <p className="tx m-0">{prox.descricao}</p> : null}
             <div className="flex flex-wrap gap-2">
-              <Link href={prox.href} className="b1 w-auto flex-1 px-6 no-underline">Fazer agora</Link>
+              <Link href={prox.href} className="b1 w-auto flex-1 px-6 no-underline">{continuar ? "Continuar" : "Fazer agora"}</Link>
               {aulaExiste ? <Link href={`/app/l02/${encodeURIComponent(prox.aula!)}`} className="b2 no-underline">Ver a aula antes</Link> : null}
             </div>
           </section>

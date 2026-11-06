@@ -6,7 +6,7 @@ import { z } from "zod";
 import { AGENTES, type AgenteKey } from "@/lib/ai/agentes";
 import { requireAdmin } from "@/lib/auth/admin";
 import { db, schema } from "@/lib/db";
-import { configDiagnosticoSchema, fluxoSchema, textosAppSchema } from "@/lib/domain/config-schemas";
+import { configDiagnosticoSchema, fluxoSchema, precosSchema, textosAppSchema } from "@/lib/domain/config-schemas";
 import { audit } from "@/lib/server/audit";
 import { temaSchema } from "@/lib/domain/tema";
 
@@ -30,6 +30,7 @@ const CONFIGS = {
   quota_ia_dia: { schema: z.number().int().min(1).max(5000), grupo: "ia", descricao: "Usos de IA por aluna por dia." },
   quota_professora_dia: { schema: z.number().int().min(1).max(1000), grupo: "ia", descricao: "Perguntas à Professora por aluna por dia." },
   cadastro_aberto: { schema: z.boolean(), grupo: "acesso", descricao: "Qualquer pessoa pode criar conta." },
+  precos_ebook: { schema: precosSchema, grupo: "personalizar", descricao: "Preço do ebook por moeda: sugerido, faixa (mín/máx) e teto (acima disso o app recusa)." },
   tema: { schema: temaSchema, grupo: "personalizar", descricao: "Cores, raio e animações do app (Admin → Aparência)." },
 } as const;
 export type ConfigKey = keyof typeof CONFIGS;

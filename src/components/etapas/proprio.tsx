@@ -6,7 +6,9 @@ import { iaLigada } from "@/lib/ai/run";
 import { AcaoIa, Checklist, MarcarFeito } from "./interativos";
 import { AvaliarIdeia, EscolherIdeia, FichaEditavel, FichaPerguntas, MercadoEscolha, OfertaForm, PaginaEditor } from "./proprio-client";
 import { Icone } from "@/components/ui/icone";
-import { INFO_MERCADO } from "@/lib/domain/mercados";
+import { INFO_MERCADO, MERCADOS } from "@/lib/domain/mercados";
+import { faixa, fmtPreco, moedaDoPais, PRECOS_PADRAO, type Moeda } from "@/lib/domain/precos";
+import { tabelaPrecos } from "@/lib/server/config-app";
 import { LinkTester } from "./link-tester";
 import { BarraAcao, PassoAPasso } from "./comum";
 import { ETAPAS_PROPRIO } from "@/lib/domain/etapas";
@@ -160,18 +162,23 @@ export async function ProprioFicha({ p, proxima }: { p: P; proxima: string }) {
 }
 
 /** B3 · oferta: nome, promessa, preço com o porquê, bônus reais, garantia. */
-export function ProprioOferta({ p, proxima }: { p: P; proxima: string }) {
+export async function ProprioOferta({ p, proxima }: { p: P; proxima: string }) {
   const o = p.dados.oferta as { nome: Bi; promessa: Bi; preco: { valor: number; moeda: string; porque: string }; bonus: { titulo: Bi; o_que_e: string }[]; garantia: { texto: Bi; porque: string }; por_que_funciona: string; aprovada?: boolean } | undefined;
+  const tabela = await tabelaPrecos();
   if (!o) return <AcaoIa acao={gerarOferta.bind(null, p.id, false)} carregando="A IA está montando a oferta" passos={["Lendo a ficha do produto", "Pensando num nome e numa promessa honesta", "Sugerindo um preço com o porquê", "Escolhendo bônus e garantia reais"]} duracao={15}>Montar a oferta com a IA</AcaoIa>;
   return (
     <>
       <div className="grid gap-2.5 lg:grid-cols-2">
-        <div className="cd gap-1"><span className="kk">PREÇO SUGERIDO</span><span className="text-xl font-bold">{o.preco.valor > 0 ? `${o.preco.moeda} ${o.preco.valor}` : "[valor]"}</span><span className="mu">{o.preco.porque}</span></div>
+        {(() => {
+          const m = (["USD", "EUR", "GBP", "BRL"].includes(o.preco.moeda) ? o.preco.moeda : moedaDoPais(p.paisVenda)) as Moeda;
+          const f = faixa(m, tabela);
+          return <div className="cd gap-1"><span className="kk">PREÇO SUGERIDO</span><span className="text-xl font-bold">{fmtPreco(o.preco.valor > 0 ? o.preco.valor : f.sugerido, m)}</span><span className="mu">Faixa {fmtPreco(f.min, m)} a {fmtPreco(f.max, m)}. Preço de entrada: fácil de comprar no impulso. Nunca acima de {fmtPreco(f.teto, m)}.</span></div>;
+        })()}
         <div className="cd gap-1"><span className="kk">GARANTIA</span><span className="tx">{o.garantia.texto.x}</span><span className="mu">{o.garantia.texto.pt !== o.garantia.texto.x ? `${o.garantia.texto.pt} · ` : ""}{o.garantia.porque}</span></div>
       </div>
       {o.bonus.length ? <div className="cd gap-1.5"><span className="kk">BÔNUS</span>{o.bonus.map((b) => <span key={b.titulo.x} className="tx">• <b>{b.titulo.x}</b>{b.titulo.pt !== b.titulo.x ? ` (${b.titulo.pt})` : ""}: {b.o_que_e}</span>)}</div> : null}
       <div className="cd"><span className="kk">POR QUE FUNCIONA</span><span className="tx">{o.por_que_funciona}</span></div>
-      <OfertaForm pastaId={p.id} acao={aprovarOferta.bind(null, p.id)} nome={o.nome.x} nomePt={o.nome.pt} promessa={o.promessa.x} promessaPt={o.promessa.pt} preco={o.preco.valor} aprovada={Boolean(o.aprovada)} proxima={proxima} />
+      <OfertaForm pastaId={p.id} acao={aprovarOferta.bind(null, p.id)} nome={o.nome.x} nomePt={o.nome.pt} promessa={o.promessa.x} promessaPt={o.promessa.pt} preco={o.preco.valor} aprovada={Boolean(o.aprovada)} proxima={proxima} moeda={(["USD", "EUR", "GBP", "BRL"].includes(o.preco.moeda) ? o.preco.moeda : moedaDoPais(p.paisVenda)) as Moeda} faixa={faixa((["USD", "EUR", "GBP", "BRL"].includes(o.preco.moeda) ? o.preco.moeda : moedaDoPais(p.paisVenda)) as Moeda, tabela)} />
       <AcaoIa acao={gerarOferta.bind(null, p.id, true)} className="b2" carregando="Montando outra versão da oferta" passos={["Lendo a ficha", "Mudando o ângulo da oferta", "Conferindo as regras"]} duracao={15}>Pedir outra versão</AcaoIa>
     </>
   );
@@ -253,6 +260,10 @@ export async function ProprioMercado({ p, proxima }: { p: P; proxima: string }) 
     return { resultado: (d?.resultado as { pais_venda?: { k?: string } } | null) ?? null };
   })();
   const atual = (p.dados.mercado as { pais?: string } | undefined)?.pais ?? null;
+  const tabela = await tabelaPrecos();
+  const precos = Object.fromEntries((Object.keys(PRECOS_PADRAO) as Moeda[]).map((m) => [m, faixa(m, tabela)])) as Record<Moeda, ReturnType<typeof faixa>>;
+  const moedaPais = Object.fromEntries(MERCADOS.map((k) => [k, moedaDoPais(k)])) as Record<string, Moeda>;
+  const precoAtual = (p.dados.oferta as { preco?: { valor?: number; moeda?: string } } | undefined)?.preco;
   return (
     <>
       <div className="cd flex-row items-start gap-3">
@@ -260,7 +271,7 @@ export async function ProprioMercado({ p, proxima }: { p: P; proxima: string }) 
         <span className="tx">A ideia, a ficha e a oferta ficaram em português pra você entender tudo. A partir daqui, o ebook, a página e os anúncios saem no idioma de quem compra, sempre com a tradução do lado.</span>
       </div>
       {(p.dados as { mercadoMudou?: boolean }).mercadoMudou ? <div className="warn">Você trocou o país. Se o ebook ou a página já estavam prontos, refaça pra sair no idioma novo.</div> : null}
-      <MercadoEscolha pastaId={p.id} atual={atual} sugerido={resultado?.pais_venda?.k ?? p.paisVenda} proxima={proxima} info={INFO_MERCADO} preco={(p.dados.oferta as { preco?: { valor?: number } } | undefined)?.preco?.valor ?? null} />
+      <MercadoEscolha pastaId={p.id} atual={atual} sugerido={resultado?.pais_venda?.k ?? p.paisVenda} proxima={proxima} info={INFO_MERCADO} preco={precoAtual?.valor ?? null} precos={precos} moedaPais={moedaPais} moedaAtual={(precoAtual?.moeda as Moeda | undefined) ?? null} />
     </>
   );
 }

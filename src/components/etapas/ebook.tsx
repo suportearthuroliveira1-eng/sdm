@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { useActionState, useState, useTransition } from "react";
 import { Spinner, SubmitButton } from "@/components/ux/submit-button";
 import { toast } from "@/components/ux/toaster";
+import { IaTrabalhando } from "@/components/ux/ia-trabalhando";
+import { Icone } from "@/components/ui/icone";
 import { escolherTema, gerarCapitulo, gerarSumario, salvarSumario } from "@/lib/actions/ebook";
 import { TEMAS, TONS, type CapEbook, type TemaKey } from "@/lib/domain/temas";
 
@@ -17,8 +19,9 @@ export function Ebook({ pastaId, eb, proxima }: { pastaId: string; eb: Eb; proxi
 
 function Opcoes({ pastaId, refazer }: { pastaId: string; refazer?: boolean }) {
   const router = useRouter();
-  const [st, action] = useActionState(async (p: { ok?: boolean; erro?: string } | null, f: FormData) => {
-    const r = await gerarSumario(pastaId, p, f);
+  const [manual, setManual] = useState(false);
+  const [st, action, pend] = useActionState(async (p: { ok?: boolean; erro?: string } | null, f: FormData) => {
+    const r: { ok?: boolean; erro?: string } = await gerarSumario(pastaId, p, f).catch(() => ({ erro: "Sem conexão. Tente de novo." }));
     if (r.ok) {
       toast("Sumário pronto");
       router.refresh();
@@ -26,26 +29,45 @@ function Opcoes({ pastaId, refazer }: { pastaId: string; refazer?: boolean }) {
     return r;
   }, null);
   return (
-    <form action={action} className="cd gap-3">
+    <div className="flex flex-col gap-3">
       <span className="kk">PARTE 1 · SUMÁRIO {refazer ? "(REFAZER)" : ""}</span>
-      <div className="grid gap-3 sm:grid-cols-3">
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="eb-caps" className="lb">Capítulos</label>
-          <select id="eb-caps" name="capitulos" defaultValue="6" className="in">{[4, 5, 6, 7, 8, 9, 10].map((n) => <option key={n}>{n}</option>)}</select>
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="eb-tam" className="lb">Tamanho</label>
-          <select id="eb-tam" name="tamanho" defaultValue="10" className="in"><option value="5">Curto (5 páginas)</option><option value="10">Médio (10 páginas)</option></select>
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="eb-tom" className="lb">Tom</label>
-          <select id="eb-tom" name="tom" defaultValue="amiga" className="in">{TONS.map((t) => <option key={t}>{t}</option>)}</select>
-        </div>
-      </div>
-      <span className="mu">O idioma vem do país de venda da pasta.</span>
+      <form action={action}>
+        <input type="hidden" name="capitulos" value="5" />
+        <input type="hidden" name="tamanho" value="10" />
+        <input type="hidden" name="tom" value="amiga" />
+        <button disabled={pend} className="press surge flex w-full items-center gap-4 rounded-2xl border-[1.5px] border-c-amber/70 p-4 text-left text-text" style={{ background: "linear-gradient(135deg, color-mix(in srgb, var(--c-amber) 16%, var(--surface)), color-mix(in srgb, var(--ok) 12%, var(--surface)))" }}>
+          <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-c-amber text-accent-ink">{pend ? <Spinner /> : <Icone nome="varinha" tamanho={24} />}</span>
+          <span className="flex flex-col gap-0.5">
+            <span className="font-bold">A IA escolhe tudo por mim</span>
+            <span className="text-sm text-text-2">5 capítulos, uns 10 páginas, tom de amiga: o formato que mais funciona pra ebook de entrada.</span>
+          </span>
+        </button>
+      </form>
+      {!manual ? (
+        <button type="button" className="b3 self-start" onClick={() => setManual(true)}>Prefiro escolher eu mesma</button>
+      ) : (
+        <form action={action} className="cd surge gap-3">
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="eb-caps" className="lb">Capítulos</label>
+              <select id="eb-caps" name="capitulos" defaultValue="5" className="in">{[4, 5, 6, 7, 8, 9, 10].map((n) => <option key={n} value={n}>{n}{n === 5 ? " (sugerido)" : ""}</option>)}</select>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="eb-tam" className="lb">Tamanho</label>
+              <select id="eb-tam" name="tamanho" defaultValue="10" className="in"><option value="5">Curto (5 páginas)</option><option value="10">Médio (10 páginas, sugerido)</option></select>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="eb-tom" className="lb">Tom</label>
+              <select id="eb-tom" name="tom" defaultValue="amiga" className="in">{TONS.map((t) => <option key={t} value={t}>{t}{t === "amiga" ? " (sugerido)" : ""}</option>)}</select>
+            </div>
+          </div>
+          <span className="mu">O idioma vem do país de venda que você escolheu.</span>
+          <SubmitButton pendente="A IA está montando o sumário...">Criar o sumário com a IA</SubmitButton>
+        </form>
+      )}
       {st?.erro ? <span role="alert" className="text-sm text-danger">{st.erro}</span> : null}
-      <SubmitButton pendente="A IA está montando o sumário...">Criar o sumário com a IA</SubmitButton>
-    </form>
+      <IaTrabalhando ativo={pend} titulo="A IA está montando o sumário" passos={["Lendo a ficha e a oferta", "Dividindo o conteúdo em capítulos", "Dando um objetivo pra cada um", "Traduzindo os títulos pra você"]} duracao={10} />
+    </div>
   );
 }
 

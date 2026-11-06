@@ -15,7 +15,7 @@ import { gerarCapitulo, gerarSumario, salvarSumario } from "./ebook";
  * e mostra o progresso real. Cada passo pula o que já está feito, então dá pra tentar de novo.
  * Para antes da Revisão: ali é ela quem confere e aprova (regra 4).
  */
-type Passo = "inicio" | "ideias" | "escolha" | "rascunho" | "ficha" | "oferta" | "mercado" | "sumario" | `capitulo:${number}`;
+type Passo = "fim" | "inicio" | "ideias" | "escolha" | "rascunho" | "ficha" | "oferta" | "mercado" | "sumario" | `capitulo:${number}`;
 export type RespPiloto = { ok?: boolean; erro?: string; capitulos?: number; ideia?: string };
 
 async function salvar(id: string, patch: Record<string, unknown>) {
@@ -34,7 +34,10 @@ export async function pilotoPasso(pastaId: string, passo: Passo): Promise<RespPi
   const r = await (async (): Promise<RespPiloto> => {
     switch (true) {
       case passo === "inicio":
-        await salvar(p.id, { feito: { ...((dados.feito as object) ?? {}), entenda: true }, piloto: { em: new Date().toISOString() } });
+        await salvar(p.id, { feito: { ...((dados.feito as object) ?? {}), entenda: true }, piloto: { em: new Date().toISOString(), fim: null } });
+        return { ok: true };
+      case passo === "fim":
+        await salvar(p.id, { piloto: { ...((dados.piloto as object) ?? {}), fim: new Date().toISOString() } });
         return { ok: true };
       case passo === "ideias":
         return dados.ideias ? { ok: true } : gerarIdeias(p.id, false);

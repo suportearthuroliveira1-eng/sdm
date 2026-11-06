@@ -4,6 +4,8 @@ import { CONFIG_PADRAO, type ConfigDiagnostico } from "@/lib/domain/diagnostico"
 import { configDiagnosticoSchema, fluxoSchema, textosAppSchema, type Fluxo, type TextosApp } from "@/lib/domain/config-schemas";
 import { getSetting } from "@/lib/server/settings";
 import { temaSchema, type Tema } from "@/lib/domain/tema";
+import { precosSchema } from "@/lib/domain/config-schemas";
+import type { FaixaPreco, Moeda } from "@/lib/domain/precos";
 
 /** Configurações do app editáveis no admin. Valor inválido ou ausente → padrão do código. */
 export const configDiagnostico = cache(async (): Promise<ConfigDiagnostico> => {
@@ -33,4 +35,11 @@ export const temaApp = cache(async (): Promise<Tema | null> => {
   } catch {
     return null;
   }
+});
+
+/** Tabela de preço do ebook (setting `precos_ebook`), por cima do padrão do código. */
+export const tabelaPrecos = cache(async (): Promise<Partial<Record<Moeda, FaixaPreco>>> => {
+  const v = await getSetting<unknown>("precos_ebook", null);
+  const r = precosSchema.safeParse(v);
+  return r.success ? (r.data as Partial<Record<Moeda, FaixaPreco>>) : {};
 });

@@ -10,6 +10,7 @@ import { Conta, SdmAfiliacao, SdmEntenda, SdmKit, SdmLink, SdmRegras } from "@/c
 import { db, schema } from "@/lib/db";
 import type { CapEbook } from "@/lib/domain/temas";
 import { hrefEtapa, pastaDaAluna } from "@/lib/server/pastas";
+import { marcarOndeParou } from "@/lib/server/onde-parou";
 
 export const metadata: Metadata = { title: "Etapa" };
 
@@ -35,6 +36,7 @@ export default async function Etapa({ params }: PageProps<"/app/p/[id]/[etapa]">
       </div>
     );
   }
+  await marcarOndeParou(pasta.studentId, { path: hrefEtapa(pasta.id, slug), titulo: `${pasta.nome ?? "Pasta"}: ${et.nome}`, tipo: "etapa" });
   // a próxima na ordem (destrava quando esta ficar pronta)
   const prox = etapas[i + 1];
   const proxima = prox ? hrefEtapa(pasta.id, prox.slug) : `/app/p/${pasta.id}`;

@@ -1,6 +1,6 @@
 # Estado do projeto
 
-> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-06 (14ª tarefa: zerar aluna no admin; conta da dona zerada)** · branch `claude/intelligent-bohr-54teds`.
+> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-06 (15ª tarefa: preço sugerido com moeda e teto, A IA escolhe tudo no ebook e no painel, voltar de onde parou)** · branch `claude/intelligent-bohr-54teds`.
 
 ## Fase atual
 **O app segue `docs/App_SDM_Fluxo_Ideal.pdf`** (dois caminhos + divulgação). **IA ligada em produção** (chave da OpenAI em Admin → Chaves e variáveis, tabela `app_secrets`). Quase tudo do app é configurável no admin, sem deploy: perguntas do diagnóstico e regras de decisão, regras do primeiro acesso, textos, IA (modelos, limites, regras base, Professora, prompt de cada agente com versões).
@@ -8,7 +8,7 @@
 | Bloco (PDF) | Situação |
 |---|---|
 | Primeiro acesso (telas 1–7) | ✓ **obrigatório** (configurável), login e-mail+senha, instalar, boas-vindas, combinado, diagnóstico com **Confirmar e Voltar** em cada pergunta (perguntas e regras do admin), decisão do caminho por regras com peso (IA explica) ou pela IA, "o que a IA entendeu", escolha do caminho cria a pasta |
-| Início (I1–I5) | ✓ I1 próximo passo único, I2 meu caminho (7 fases), I5 novidades (placeholder) · ✗ I3 rotina, I4 números da semana |
+| Início (I1–I5) | ✓ "Você parou aqui" / "Continue de onde parou" e "A IA parou no meio", I1 próximo passo único, I2 meu caminho (7 fases), I5 novidades (placeholder) · ✗ I3 rotina, I4 números da semana |
 | Produtos (P1–P3) | ✓ pastas agrupadas, criar produto com IA, quero ser afiliada, painel com ✓/●/cadeado e motivo, biblioteca |
 | Caminho A · afiliada SDM (A0–A7) | ✓ A0 entenda, A1 pedir afiliação + aprovação no admin, A2 link por canal + teste, A3 kit do time + adaptar com IA, A4 conta (Wise), A5 regras, A6 → divulgação · ✗ A7 comissões (depende da Hubla) |
 | Caminho B · produto próprio (B0–B10) | ✓ **A IA faz tudo** (piloto até a Revisão), B0 com fluxograma + Como a IA pensa, **português primeiro** + etapa Idioma e país, ficha com rascunho da IA, B1 ideias (IA, outras 3, avaliar a minha), B2 ficha (IA + corrigir campo), B3 oferta (IA, aprovar/editar/outra), B4 ebook (sumário editável, capítulos 1 a 1 com progresso, ajustes, 6 temas, PDF + versão pt), B5 revisão, B6 página (pagina/pre/quiz, editar bloco, prévia celular/computador), B7 checkout testado, B8 conta, B9 teste · ✗ B10 vendas, publicar a página (onde fica: a definir) |

@@ -102,3 +102,7 @@
 
 ## ADR-020 · Tema editável (Admin → Aparência)
 - **Decisão:** setting `tema` validado (#RRGGBB, raio 6–28, animações) vira CSS variables no layout raiz; o resto das cores deriva com `color-mix`. Vazio = visual do protótipo (regra 8). Temas prontos passam AA (teste); o editor avisa quando uma cor quebra o contraste.
+
+## ADR-021 · Preço do ebook por regra, não pela IA
+- **Contexto:** a dona pediu "preço sugerido, nunca preço alto, e a moeda". O número da IA variava (9, 0, [valor]).
+- **Decisão:** sugestão, faixa e teto por moeda numa tabela (`precos.ts`, editável em `precos_ebook`). A IA não define preço; o app recusa acima do teto. A moeda segue o país da pasta (provisório até a etapa Idioma e país).

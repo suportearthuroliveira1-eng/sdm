@@ -4,6 +4,7 @@ import { notFound, redirect } from "next/navigation";
 import { LockIcon } from "@/components/app/ui";
 import { Icone } from "@/components/ui/icone";
 import { visualEtapa } from "@/lib/domain/visual-etapas";
+import { PilotoAutomatico } from "@/components/etapas/piloto";
 import { FASES } from "@/lib/domain/etapas";
 import { hrefEtapa, pastaDaAluna } from "@/lib/server/pastas";
 
@@ -57,6 +58,22 @@ export default async function Pasta({ params }: PageProps<"/app/p/[id]">) {
           <h2 id="cont" className="m-0 text-lg font-bold">{feitas === etapas.length ? "Tudo pronto por aqui." : "Esperando o time ou uma etapa fechada."}</h2>
         )}
       </section>
+
+      {pasta.tipo === "proprio" && !etapas.find((e) => e.slug === "ebook")?.ok ? (
+        (() => {
+          const pil = (pasta.dados as { piloto?: { em?: string; fim?: string | null } }).piloto;
+          const parou = Boolean(pil?.em && !pil?.fim);
+          return (
+            <PilotoAutomatico
+              pastaId={pasta.id}
+              revisaoHref={`/app/p/${pasta.id}/revisao`}
+              continuar={parou || feitas > 0}
+              titulo={parou ? "A IA parou no meio: continuar" : feitas > 0 ? "Deixe a IA fazer o resto" : "A IA faz tudo pra mim"}
+              descricao={parou ? "Você saiu enquanto a IA montava o produto. Ela pula o que já está pronto e termina o resto." : feitas > 0 ? "Ela pula o que você já fez e termina ficha, oferta, país e ebook. Você revisa no final." : "Ela escolhe a ideia, completa a ficha, monta a oferta e escreve o ebook. Você revisa no final."}
+            />
+          );
+        })()
+      ) : null}
 
       {grupos.map((g) => (
         <section key={g} className="flex flex-col gap-2" aria-label={g}>

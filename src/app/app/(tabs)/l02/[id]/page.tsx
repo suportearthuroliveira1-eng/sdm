@@ -5,6 +5,7 @@ import { LockIcon } from "@/components/app/ui";
 import { agoraFacaLink } from "@/lib/domain/screens";
 import { getJornada } from "@/lib/server/aluna";
 import { AulaAcoes } from "./acoes";
+import { marcarOndeParou } from "@/lib/server/onde-parou";
 
 export const metadata: Metadata = { title: "Aula" };
 
@@ -15,6 +16,7 @@ export default async function L02({ params }: PageProps<"/app/l02/[id]">) {
   const mod = j.modulos.find((m) => m.aulas.some((a) => a.id === id));
   const aula = mod?.aulas.find((a) => a.id === id);
   if (!mod || !aula) notFound();
+  if (!aula.lock.travado) await marcarOndeParou(j.student.id, { path: `/app/l02/${encodeURIComponent(aula.id)}`, titulo: `Aula ${aula.id}: ${aula.titulo}`, tipo: "aula" });
   const todas = j.modulos.flatMap((m) => m.aulas);
   const i = todas.findIndex((a) => a.id === id);
   const prox = todas.slice(i + 1).find((a) => !a.lock.travado);

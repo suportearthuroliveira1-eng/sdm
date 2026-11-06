@@ -103,6 +103,8 @@ export const students = pgTable(
     boasVindasEm: timestamp("boas_vindas_em", { withTimezone: true }),
     diagnosticoEm: timestamp("diagnostico_em", { withTimezone: true }),
     caminho: text("caminho"), // afiliada | produto | ambos | depois
+    /** Onde ela parou (etapa, aula): o Início oferece "continuar de onde parei". { path, titulo, em } */
+    ultimaTela: jsonb("ultima_tela"),
     criadoEm: createdAt(),
     ultimoAcesso: timestamp("ultimo_acesso", { withTimezone: true }),
     updatedAt: updatedAt(),

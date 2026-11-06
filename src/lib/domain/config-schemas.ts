@@ -52,3 +52,6 @@ export const fluxoSchema = z.object({
   pularCombinado: z.boolean().default(false),
 });
 export type Fluxo = z.infer<typeof fluxoSchema>;
+
+const faixaSchema = z.object({ sugerido: z.number().positive(), min: z.number().positive(), max: z.number().positive(), teto: z.number().positive() }).refine((f) => f.min <= f.sugerido && f.sugerido <= f.max && f.max <= f.teto, "Precisa: mínimo ≤ sugerido ≤ máximo ≤ teto");
+export const precosSchema = z.object({ USD: faixaSchema, EUR: faixaSchema, GBP: faixaSchema, BRL: faixaSchema }).partial();
