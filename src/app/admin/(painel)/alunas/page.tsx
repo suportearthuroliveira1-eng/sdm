@@ -42,7 +42,7 @@ export default async function AD02({ searchParams }: PageProps<"/admin/alunas">)
 
   const rows = (await db().execute(sql`
     SELECT s.id, s.code, s.nome, s.email, s.pais_mora AS pais, s.ativo, s.trilha_pago, s.trilha_org,
-      (SELECT array_agg(e.produto ORDER BY e.produto) FROM entitlements e WHERE e.student_id = s.id AND e.status = 'active') AS acessos,
+      (SELECT array_agg(e.produto::text ORDER BY e.produto::text) FROM entitlements e WHERE e.student_id = s.id AND e.status = 'active') AS acessos,
       p.funil, p.publicado
     FROM students s
     LEFT JOIN student_products p ON p.id = s.produto_ativo

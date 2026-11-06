@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-06 · Alunas no admin (de novo)
+- Segundo erro da tela: com o driver `pg`, `array_agg` de enum (acessos) vinha como texto `{sdm,up1}`, não lista, e quebrava a tela quando havia aluna com acesso. A consulta agora agrega `produto::text`. Conferidas todas as telas do admin e a ficha da aluna (senha provisória → 1º login obriga a criar a definitiva → provisória deixa de valer).
+
 ## 2026-11-06 · Hubla, varredura das etapas, link da bio e criativos em passo a passo
 - **Admin → Alunas** voltou (a consulta usava `s.criado_em`; a coluna é `created_at`).
 - **Hubla** (doc oficial v2.0.0 conferida): token `x-hubla-token` cadastrado em Admin → Chaves (`HUBLA_WEBHOOK_TOKEN`); eventos `invoice.payment_succeeded`, `customer.member_added`, `subscription.activated` liberam; `invoice.refunded`, `customer.member_removed`, `subscription.deactivated` e `invoice.status_updated` com `chargeback` revogam; comprador também em `event.invoice.payer`. Conta nova → **senha provisória** (`gerarSenhaProvisoria`) enviada por e-mail (Resend, chave em Admin → Chaves; remetente em `email_remetente`). No 1º login a marca `trocar_senha` (metadata do usuário) leva pra "Crie sua senha definitiva". "Não recebi meu acesso" reenvia (só pra conta que ainda não entrou). Ficha da aluna: "Gerar senha provisória" (mostra uma vez, mensagem pro WhatsApp, ou manda por e-mail). Acessos e webhooks: liga/desliga, URL do webhook, passo a passo do que falta, produto e comprador em cada evento.
