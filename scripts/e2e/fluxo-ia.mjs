@@ -23,9 +23,9 @@ try {
   const resp = ["Estados Unidos", ["Português", "Inglês"], "1 hora", "Nada agora", "Vídeo orgânico (sem pagar anúncio)", "Prefiro não aparecer", ["Cozinha e receitas"], "Nunca", "Não falar bem o idioma", "Ter o meu próprio produto"];
   for (const r of resp) {
     if (Array.isArray(r)) { for (const o of r) await p.getByRole("checkbox", { name: o }).click(); }
-    else await p.getByRole("radio", { name: r }).click();
-    await p.getByRole("button", { name: /^Confirmar/ }).click(); // cada resposta tem botão de confirmar
-    await p.waitForTimeout(400);
+    else await p.getByRole("radio", { name: r }).click(); // escolha única: o toque já confirma
+    if (Array.isArray(r)) await p.getByRole("button", { name: /^Confirmar/ }).click();
+    await p.waitForTimeout(600);
   }
   await p.waitForURL(/a06/); log("3 resultado IA ok"); await shot("a06");
   await p.getByRole("link", { name: "Está certo" }).click(); await p.waitForURL(/caminho/);

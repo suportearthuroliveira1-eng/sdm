@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-11-09 · Primeiro acesso mais visual, com menos texto
+- **Trilha nova** no topo das 5 telas: bolinhas com ícone, a de agora pulsa, as feitas ganham check.
+- **Explicação quando ela pede**: botões "Pra que serve?", "Por que essa pergunta?", "Por quê?" e "Ver detalhes" (`components/primeiro/pra-que-serve.tsx`). O texto longo fica escondido até ela tocar.
+- **Boas-vindas**: foto da Amanda (ou o robô) flutuando, "Oi, Maria!", aula de 2 minutos e 3 cartões animados (Aprender, Escolher, Vender).
+- **Combinado**: "O SDM faz" e "Você faz" com ícones e checks aparecendo um a um; textos padrão mais curtos.
+- **Perguntas**: um toque na opção já salva e vai pra próxima (Confirmar só aparece em múltipla escolha, texto ou "Outro"). As opções entram em cascata. O robô aparece enquanto a IA lê as respostas.
+- **Resultado**: o robô fala o resumo num balão. 3 cartões aparecem um depois do outro (Seu caminho, Vender pra, Divulgar com), cada um com "Por quê?". Cuidados recolhidos.
+- **Caminho**: o sugerido vem primeiro e brilhando, com ícone, uma frase, 2 etiquetas e detalhes recolhidos.
+- **Diagnóstico**: quem só fala português agora recebe "Brasil · português" (antes podia cair em espanhol). A IA escreve o resumo e cada "porquê" em 1 a 2 frases curtas.
+- Scripts e2e atualizados pro toque que já confirma; `scripts/e2e/primeiro-acesso.mjs` tira os prints. Varredura: produto próprio 19/19, afiliada 10/10.
+
 ## 2026-11-09 · Países Ocultos no menu, prévia com checkout e aba completa
 - **Menu**: aba "Ocultos" (computador: "Países Ocultos"), dourada, pra todas.
 - **Sem acesso, a aba vira prévia de venda**:

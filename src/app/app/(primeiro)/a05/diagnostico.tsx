@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { Passos } from "@/components/app/passos";
 import { Spinner } from "@/components/ux/submit-button";
+import { IaTrabalhando } from "@/components/ux/ia-trabalhando";
+import { PraQueServe } from "@/components/primeiro/pra-que-serve";
 import { concluirDiagnostico, salvarResposta } from "@/lib/actions/onboarding";
 import { tipoDe, type Pergunta, type Respostas } from "@/lib/domain/diagnostico";
 
@@ -57,14 +59,19 @@ export function Diagnostico({ perguntas, inicial, inicio }: { perguntas: Pergunt
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const confirmar = () => {
+  const confirmar = (forcado?: string) => {
     if (pending) return;
+    const valor = forcado ?? valorDe(p, d);
     if (valor === null) {
       setErro(t === "multipla" ? "Marque pelo menos uma opção." : d.unica === OUTRO || d.outroLigado ? "Escreva a sua resposta." : "Escolha uma opção.");
       return;
     }
     setErro("");
-    start(async () => {
+    start(() => passo(valor));
+  };
+
+  const passo = async (valor: string | string[]) => {
+    {
       const res = await salvarResposta(p.k, valor).catch(() => ({ ok: false, erro: "Sem conexão. Toque em Confirmar de novo." }));
       if (!res.ok) {
         setErro(res.erro ?? "Não deu pra salvar.");
@@ -89,27 +96,21 @@ export function Diagnostico({ perguntas, inicial, inicio }: { perguntas: Pergunt
         return Array.isArray(v) ? !v.length : !v;
       });
       if (falta >= 0) irPara(falta, novo);
-    });
+    }
   };
 
-  if (fechando) {
-    return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center" role="status">
-        <span className="spinner size-10 text-accent" aria-hidden />
-        <h1 className="m-0 text-xl font-bold">A IA está lendo as suas respostas</h1>
-        <p className="mu text-sm">Leva uns segundos. Ela monta um resumo e sugere por onde começar.</p>
-      </div>
-    );
-  }
+  if (fechando) return <IaTrabalhando ativo titulo="A IA está lendo as suas respostas" passos={["Olhando o seu tempo e o seu dinheiro", "Vendo os idiomas que você fala", "Escolhendo o melhor caminho pra você", "Montando o seu resumo"]} duracao={10} />;
 
-  const opcao = (o: string, marcado: boolean, onClick: () => void, papel: "radio" | "checkbox") => (
+  const opcao = (o: string, marcado: boolean, onClick: () => void, papel: "radio" | "checkbox", n = 0) => (
     <button
       key={o}
+      style={{ animationDelay: `${n * 60}ms` }}
+      disabled={pending}
       type="button"
       role={papel}
       aria-checked={marcado}
       onClick={onClick}
-      className={`press flex min-h-[54px] items-center justify-between gap-3 rounded-[14px] border-[1.5px] px-4 text-left text-[15px] text-text transition-colors ${marcado ? "border-accent bg-sel font-bold" : "border-line-2 bg-surface hover:border-accent/60"}`}
+      className={`press surge flex min-h-[54px] items-center justify-between gap-3 rounded-[14px] border-[1.5px] px-4 text-left text-[15px] text-text transition-colors ${marcado ? "border-accent bg-sel font-bold" : "border-line-2 bg-surface hover:border-accent/60"}`}
     >
       <span>{o}</span>
       <span aria-hidden className={`grid size-6 shrink-0 place-items-center border-[1.5px] text-[13px] ${papel === "radio" ? "rounded-full" : "rounded-md"} ${marcado ? "border-accent bg-accent text-accent-ink" : "border-line-2"}`}>
@@ -128,11 +129,11 @@ export function Diagnostico({ perguntas, inicial, inicio }: { perguntas: Pergunt
         <span className="mu font-bold">Pergunta {i + 1} de {perguntas.length}</span>
       </div>
 
-      <div key={p.k} className="page-in flex flex-col gap-4">
+      <div key={p.k} className="oc-revela flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
           <h1 className="m-0 text-[22px] font-bold leading-snug">{p.q}</h1>
-          {p.p ? <p className="mu m-0">Por que eu pergunto: {p.p}</p> : null}
-          {t === "multipla" ? <p className="m-0 text-sm font-bold text-accent-2">Pode marcar mais de uma.</p> : null}
+          {t === "multipla" ? <p className="m-0 text-sm font-bold text-accent-2">Pode marcar mais de uma.</p> : t !== "texto" ? <p className="m-0 text-xs text-muted">Toque numa opção: ela já salva e vai pra próxima.</p> : null}
+          {p.p ? <PraQueServe rotulo="Por que essa pergunta?">{p.p.charAt(0).toUpperCase() + p.p.slice(1)}</PraQueServe> : null}
         </div>
 
         {t === "texto" ? (
@@ -143,8 +144,8 @@ export function Diagnostico({ perguntas, inicial, inicio }: { perguntas: Pergunt
         ) : (
           <div className="flex flex-col gap-2" role={t === "multipla" ? "group" : "radiogroup"} aria-label={p.q}>
             {t === "multipla"
-              ? p.o.map((o) => opcao(o, d.multi.includes(o), () => setD({ ...d, multi: d.multi.includes(o) ? d.multi.filter((x) => x !== o) : [...d.multi, o] }), "checkbox"))
-              : p.o.map((o) => opcao(o, d.unica === o, () => setD({ ...d, unica: o, outroLigado: false }), "radio"))}
+              ? p.o.map((o, n) => opcao(o, d.multi.includes(o), () => setD({ ...d, multi: d.multi.includes(o) ? d.multi.filter((x) => x !== o) : [...d.multi, o] }), "checkbox", n))
+              : p.o.map((o, n) => opcao(o, d.unica === o, () => { setD({ ...d, unica: o, outroLigado: false }); confirmar(o); }, "radio", n))}
             {p.outro
               ? t === "multipla"
                 ? opcao("Outro", d.outroLigado, () => setD({ ...d, outroLigado: !d.outroLigado }), "checkbox")
@@ -177,24 +178,33 @@ export function Diagnostico({ perguntas, inicial, inicio }: { perguntas: Pergunt
 
       {erro ? <p role="alert" className="m-0 text-sm text-danger">{erro}</p> : null}
 
-      <div className="sticky bottom-0 -mx-5 mt-auto flex gap-2 border-t border-line bg-bg/95 px-5 pb-[max(env(safe-area-inset-bottom),16px)] pt-3 backdrop-blur">
-        {i > 0 ? (
-          <button type="button" className="b2 w-auto px-5" onClick={() => irPara(i - 1)} disabled={pending}>
-            Voltar
-          </button>
-        ) : null}
-        <button type="button" className="b1 flex-1" onClick={confirmar} disabled={pending || valor === null} aria-busy={pending}>
-          {pending ? (
-            <>
-              <Spinner /> Salvando...
-            </>
-          ) : ultimo ? (
-            "Confirmar e ver o resultado"
-          ) : (
-            "Confirmar"
-          )}
-        </button>
-      </div>
+      {(() => {
+        // escolha única: o toque na opção já confirma; o botão só aparece pra múltipla, texto ou "Outro"
+        const precisaBotao = t !== "unica" || d.unica === OUTRO;
+        if (!precisaBotao && i === 0) return null;
+        return (
+          <div className="sticky bottom-0 -mx-5 mt-auto flex gap-2 border-t border-line bg-bg/95 px-5 pb-[max(env(safe-area-inset-bottom),16px)] pt-3 backdrop-blur">
+            {i > 0 ? (
+              <button type="button" className={precisaBotao ? "b2 w-auto px-5" : "b2 flex-1"} onClick={() => irPara(i - 1)} disabled={pending}>
+                Voltar
+              </button>
+            ) : null}
+            {precisaBotao ? (
+              <button type="button" className="b1 flex-1" onClick={() => confirmar()} disabled={pending || valor === null} aria-busy={pending}>
+                {pending ? (
+                  <>
+                    <Spinner /> Salvando...
+                  </>
+                ) : ultimo ? (
+                  "Confirmar e ver o resultado"
+                ) : (
+                  "Confirmar"
+                )}
+              </button>
+            ) : null}
+          </div>
+        );
+      })()}
     </>
   );
 }

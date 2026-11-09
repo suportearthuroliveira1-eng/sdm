@@ -6,6 +6,8 @@ import { redirect } from "next/navigation";
 import { requireStudent } from "@/lib/auth/session";
 import { configFluxo, textosApp } from "@/lib/server/config-app";
 import { SDM_FAZ, VOCE_FAZ } from "@/lib/domain/textos-padrao";
+import { Icone } from "@/components/ui/icone";
+import { PraQueServe } from "@/components/primeiro/pra-que-serve";
 
 export const metadata: Metadata = { title: "O nosso combinado" };
 
@@ -20,24 +22,29 @@ export default async function A07() {
   return (
     <>
       <Passos atual={2} rotulo="Combinado" />
-      <span className="self-start rounded-[10px] bg-warn-bg px-2.5 py-1 text-xs font-bold tracking-[0.5px] text-warn">AULA 0.6</span>
-      <h1 className="m-0 text-[26px] font-bold leading-tight">{tx.combinado.titulo || "O nosso combinado"}</h1>
+      <div className="surge flex flex-col gap-1.5">
+        <h1 className="m-0 text-[26px] font-bold leading-tight">{tx.combinado.titulo || "O nosso combinado"}</h1>
+        <p className="m-0 text-[15px] text-text-2">A gente faz a parte da gente. Você faz a sua.</p>
+      </div>
       <div className="grid gap-3 sm:grid-cols-2">
-        {[["O QUE O SDM FAZ", sdmFaz], ["O QUE VOCÊ FAZ", voceFaz]].map(([t, l]) => (
-          <div key={t as string} className="cd gap-2">
-            <span className="kk">{t as string}</span>
-            {(l as string[]).map((x, i) => (
-              <div key={x} className="flex gap-2.5">
-                <span className="dot bg-sel text-accent-2" aria-hidden>{i + 1}</span>
-                <span className="tx">{x}</span>
+        {[
+          { t: "O SDM faz", l: sdmFaz, icone: "kit" as const, cor: "var(--accent)" },
+          { t: "Você faz", l: voceFaz, icone: "pessoa" as const, cor: "var(--c-amber)" },
+        ].map((col, c) => (
+          <section key={col.t} aria-label={col.t} className="oc-revela flex flex-col gap-2 rounded-2xl border border-line bg-surface p-4" style={{ animationDelay: `${c * 200}ms` }}>
+            <span className="flex items-center gap-2 text-sm font-bold" style={{ color: col.cor }}><Icone nome={col.icone} tamanho={18} /> {col.t}</span>
+            {col.l.map((x, i) => (
+              <div key={x} className="oc-revela flex items-start gap-2.5" style={{ animationDelay: `${c * 200 + 150 + i * 110}ms` }}>
+                <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full text-accent-ink" style={{ background: col.cor }}><Icone nome="check" tamanho={12} espessura={3} /></span>
+                <span className="text-[14px] leading-snug text-text">{x}</span>
               </div>
             ))}
-          </div>
+          </section>
         ))}
       </div>
-      <p className="mu">O SDM não promete ganho: ele te ensina o caminho e te acompanha. O resultado vem do seu passo por dia.</p>
+      <PraQueServe>O SDM não promete ganho. Ele te ensina o caminho e te acompanha. O resultado vem do seu passo por dia.</PraQueServe>
       {student.combinadoEm ? <div className="good">Combinado feito em {student.combinadoEm.toLocaleDateString("pt-BR")}.</div> : null}
-      <form action={combinar} className="mt-auto">
+      <form action={combinar} className="sticky bottom-0 -mx-5 mt-auto bg-bg/95 px-5 pb-[max(env(safe-area-inset-bottom),16px)] pt-3 backdrop-blur">
         <SubmitButton pendente="Registrando...">{student.combinadoEm ? "Seguir" : "Combinado"}</SubmitButton>
       </form>
     </>

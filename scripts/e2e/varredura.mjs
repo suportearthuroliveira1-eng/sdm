@@ -65,7 +65,8 @@ try {
   await p.getByRole("button", { name: "Combinado" }).click(); await p.waitForURL(/a05/);
   for (const r of ["Estados Unidos", ["Português", "Inglês"], "2 horas ou mais", "Até US$ 100 por mês", "Os dois", "Sim, apareço", ["Casa e organização"], "Já tentei", "Perder dinheiro", "Ter uma renda extra em dólar"]) {
     if (Array.isArray(r)) for (const o of r) await p.getByRole("checkbox", { name: o }).click(); else await p.getByRole("radio", { name: r }).click();
-    await p.getByRole("button", { name: /^Confirmar/ }).click(); await p.waitForTimeout(300);
+    if (Array.isArray(r)) await p.getByRole("button", { name: /^Confirmar/ }).click();
+    await p.waitForTimeout(500);
   }
   await p.waitForURL(/a06/); await p.getByRole("link", { name: "Está certo" }).click(); await p.waitForURL(/caminho/);
   await p.locator("form").filter({ hasText: "Os dois" }).getByRole("button", { name: "Escolher" }).click(); await p.waitForURL(B + "/app");

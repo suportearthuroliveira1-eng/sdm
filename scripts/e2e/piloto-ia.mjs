@@ -20,7 +20,8 @@ try {
   await p.getByRole("button", { name: "Combinado" }).click(); await p.waitForURL(/a05/);
   for (const r of ["Estados Unidos", ["Português", "Inglês"], "1 hora", "Nada agora", "Não sei, quero a sugestão do app", "Só a voz ou as mãos", ["Casa e organização"], "Nunca", "Perder dinheiro", "Ter o meu próprio produto"]) {
     if (Array.isArray(r)) for (const o of r) await p.getByRole("checkbox", { name: o }).click(); else await p.getByRole("radio", { name: r }).click();
-    await p.getByRole("button", { name: /^Confirmar/ }).click(); await p.waitForTimeout(300);
+    if (Array.isArray(r)) await p.getByRole("button", { name: /^Confirmar/ }).click();
+    await p.waitForTimeout(500);
   }
   await p.waitForURL(/a06/); await p.getByRole("link", { name: "Está certo" }).click(); await p.waitForURL(/caminho/);
   await p.locator("form").filter({ hasText: "Criar meu produto com a IA" }).getByRole("button", { name: "Escolher" }).click(); await p.waitForURL(B + "/app");

@@ -28,9 +28,9 @@ try {
   const resp = ["Brasil", ["Português", "Inglês"], "1 hora", "Até US$ 100 por mês", "Os dois", "Só a voz ou as mãos", ["Casa e organização"], "Já tentei", "Perder dinheiro", "Ter o meu próprio produto"];
   for (const r of resp) {
     if (Array.isArray(r)) { for (const o of r) await p.getByRole("checkbox", { name: o }).click(); }
-    else await p.getByRole("radio", { name: r }).click();
-    await p.getByRole("button", { name: /^Confirmar/ }).click();
-    await p.waitForTimeout(400);
+    else await p.getByRole("radio", { name: r }).click(); // escolha única: o toque já confirma
+    if (Array.isArray(r)) await p.getByRole("button", { name: /^Confirmar/ }).click();
+    await p.waitForTimeout(600);
   }
   await p.waitForURL(/a06/); log("diagnóstico ok");
   await p.getByRole("link", { name: "Está certo" }).click(); await p.waitForURL(/caminho/);

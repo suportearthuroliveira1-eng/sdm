@@ -119,7 +119,7 @@ export function decidir(r: Respostas, cfg: ConfigDiagnostico): { caminho: Caminh
 
 export type Resultado = {
   perfil: string;
-  pais_venda: { k: "eua" | "uk" | "latam" | "esp"; porque: string };
+  pais_venda: { k: "eua" | "uk" | "latam" | "esp" | "br"; porque: string };
   caminho: { valor: "afiliada" | "produto" | "ambos"; porque: string };
   divulgacao: { valor: "pago" | "org" | "ambos"; porque: string };
   cuidados: string[];
@@ -149,6 +149,7 @@ export function resultadoPorRegras(r: Respostas, cfg: ConfigDiagnostico = CONFIG
   if (pais === "Espanha") [k, porquePais] = ["esp", "Você mora na Espanha e conhece o jeito das pessoas daí."];
   else if (pais === "Reino Unido" || pais === "Irlanda") [k, porquePais] = ["uk", "Você mora num país de língua inglesa da Europa e conhece o jeito das pessoas daí."];
   else if (fala("Espanhol") && !fala("Inglês")) [k, porquePais] = ["latam", "Você entende espanhol: os latinos nos EUA compram em espanhol e recebem em dólar."];
+  else if (!fala("Inglês") && !fala("Espanhol")) [k, porquePais] = ["br", "Você fala português: começa vendendo na sua língua. Dá pra trocar de país depois."];
   else if (pais === "Estados Unidos") porquePais = "Você mora nos EUA e conhece o jeito das pessoas daí.";
   const d = decidir(r, cfg);
   const tempo = String(r.tempo ?? "");

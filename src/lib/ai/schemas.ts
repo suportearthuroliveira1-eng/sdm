@@ -11,10 +11,10 @@ export const checagem = z.object({
 
 export const diagnosticoOut = z.object({
   perfil: z.string().describe("Resumo de quem ela é, em 2 a 3 frases, em português simples, falando com ela (você)."),
-  pais_venda: z.object({ k: z.enum(["eua", "uk", "latam", "esp"]), porque: z.string() }),
+  pais_venda: z.object({ k: z.enum(["eua", "uk", "latam", "esp", "br"]), porque: z.string() }),
   caminho: z.object({ valor: z.enum(["afiliada", "produto", "ambos"]), porque: z.string() }),
   divulgacao: z.object({ valor: z.enum(["pago", "org", "ambos"]), porque: z.string() }),
-  cuidados: z.array(z.string()).describe("Até 3 cuidados ou próximos passos práticos."),
+  cuidados: z.array(z.string()).describe("Até 2 cuidados práticos, cada um com 1 frase curta."),
 });
 
 export const ideiasOut = z.object({
