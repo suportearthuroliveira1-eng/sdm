@@ -10,15 +10,15 @@ import { configFluxo } from "@/lib/server/config-app";
 import { passoPendente } from "@/lib/domain/onboarding";
 import { ondeParouValido } from "@/lib/server/onde-parou";
 import { Icone } from "@/components/ui/icone";
-import { configOculto } from "@/lib/server/pais-oculto";
+import { podeEntrarNoOculto } from "@/lib/server/pais-oculto";
+import { requireStudent } from "@/lib/auth/session";
 import { marcaApp } from "@/lib/server/marca";
-import { liberadaNoOculto } from "@/lib/domain/pais-oculto";
 
 export const metadata: Metadata = { title: "Início" };
 
 // Início (aba 1) do fluxo ideal: I1 próximo passo, I2 meu caminho, I5 novidades.
 export default async function Inicio() {
-  const [j, pastas, fluxo, oculto, marca] = await Promise.all([getJornada(), minhasPastas(), configFluxo(), configOculto(), marcaApp()]);
+  const [j, pastas, fluxo, oculto, marca] = await Promise.all([getJornada(), minhasPastas(), configFluxo(), requireStudent().then(({ student }) => podeEntrarNoOculto(student.id)), marcaApp()]);
   if (!j.student.boasVindasEm && !fluxo.pularBoasVindas) redirect("/app/a04"); // primeira vez: boas-vindas
   const prox = proximoPasso(j, pastas, passoPendente(j.student, fluxo));
   const parou = ondeParouValido(j.student.ultimaTela, prox.href);
@@ -37,13 +37,13 @@ export default async function Inicio() {
       <PageTitle k={`Oi, ${j.student.nome.split(/\s+/)[0]}`}>Seu caminho</PageTitle>
       <div className="grid gap-3.5 lg:grid-cols-[1.4fr_1fr]">
         <div className="flex flex-col gap-3.5">
-          {liberadaNoOculto(oculto, j.student.id) ? (
+          {oculto.pode ? (
             <Link href="/app/oculto" className="oc-convite surge flex items-center gap-3 rounded-2xl border border-c-amber/70 p-4 text-text no-underline" style={{ background: "linear-gradient(135deg, #1a1030, #0b0814)" }}>
               <span className="oc-fechadura grid size-12 shrink-0 place-items-center rounded-2xl bg-[#c9a227] text-[#2a1a0e]"><Icone nome="globo" tamanho={24} /></span>
               <span className="flex flex-1 flex-col">
                 <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-c-amber">Liberado só pra você</span>
                 <span className="oc-titulo text-[18px] font-extrabold leading-snug">País Oculto</span>
-                <span className="text-xs text-text-2">{oculto.convite || "Mercados escondidos e uma estratégia secreta, feita pela IA pra você."}</span>
+                <span className="text-xs text-text-2">{oculto.cfg.convite || "Mercados escondidos e uma estratégia secreta, feita pela IA pra você."}</span>
               </span>
               <span className="shrink-0 text-sm font-bold text-c-amber">Abrir →</span>
             </Link>

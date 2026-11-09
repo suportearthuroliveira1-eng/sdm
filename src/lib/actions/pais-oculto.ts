@@ -10,14 +10,14 @@ import { requireStudent } from "@/lib/auth/session";
 import { db, schema } from "@/lib/db";
 import { catalogoAtivo, configOcultoSchema, type DadosOculto } from "@/lib/domain/pais-oculto";
 import { audit } from "@/lib/server/audit";
-import { configOculto } from "@/lib/server/pais-oculto";
+import { configOculto, podeEntrarNoOculto } from "@/lib/server/pais-oculto";
 
 type R = { ok?: boolean; erro?: string };
 
 async function aluna() {
   const { student } = await requireStudent();
-  const cfg = await configOculto();
-  if (!cfg.ligado || !cfg.alunas.includes(student.id)) throw new Error("sem acesso");
+  const { cfg, pode } = await podeEntrarNoOculto(student.id);
+  if (!pode) throw new Error("sem acesso");
   return { student, cfg };
 }
 

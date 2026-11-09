@@ -9,6 +9,9 @@ describe("País Oculto", () => {
     expect(liberadaNoOculto({ ligado: false, alunas: [id], desligados: [], convite: "" }, id)).toBe(false);
     expect(liberadaNoOculto({ ligado: true, alunas: [], desligados: [], convite: "" }, id)).toBe(false);
   });
+  it("o time sempre entra, mesmo fora da lista", () => {
+    expect(liberadaNoOculto({ ligado: false, alunas: [], desligados: [], convite: "" }, id, true)).toBe(true);
+  });
   it("países desligados somem do catálogo", () => {
     const c = catalogoAtivo({ ligado: true, alunas: [], desligados: ["portugal"], convite: "" });
     expect(c.some((p) => p.k === "portugal")).toBe(false);
@@ -20,6 +23,7 @@ describe("País Oculto", () => {
   });
   it("config recusa id que não é uuid", () => {
     expect(configOcultoSchema.safeParse({ ligado: true, alunas: ["x"] }).success).toBe(false);
+    expect(configOcultoSchema.safeParse({ ligado: true, alunas: ["00000000-0000-0000-0000-000000000001"] }).success).toBe(true);
     expect(configOcultoSchema.safeParse({ ligado: true, alunas: [id] }).success).toBe(true);
   });
 });

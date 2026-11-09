@@ -17,7 +17,9 @@ export default async function AdminPaisOculto() {
     : [];
   return (
     <section className="flex max-w-5xl flex-col gap-6">
-      <AdminHead id="SECRETO" t="País Oculto" d="Uma IA liberada só pra quem você escolher. Ela acha mercados escondidos e entrega o produto e a estratégia secreta. Quem não está na lista nem vê que existe." />
+      <AdminHead id="SECRETO" t="País Oculto" d="Uma IA liberada só pra quem você escolher. Ela acha mercados escondidos e entrega o produto e a estratégia secreta. Quem não está na lista nem vê que existe. O time sempre vê.">
+        <a href="/app/oculto" className="ab1 no-underline">Abrir o País Oculto</a>
+      </AdminHead>
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="acd gap-3">
           <h2 className="m-0 text-base font-bold">Liberar alunas</h2>

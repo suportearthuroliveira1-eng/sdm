@@ -36,7 +36,7 @@ export const CATALOGO_OCULTO: PaisOculto[] = [
 export const configOcultoSchema = z.object({
   ligado: z.boolean(),
   /** ids (uuid) das alunas que podem entrar */
-  alunas: z.array(z.string().uuid()).max(5000),
+  alunas: z.array(z.string().regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, "id inválido")).max(5000),
   /** países do catálogo que o time escondeu */
   desligados: z.array(z.string().max(40)).max(40).default([]),
   /** frase do convite no Início */
@@ -45,8 +45,9 @@ export const configOcultoSchema = z.object({
 export type ConfigOculto = z.infer<typeof configOcultoSchema>;
 export const CONFIG_OCULTO_PADRAO: ConfigOculto = { ligado: true, alunas: [], desligados: [], convite: "" };
 
-export function liberadaNoOculto(cfg: ConfigOculto, studentId: string) {
-  return cfg.ligado && cfg.alunas.includes(studentId);
+/** Liberada: está na lista e a área está ligada. O time (admin) sempre entra, pra conferir. */
+export function liberadaNoOculto(cfg: ConfigOculto, studentId: string, ehAdmin = false) {
+  return ehAdmin || (cfg.ligado && cfg.alunas.some((a) => a.toLowerCase() === studentId.toLowerCase()));
 }
 
 export function catalogoAtivo(cfg: ConfigOculto) {
