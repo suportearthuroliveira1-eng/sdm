@@ -9,6 +9,7 @@ export const TABS = [
   { href: "/app", id: "I01", label: "Início", icon: TabIcons.inicio },
   { href: "/app/v01", id: "V01", label: "Produtos", icon: TabIcons.produtos },
   { href: "/app/l01", id: "L01", label: "Aulas", icon: TabIcons.aulas },
+  { href: "/app/oculto", id: "OC", label: "Ocultos", icon: TabIcons.oculto },
   { href: "/app/q01", id: "Q01", label: "Professora", icon: TabIcons.professora },
   { href: "/app/u01", id: "U01", label: "Perfil", icon: TabIcons.perfil },
 ] as const;
@@ -67,8 +68,8 @@ export function AppShell({ nome, isAdmin, marca = {}, children }: { nome: string
               aria-current={ativa === t.href ? "page" : undefined}
               className={`flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm no-underline ${ativa === t.href ? "bg-sel font-bold text-text" : "text-muted hover:bg-surface hover:text-text"}`}
             >
-              {t.icon}
-              {t.label}
+              <span className={t.id === "OC" ? "text-c-amber" : undefined}>{t.icon}</span>
+              {t.id === "OC" ? "Países Ocultos" : t.label}
             </Link>
           ))}
           {isAdmin ? (
@@ -106,7 +107,7 @@ export function AppShell({ nome, isAdmin, marca = {}, children }: { nome: string
 
         {/* menu de baixo (celular, telas raiz) */}
         {raiz ? (
-          <nav aria-label="Menu principal" className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-5 border-t border-line bg-side px-1 pb-[max(env(safe-area-inset-bottom),12px)] pt-2 lg:hidden">
+          <nav aria-label="Menu principal" className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-6 border-t border-line bg-side px-1 pb-[max(env(safe-area-inset-bottom),12px)] pt-2 lg:hidden">
             {TABS.map((t) => (
               <Link
                 key={t.href}
@@ -114,7 +115,7 @@ export function AppShell({ nome, isAdmin, marca = {}, children }: { nome: string
                 aria-current={ativa === t.href ? "page" : undefined}
                 className={`flex h-14 flex-col items-center justify-center gap-1 text-[11px] no-underline ${ativa === t.href ? "font-bold text-text" : "text-muted"}`}
               >
-                {t.icon}
+                <span className={t.id === "OC" ? "text-c-amber" : undefined}>{t.icon}</span>
                 {t.label}
               </Link>
             ))}

@@ -1,6 +1,6 @@
 # Estado do projeto
 
-> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-06 (19ª tarefa: País Oculto com castelo animado, Admin → Aulas e trilhas, Marca e foto da Amanda, Time do admin, nova aluna com senha provisória)** · branch `claude/intelligent-bohr-54teds`.
+> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-09 (21ª tarefa: Países Ocultos no menu, prévia de venda com escassez real e checkout, compra pela Hubla libera, aba com mapa/estratégia/plano/PDF/produtos)** · branch `claude/intelligent-bohr-54teds`.
 
 ## Fase atual
 **O app segue `docs/App_SDM_Fluxo_Ideal.pdf`** (dois caminhos + divulgação). **IA ligada em produção** (chave da OpenAI em Admin → Chaves e variáveis, tabela `app_secrets`). Quase tudo do app é configurável no admin, sem deploy: perguntas do diagnóstico e regras de decisão, regras do primeiro acesso, textos, IA (modelos, limites, regras base, Professora, prompt de cada agente com versões).

@@ -33,6 +33,21 @@ export const CATALOGO_OCULTO: PaisOculto[] = [
   { k: "singapura", nome: "Singapura", sigla: "SG", idioma: "Inglês", idiomaCod: "en", moeda: "Dólar de Singapura", moedaPreco: "USD", porque: "Compra online em inglês, quase ninguém do Brasil anuncia lá.", cuidado: "Público prático: mostre o passo a passo.", cor: "var(--c-pink)" },
 ];
 
+/** Venda do País Oculto (quem não tem acesso vê a prévia e vai pro checkout). Escassez só com dado real do admin. */
+export const vendaOcultoSchema = z.object({
+  aberta: z.boolean().default(false),
+  checkoutUrl: z.string().trim().max(500).refine((u) => u === "" || /^https:\/\//.test(u), "O link do checkout precisa começar com https://").default(""),
+  preco: z.string().trim().max(60).default(""),
+  /** total de vagas da turma (null = sem limite). Restantes = vagas - liberadas. */
+  vagas: z.number().int().min(1).max(100000).nullable().default(null),
+  /** data/hora em que a turma fecha (ISO). Vazio = sem prazo. */
+  fechaEm: z.string().trim().max(40).default(""),
+  /** ids de produto da Hubla que liberam o País Oculto na compra */
+  hublaProdutos: z.array(z.string().trim().min(1).max(80)).max(20).default([]),
+});
+export type VendaOculto = z.infer<typeof vendaOcultoSchema>;
+export const VENDA_PADRAO: VendaOculto = { aberta: false, checkoutUrl: "", preco: "", vagas: null, fechaEm: "", hublaProdutos: [] };
+
 export const configOcultoSchema = z.object({
   ligado: z.boolean(),
   /** ids (uuid) das alunas que podem entrar */
@@ -41,9 +56,10 @@ export const configOcultoSchema = z.object({
   desligados: z.array(z.string().max(40)).max(40).default([]),
   /** frase do convite no Início */
   convite: z.string().trim().max(200).default(""),
+  venda: vendaOcultoSchema.default(VENDA_PADRAO),
 });
 export type ConfigOculto = z.infer<typeof configOcultoSchema>;
-export const CONFIG_OCULTO_PADRAO: ConfigOculto = { ligado: true, alunas: [], desligados: [], convite: "" };
+export const CONFIG_OCULTO_PADRAO: ConfigOculto = { ligado: true, alunas: [], desligados: [], convite: "", venda: VENDA_PADRAO };
 
 /** Liberada: está na lista e a área está ligada. O time (admin) sempre entra, pra conferir. */
 export function liberadaNoOculto(cfg: ConfigOculto, studentId: string, ehAdmin = false) {
@@ -54,9 +70,27 @@ export function catalogoAtivo(cfg: ConfigOculto) {
   return CATALOGO_OCULTO.filter((p) => !cfg.desligados.includes(p.k));
 }
 
+/**
+ * Escassez de verdade: vagas restantes (vagas do admin - quem já entrou) e prazo de fechamento.
+ * Sem vagas nem prazo configurados, não mostra número nenhum (regra 6).
+ */
+export function escassez(v: VendaOculto, liberadas: number, agora: Date) {
+  const restantes = v.vagas == null ? null : Math.max(0, v.vagas - liberadas);
+  const fim = v.fechaEm ? new Date(v.fechaEm) : null;
+  const prazo = fim && !Number.isNaN(fim.getTime()) ? fim : null;
+  const encerrada = !v.aberta || !v.checkoutUrl || restantes === 0 || (prazo !== null && prazo.getTime() <= agora.getTime());
+  return { restantes, vagas: v.vagas, prazo: prazo?.toISOString() ?? null, encerrada };
+}
+
 /** O que fica salvo na aluna (students.cartoes.oculto). */
 export type DadosOculto = {
   abertoEm?: string;
+  /** quando ela pediu pra ser avisada (prévia, turma fechada) */
+  interesse?: string;
+  /** país → pasta criada a partir da estratégia (não cria duas vezes) */
+  produtos?: Record<string, string>;
+  /** país → ações do plano marcadas (índice "fase.acao") */
+  plano?: Record<string, string[]>;
   mapa?: { paises: { k: string; por_que_voce: string; vantagem: string; primeiro_passo: string }[]; segredo_geral: string };
   estrategias?: Record<string, unknown>;
 };

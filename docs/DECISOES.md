@@ -117,3 +117,8 @@
 - **Contexto**: o time pediu uma área secreta (País Oculto), capas/banners de aula e foto da Amanda/ícone pelo admin. Hoje não temos como aplicar migration em produção sem um token novo do Supabase.
 - **Decisão**: tudo que é novo vive em tabelas que já existem. Quem tem acesso ao País Oculto, os países ligados e o convite ficam no setting `pais_oculto`; o que a aluna gerou fica em `students.cartoes.oculto` (gravação atômica por `jsonb ||`). Capas e banners em `aulas_visual`; foto, ícone e nome em `marca`. Imagens vão pro bucket privado em `publico/...` e saem por `/api/publico/...` (só PNG/JPG/WEBP, até 4 MB, nome nunca repete, cache longo).
 - **Consequência**: zerar a aluna apaga o que ela fez no País Oculto. Se um dia virar tabela, é só migrar desses JSON. Preço no País Oculto vem da tabela do app (regra 6), não da IA.
+
+## ADR-025 · País Oculto vendido à parte, liberado pela compra
+- **Contexto**: a dona quer vender o País Oculto com prévia e escassez dentro do app.
+- **Decisão**: produto da Hubla listado em `pais_oculto.venda.hublaProdutos` libera a área (sem entitlement novo: não dá pra mexer no enum sem migration). Comprador sem conta ganha acesso `sdm` com `external_ref = 'pais-oculto'` (senão não entraria no app); reembolso tira os dois. Escassez só com vagas e prazo definidos pelo admin (regra 6: nada de número inventado).
+- **Consequência**: quando der pra migrar, o País Oculto pode virar um acesso próprio (`entitlement_product`).

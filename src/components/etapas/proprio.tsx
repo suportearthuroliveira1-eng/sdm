@@ -249,6 +249,12 @@ export async function ProprioMercado({ p, proxima }: { p: P; proxima: string }) 
         <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-c-sky/15 text-c-sky"><Icone nome="idioma" tamanho={22} /></span>
         <span className="tx">A ideia, a ficha e a oferta ficaram em português pra você entender tudo. A partir daqui, o ebook, a página e os anúncios saem no idioma de quem compra, sempre com a tradução do lado.</span>
       </div>
+      {(p.dados as { oculto?: { nome?: string; idioma?: string; moeda?: string } }).oculto ? (
+        <div className="cd gap-1 border-c-amber/60">
+          <span className="kk text-c-amber">SUA ESTRATÉGIA DO PAÍS OCULTO</span>
+          <span className="tx">A estratégia foi feita pra <b>{(p.dados as { oculto: { nome: string } }).oculto.nome}</b> ({(p.dados as { oculto: { idioma: string } }).oculto.idioma}, {(p.dados as { oculto: { moeda: string } }).oculto.moeda}). Escolha abaixo o país com o mesmo idioma de venda.</span>
+        </div>
+      ) : null}
       {(p.dados as { mercadoMudou?: boolean }).mercadoMudou ? <div className="warn">Você trocou o país. Se o ebook ou a página já estavam prontos, refaça pra sair no idioma novo.</div> : null}
       <MercadoEscolha pastaId={p.id} atual={atual} sugerido={resultado?.pais_venda?.k ?? p.paisVenda} proxima={proxima} info={INFO_MERCADO} preco={precoAtual?.valor ?? null} precos={precos} moedaPais={moedaPais} moedaAtual={(precoAtual?.moeda as Moeda | undefined) ?? null} />
     </>

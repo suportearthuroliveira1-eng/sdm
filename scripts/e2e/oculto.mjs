@@ -33,32 +33,51 @@ try {
     await p.waitForTimeout(400);
   }
   await p.waitForURL(/a06/); log("diagnóstico ok");
+  await p.getByRole("link", { name: "Está certo" }).click(); await p.waitForURL(/caminho/);
+  await p.locator("form").filter({ hasText: "Ser afiliada do SDM" }).getByRole("button", { name: "Escolher" }).click();
+  await p.waitForURL((u) => !u.pathname.includes("caminho"));
   const [{ id }] = (await db.query("select id from students where email = $1", [email])).rows;
-  // sem acesso: a página não existe
-  const r404 = await p.goto(B + "/app/oculto"); log("sem acesso →", r404?.status());
+  // sem acesso: prévia com castelo trancado, escassez real e checkout (aba no menu)
+  const fecha = new Date(Date.now() + 2 * 86400000 + 5 * 3600000).toISOString();
+  await db.query(`insert into settings (key, value, grupo) values ('pais_oculto', $1::jsonb, 'acesso') on conflict (key) do update set value = $1::jsonb`, [JSON.stringify({ ligado: true, alunas: [], desligados: [], convite: "", venda: { aberta: true, checkoutUrl: "https://pay.hub.la/teste", preco: "R$ 497", vagas: 30, fechaEm: fecha, hublaProdutos: [] } })]);
+  await p.goto(B + "/app"); await shot("inicio-teaser");
+  await p.getByRole("navigation", { name: "Menu principal" }).getByRole("link", { name: "Ocultos" }).click(); await p.waitForURL(/\/app\/oculto/);
+  await p.waitForTimeout(1200); await shot("previa");
+  await p.getByRole("button", { name: /Portão trancado/ }).click(); await p.waitForTimeout(900); await shot("previa-oferta");
+  const checkout = await p.getByRole("link", { name: /Quero a chave/ }).getAttribute("href"); log("prévia ok, checkout:", checkout);
+  await shot("previa-inteira", true);
+  // libera e entra
   await db.query("insert into admin_users (email, papel) values ($1, 'admin') on conflict (email) do update set papel='admin', ativo=true", [email]);
-  await db.query(`insert into settings (key, value, grupo) values ('pais_oculto', $1::jsonb, 'acesso') on conflict (key) do update set value = $1::jsonb`, [JSON.stringify({ ligado: true, alunas: [id], desligados: [], convite: "" })]);
-  await p.goto(B + "/app"); await p.getByText("País Oculto").first().waitFor(); await shot("inicio-convite");
-  await p.getByRole("link", { name: /País Oculto/ }).click(); await p.waitForURL(/\/app\/oculto/);
+  await db.query(`update settings set value = jsonb_set(value, '{alunas}', $1::jsonb) where key = 'pais_oculto'`, [JSON.stringify([id])]);
+  await p.goto(B + "/app/oculto");
   await p.waitForTimeout(800); await shot("portao");
   await p.getByRole("button", { name: /Girar a chave/ }).click();
-  await p.waitForTimeout(500); await shot("portao-chave");
-  await p.waitForTimeout(900); await shot("portao-abrindo");
+  await p.waitForTimeout(1300); await shot("portao-abrindo");
   await p.getByRole("button", { name: "Entrar" }).click(); log("portão aberto");
-  await shot("mapa-fechado");
   await p.getByRole("button", { name: /Revelar os meus países ocultos/ }).click();
-  await p.waitForTimeout(3000); await shot("mapa-carregando");
   await p.getByRole("button", { name: /estratégia secreta/ }).first().waitFor(); log("mapa revelado");
-  await p.waitForTimeout(400); await shot("mapa-virando");
-  await p.waitForTimeout(2500); await shot("mapa", true);
+  await p.waitForTimeout(2600); await shot("mapa", true);
   await p.getByRole("button", { name: /estratégia secreta/ }).first().click();
   await p.getByText("Estratégia secreta ·").waitFor(); log("estratégia pronta");
-  await p.waitForTimeout(2500); await shot("estrategia", true);
+  const caixas = p.locator('input[type=checkbox]');
+  await caixas.nth(0).check(); await caixas.nth(1).check(); await p.waitForTimeout(800);
+  await p.waitForTimeout(2000); await shot("estrategia", true);
+  const pdf = await p.request.get(B + (await p.getByRole("link", { name: /Baixar o dossiê/ }).getAttribute("href")));
+  log("pdf:", pdf.status(), pdf.headers()["content-type"], (await pdf.body()).length, "bytes");
+  const { writeFileSync } = await import("node:fs"); writeFileSync(S + "/dossie.pdf", await pdf.body());
   await p.getByRole("button", { name: /Criar este produto com a IA/ }).click();
-  await p.waitForURL(/\/ficha/); log("produto criado → ficha"); await shot("ficha-oculto");
+  await p.waitForURL(/\/app\/p\/[0-9a-f-]+$/); log("produto criado → pasta");
+  await p.goto(B + "/app/oculto");
+  await p.getByRole("tab", { name: /Produtos/ }).click(); await shot("produtos");
+  const plano = await db.query("select cartoes->'oculto'->'plano' as p, cartoes->'oculto'->'produtos' as pr from students where id = $1", [id]); log("salvo:", JSON.stringify(plano.rows[0]));
+  await p.getByRole("link", { name: /Continuar/ }).first().click(); await p.waitForURL(/\/app\/p\//); await shot("etapa-oculto");
+  // de volta: criar de novo não duplica
+  await p.goto(B + "/app/oculto"); await p.getByRole("tab", { name: /Estratégia/ }).click();
+  log("botão agora:", await p.getByRole("link", { name: /Continuar o meu produto/ }).innerText());
   // admin
   await p.setViewportSize({ width: 1280, height: 900 });
   await p.goto(B + "/admin/pais-oculto"); await shot("admin-oculto", true);
+  await p.getByLabel("Vagas da turma (vazio = sem limite)").fill("40"); await p.getByRole("button", { name: "Salvar venda" }).click(); await p.getByText("Venda salva.").waitFor(); log("venda salva no admin");
   await p.goto(B + "/admin/aulas"); await shot("admin-aulas", true);
   await p.goto(B + "/admin/marca");
   await p.locator('input[type=file]').first().setInputFiles("public/icons/icon-512.png");

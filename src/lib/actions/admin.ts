@@ -43,12 +43,8 @@ export async function createStudentAction(_p: LinkResult | null, form: FormData)
     }
     const oculto = form.get("oculto") === "on";
     if (oculto) {
-      const { configOculto } = await import("@/lib/server/pais-oculto");
-      const cfg = await configOculto();
-      if (!cfg.alunas.includes(student.id)) {
-        const valor = { ...cfg, alunas: [...cfg.alunas, student.id] };
-        await db().insert(schema.settings).values({ key: "pais_oculto", value: valor, grupo: "acesso", descricao: "País Oculto: quem tem acesso e quais países aparecem (Admin → País Oculto).", pendente: false }).onConflictDoUpdate({ target: schema.settings.key, set: { value: valor } });
-      }
+      const { adicionarAoOculto } = await import("@/lib/server/pais-oculto");
+      await adicionarAoOculto([student.id]);
     }
     await audit(admin.id, created ? "aluna.criar" : "aluna.atualizar_acessos", { tipo: "student", id: student.code }, { acessos: parsed.data.acessos, senhaProvisoria: Boolean(senha), oculto });
     revalidatePath("/admin/alunas");

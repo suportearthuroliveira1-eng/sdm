@@ -37,11 +37,11 @@ export default async function Inicio() {
       <PageTitle k={`Oi, ${j.student.nome.split(/\s+/)[0]}`}>Seu caminho</PageTitle>
       <div className="grid gap-3.5 lg:grid-cols-[1.4fr_1fr]">
         <div className="flex flex-col gap-3.5">
-          {oculto.pode ? (
+          {oculto.pode || (oculto.cfg.ligado && oculto.cfg.venda.aberta && oculto.cfg.venda.checkoutUrl) ? (
             <Link href="/app/oculto" className="oc-convite surge flex items-center gap-3 rounded-2xl border border-c-amber/70 p-4 text-text no-underline" style={{ background: "linear-gradient(135deg, #1a1030, #0b0814)" }}>
               <span className="oc-fechadura grid size-12 shrink-0 place-items-center rounded-2xl bg-[#c9a227] text-[#2a1a0e]"><Icone nome="globo" tamanho={24} /></span>
               <span className="flex flex-1 flex-col">
-                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-c-amber">Liberado só pra você</span>
+                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-c-amber">{oculto.pode ? "Liberado só pra você" : oculto.cfg.venda.vagas ? "Turma aberta · vagas limitadas" : "Turma aberta"}</span>
                 <span className="oc-titulo text-[18px] font-extrabold leading-snug">País Oculto</span>
                 <span className="text-xs text-text-2">{oculto.cfg.convite || "Mercados escondidos e uma estratégia secreta, feita pela IA pra você."}</span>
               </span>

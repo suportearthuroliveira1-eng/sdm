@@ -28,7 +28,7 @@ export default async function Etapa({ params, searchParams }: PageProps<"/app/p/
   if (et.travada) {
     return (
       <div className="flex flex-col gap-3 lg:max-w-3xl">
-        <EtapaHead pastaId={pasta.id} pastaNome={pasta.nome ?? ""} etapa={et} etapas={etapas} tipo={pasta.tipo} />
+        <EtapaHead pastaId={pasta.id} pastaNome={pasta.nome ?? ""} etapa={et} etapas={etapas} tipo={pasta.tipo} oculto={((pasta.dados ?? {}) as { oculto?: { nome?: string } }).oculto?.nome ?? null} />
         <div className="warn">Essa etapa ainda está fechada. {et.travada}</div>
         {(() => {
           const agora = etapas.find((e) => e.agora);
@@ -82,7 +82,7 @@ export default async function Etapa({ params, searchParams }: PageProps<"/app/p/
 
   return (
     <div className="flex flex-col gap-3.5 lg:max-w-4xl">
-      <EtapaHead pastaId={pasta.id} pastaNome={pasta.nome ?? ""} etapa={et} etapas={etapas} tipo={pasta.tipo} />
+      <EtapaHead pastaId={pasta.id} pastaNome={pasta.nome ?? ""} etapa={et} etapas={etapas} tipo={pasta.tipo} oculto={((pasta.dados ?? {}) as { oculto?: { nome?: string } }).oculto?.nome ?? null} />
       {corpo}
       <NavEtapas pastaId={pasta.id} etapas={etapas} slug={slug} />
     </div>

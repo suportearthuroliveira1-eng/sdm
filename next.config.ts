@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
   // Upload de imagem por server action (a Vercel aceita até 4,5 MB por requisição).
   experimental: { serverActions: { bodySizeLimit: "4.5mb" } },
   // fontes do PDF do ebook (lidas do disco na função da Vercel)
-  outputFileTracingIncludes: { "/api/ebook/*": ["./public/fonts/**/*"] },
+  outputFileTracingIncludes: { "/api/ebook/*": ["./public/fonts/**/*"], "/api/oculto/*": ["./public/fonts/**/*"] },
   async headers() {
     return [
       {

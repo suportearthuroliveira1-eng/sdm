@@ -337,6 +337,8 @@ body {
 @keyframes oc-revela { from { opacity: 0; transform: translateY(18px); filter: blur(8px); } }
 .oc-bussola { animation: oc-gira 14s linear infinite; }
 @keyframes oc-gira { to { transform: rotate(360deg); } }
+.oc-treme { animation: oc-treme 0.5s ease-in-out; }
+@keyframes oc-treme { 20%, 60% { transform: translateX(-6px) rotate(-1deg); } 40%, 80% { transform: translateX(6px) rotate(1deg); } }
 .oc-convite { position: relative; overflow: hidden; }
 .oc-convite::after { content: ""; position: absolute; inset: -50%; background: conic-gradient(from 0deg, transparent 0 70%, color-mix(in srgb, var(--c-amber) 40%, transparent) 80%, transparent 90%); animation: oc-gira 5s linear infinite; z-index: 0; }
 .oc-convite > * { position: relative; z-index: 1; }
@@ -346,7 +348,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .robo-corpo, .robo-sombra, .robo-olhos, .robo-boca, .robo-antena, .robo-braco-e, .robo-braco-d, .robo-brilhos, .ia-barra, .fluxo-linha, .fluxo-traco, .surge, .pulsa, .flutua, .ia-cartao, .ia-msg { animation: none !important; }
-  .oc-estrela, .oc-lua, .oc-nevoa, .oc-bandeira, .oc-janela, .oc-fechadura, .oc-faisca, .oc-titulo, .oc-selo, .oc-revela, .oc-bussola, .oc-convite::after { animation: none !important; }
+  .oc-estrela, .oc-lua, .oc-nevoa, .oc-bandeira, .oc-janela, .oc-fechadura, .oc-faisca, .oc-titulo, .oc-selo, .oc-revela, .oc-bussola, .oc-treme, .oc-convite::after { animation: none !important; }
   .page-in, .toast-in, .skeleton, .nav-progress.is-on > div { animation: none !important; }
   .nav-progress.is-on > div { width: 60%; }
   * { transition-duration: 0ms !important; }

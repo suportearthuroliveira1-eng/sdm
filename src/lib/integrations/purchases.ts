@@ -10,6 +10,7 @@ import { hublaWebhook } from "./webhooks/hubla";
 import type { PurchaseEvent, PurchaseWebhook } from "./webhooks/types";
 import { whatsappSender } from "./whatsapp";
 import { enviarAcessoPorEmail } from "@/lib/server/senha-provisoria";
+import { adicionarAoOculto, configOculto, tirarDoOculto } from "@/lib/server/pais-oculto";
 
 export const WEBHOOKS: Record<"hubla" | "hotmart", PurchaseWebhook> = { hubla: hublaWebhook, hotmart: hotmartWebhook };
 
@@ -21,6 +22,10 @@ export async function applyPurchase(ev: PurchaseEvent): Promise<ProcessResult> {
   if (!status) return { status: "ignorado", detalhe: `tipo ${ev.tipo} sem ação` };
   if (!ev.email) return { status: "erro", detalhe: "evento sem e-mail" };
   if (!ev.externalProductId) return { status: "erro", detalhe: "evento sem produto" };
+
+  // produto do País Oculto (Admin → País Oculto → Venda): libera a área secreta, sem mexer nos outros acessos
+  const oculto = await configOculto();
+  if (oculto.venda.hublaProdutos.includes(ev.externalProductId)) return aplicarOculto(ev, status);
 
   const map = await db().query.hublaProductMap.findFirst({
     where: and(
@@ -57,6 +62,33 @@ export async function applyPurchase(ev: PurchaseEvent): Promise<ProcessResult> {
   if (!student) return { status: "ignorado", detalhe: "aluna não existe" };
   await upsertEntitlements(student.id, [map.produto], ev.provider, status, ev.transactionId ?? undefined);
   return { status: "processado", detalhe: `${student.code} ${map.produto}=${status}` };
+}
+
+/** Compra do País Oculto: cria a conta (se não existir) e entra na lista; reembolso/chargeback tira. */
+async function aplicarOculto(ev: PurchaseEvent, status: NonNullable<ReturnType<typeof statusForKind>>): Promise<ProcessResult> {
+  if (status === "active") {
+    let student = await findStudentByEmail(ev.email!);
+    let entrega = "";
+    if (!student) {
+      // conta nova só pelo País Oculto: precisa entrar no app (acesso sdm marcado com a origem, pra sair junto no reembolso)
+      const r = await createStudent({ nome: ev.nome ?? ev.email!.split("@")[0]!, email: ev.email!, whatsapp: ev.whatsapp ?? undefined, pais: undefined, acessos: [] });
+      student = r.student;
+      await upsertEntitlements(student.id, ["sdm"], ev.provider, "active", "pais-oculto");
+      if (student.authUserId) {
+        const e = await enviarAcessoPorEmail({ authUserId: student.authUserId, nome: student.nome, email: student.email }).catch((x) => ({ enviado: false, erro: errMsg(x) }));
+        entrega = e.enviado ? " · acesso enviado por e-mail" : ` · acesso NÃO enviado (${e.erro}): gere a senha em Admin → Alunas`;
+      }
+    }
+    await adicionarAoOculto([student.id]);
+    return { status: "processado", detalhe: `${student.code} +país oculto${entrega}` };
+  }
+  const student = await findStudentByEmail(ev.email!);
+  if (!student) return { status: "ignorado", detalhe: "aluna não existe" };
+  await tirarDoOculto(student.id);
+  // se o acesso ao app veio só dessa compra, sai junto
+  const sdm = await db().query.entitlements.findFirst({ where: and(eq(schema.entitlements.studentId, student.id), eq(schema.entitlements.produto, "sdm")) });
+  if (sdm?.externalRef === "pais-oculto") await upsertEntitlements(student.id, ["sdm"], ev.provider, status, "pais-oculto");
+  return { status: "processado", detalhe: `${student.code} país oculto=${status}` };
 }
 
 /** Reprocessa um evento já salvo em `events` (AD08). */

@@ -12,7 +12,7 @@ import { guiaEtapa } from "@/lib/domain/explica-etapas";
  * Cabeçalho de toda etapa: onde ela está (passo X de N, trilha clicável), o título
  * e o "Entenda" com a aula (regra 2: explica antes de pedir). Etapa feita: o Entenda fica recolhido.
  */
-export async function EtapaHead({ pastaId, pastaNome, etapa, etapas, tipo = "", children }: { pastaId: string; pastaNome: string; etapa: EtapaStatus; etapas: EtapaStatus[]; tipo?: string; children?: ReactNode }) {
+export async function EtapaHead({ pastaId, pastaNome, etapa, etapas, tipo = "", oculto, children }: { pastaId: string; pastaNome: string; etapa: EtapaStatus; etapas: EtapaStatus[]; tipo?: string; oculto?: string | null; children?: ReactNode }) {
   const guia = guiaEtapa(tipo, etapa.slug);
   const cor = visualEtapa(etapa.slug).cor;
   const aula = etapa.aula ? await db().query.lessons.findFirst({ where: eq(schema.lessons.id, etapa.aula), columns: { id: true, titulo: true } }) : null;
@@ -20,6 +20,13 @@ export async function EtapaHead({ pastaId, pastaNome, etapa, etapas, tipo = "", 
   const feitas = etapas.filter((e) => e.ok).length;
   return (
     <div className="mb-1 flex flex-col gap-3 pt-3 lg:pt-0">
+      {oculto ? (
+        <Link href="/app/oculto" className="oc-convite flex min-h-11 items-center gap-2 rounded-xl border border-c-amber/60 px-3 py-2 text-sm text-text no-underline" style={{ background: "linear-gradient(135deg, #1a1030, #0b0814)" }}>
+          <span className="text-c-amber"><Icone nome="globo" tamanho={16} /></span>
+          <span className="flex-1"><b className="text-c-amber">Produto do País Oculto</b> · {oculto}</span>
+          <span className="text-xs font-bold text-c-amber">Ver a estratégia →</span>
+        </Link>
+      ) : null}
       <div className="flex items-center justify-between gap-3">
         <Link href={`/app/p/${pastaId}`} className="flex min-h-11 items-center gap-1.5 self-start text-sm font-semibold text-muted no-underline hover:text-text">
           <span aria-hidden>←</span> {pastaNome}

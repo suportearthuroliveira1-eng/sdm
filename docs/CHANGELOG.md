@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-11-09 · Países Ocultos no menu, prévia com checkout e aba completa
+- **Menu**: aba "Ocultos" (computador: "Países Ocultos"), dourada, pra todas.
+- **Sem acesso, a aba vira prévia de venda**:
+  - castelo trancado (o portão treme quando ela toca), uma espiada com 3 cartas embaçadas e o que ela recebe;
+  - oferta com preço, contagem regressiva e barra de vagas, e o botão "Quero a chave do País Oculto" pro checkout.
+  - **Escassez só com dado real** do admin: vagas restantes = vagas da turma menos quem já tem acesso; prazo de fechamento. Sem isso, não aparece número.
+  - Turma fechada (sem vaga, prazo vencido ou venda desligada): "Me avise quando abrir" (lista de espera, contada no admin). Convite no Início enquanto a turma está aberta.
+- **Compra pela Hubla libera sozinha**: Admin → País Oculto → Venda (checkout, preço, vagas, prazo, ID do produto na Hubla).
+  - A compra coloca a aluna na lista.
+  - Conta nova ganha acesso ao app (marcado com a origem) e senha provisória por e-mail.
+  - Reembolso ou chargeback tira o País Oculto e, se o acesso ao app veio só dele, tira também.
+- **Com acesso, tudo numa aba só** (Mapa · Estratégia · Produtos):
+  - o portão só abre animado na primeira vez, com "ver a abertura de novo";
+  - o plano de ação vira caixinhas que salvam na hora, com barra de progresso;
+  - **dossiê em PDF** (capa noturna com o segredo, produto, ângulo, oferta com preço da tabela, onde divulgar, plano com caixinhas, ganchos, onde receber, cuidados);
+  - **produtos criados ficam salvos**: um por país, sem duplicar, com progresso e "Continuar: próximo passo";
+  - toda etapa de um produto oculto mostra "Produto do País Oculto · país" com link pra estratégia, e a etapa Idioma e país lembra o mercado da estratégia.
+
 ## 2026-11-09 · País Oculto: o time sempre entra
 - Em produção a dona liberou o acesso e mesmo assim caiu num 404. Agora quem é do time (admin, suporte, conteúdo) sempre entra no País Oculto, sem estar na lista. A lista aceita qualquer id no formato uuid (antes um id fora da versão 4 invalidava a lista inteira) e, se o valor salvo tiver algum campo estranho, a lista de quem tem acesso não se perde. Atalhos `/oculto` e `/app/pais-oculto` levam pra `/app/oculto`; botão "Abrir o País Oculto" no admin.
 

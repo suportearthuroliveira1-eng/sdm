@@ -5,7 +5,7 @@ import { limparTitulo, TEMAS, type CapEbook, type ExtrasEbook, type TemaKey } fr
 
 /* ---------- fontes (OFL, em public/fonts) ---------- */
 let fontesOk = false;
-function registrarFontes() {
+export function registrarFontes() {
   if (fontesOk) return;
   const f = (n: string) => path.join(process.cwd(), "public", "fonts", `${n}.ttf`);
   Font.register({ family: "Jakarta", fonts: [{ src: f("Jakarta-Regular") }, { src: f("Jakarta-Italic"), fontStyle: "italic" }, { src: f("Jakarta-Bold"), fontWeight: 700 }, { src: f("Jakarta-ExtraBold"), fontWeight: 800 }] });
