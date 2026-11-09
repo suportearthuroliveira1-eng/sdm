@@ -3,10 +3,10 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { db, schema } from "@/lib/db";
 import type { EtapaStatus } from "@/lib/domain/etapas";
-import { RolarAtual } from "./rolar-atual";
 import { Icone } from "@/components/ui/icone";
 import { visualEtapa } from "@/lib/domain/visual-etapas";
 import { guiaEtapa } from "@/lib/domain/explica-etapas";
+import { fasesDa, indiceDaFase } from "@/lib/domain/jornada";
 
 /**
  * Cabeçalho de toda etapa: onde ela está (passo X de N, trilha clicável), o título
@@ -18,6 +18,12 @@ export async function EtapaHead({ pastaId, pastaNome, etapa, etapas, tipo = "", 
   const aula = etapa.aula ? await db().query.lessons.findFirst({ where: eq(schema.lessons.id, etapa.aula), columns: { id: true, titulo: true } }) : null;
   const i = etapas.findIndex((e) => e.slug === etapa.slug);
   const feitas = etapas.filter((e) => e.ok).length;
+  const prox = etapas[i + 1];
+  const fases = fasesDa(tipo).filter((f) => etapas.some((e) => f.slugs.includes(e.slug)));
+  const fAtual = indiceDaFase(fases, etapa.slug);
+  const daAtual = etapas.filter((e) => fases[fAtual]?.slugs.includes(e.slug));
+  // a linha anda dentro da fase conforme ela conclui as etapas dela
+  const progressoFase = daAtual.length ? Math.min(0.9, daAtual.filter((e) => e.ok).length / daAtual.length) : 0;
   return (
     <div className="mb-1 flex flex-col gap-3 pt-3 lg:pt-0">
       {oculto ? (
@@ -28,56 +34,83 @@ export async function EtapaHead({ pastaId, pastaNome, etapa, etapas, tipo = "", 
         </Link>
       ) : null}
       <div className="flex items-center justify-between gap-3">
-        <Link href={`/app/p/${pastaId}`} className="flex min-h-11 items-center gap-1.5 self-start text-sm font-semibold text-muted no-underline hover:text-text">
-          <span aria-hidden>←</span> {pastaNome}
+        <Link href={`/app/p/${pastaId}`} className="flex min-h-11 min-w-0 items-center gap-1.5 text-sm font-semibold text-muted no-underline hover:text-text">
+          <span aria-hidden>←</span> <span className="truncate">{pastaNome}</span>
         </Link>
-        <span className="flex shrink-0 items-center gap-2">
-          {feitas > 1 ? (
-            <Link href={`/app/p/${pastaId}/pronto`} className="flex min-h-9 items-center gap-1 rounded-full border border-ok-line px-3 text-xs font-bold text-ok no-underline">
-              <Icone nome="olho" tamanho={14} /> Tudo pronto
-            </Link>
-          ) : null}
-          <span className="rounded-full bg-sel px-3 py-1 text-xs font-bold text-accent-2">
-            Passo {i + 1} de {etapas.length}
-          </span>
-        </span>
+        {feitas > 1 ? (
+          <Link href={`/app/p/${pastaId}/pronto`} className="flex min-h-9 shrink-0 items-center gap-1 rounded-full border border-ok-line px-3 text-xs font-bold text-ok no-underline">
+            <Icone nome="olho" tamanho={14} /> Tudo pronto
+          </Link>
+        ) : null}
       </div>
-      <nav aria-label={`Passos de ${pastaNome}: ${feitas} de ${etapas.length} prontos`} className="flex flex-col gap-2">
-        <div className="flex gap-1" aria-hidden>
-          {etapas.map((e) => (
-            <span key={e.slug} className={`h-1.5 flex-1 rounded-full transition-colors ${e.slug === etapa.slug || e.ok ? "" : "bg-line"}`} style={e.slug === etapa.slug ? { background: visualEtapa(e.slug).cor } : e.ok ? { background: "var(--ok)" } : undefined} />
-          ))}
-        </div>
-        <ol className="-mx-4 flex list-none gap-1.5 overflow-x-auto px-4 pb-1 [scrollbar-width:none] lg:mx-0 lg:flex-wrap lg:px-0">
-          {etapas.map((e) => {
-            const atual = e.slug === etapa.slug;
-            const cls = `flex min-h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3 text-xs font-semibold no-underline ${atual ? "border-accent bg-sel text-text" : e.ok ? "border-line bg-surface text-text-2" : "border-line text-muted"}`;
-            const v = visualEtapa(e.slug);
-            const marca = e.ok ? <Icone nome="check" tamanho={14} espessura={2.4} className="text-ok" /> : <Icone nome={v.icone} tamanho={14} />;
+
+      {/* a jornada em poucas fases: onde ela está e o que vem depois */}
+      <nav aria-label={`Seu caminho: fase ${fAtual + 1} de ${fases.length}, ${fases[fAtual]?.nome}`} className="surge flex flex-col gap-2 rounded-2xl border border-line bg-surface p-3">
+        <ol className="relative m-0 flex list-none items-start justify-between p-0">
+          <span aria-hidden className="absolute left-5 right-5 top-[17px] h-[3px] rounded-full bg-line" />
+          <span aria-hidden className="absolute left-5 top-[17px] h-[3px] rounded-full transition-[width] duration-700" style={{ width: `calc((100% - 2.5rem) * ${fases.length > 1 ? (fAtual + progressoFase) / (fases.length - 1) : 0})`, background: "linear-gradient(90deg, var(--ok), " + (fases[fAtual]?.cor ?? "var(--accent)") + ")" }} />
+          {fases.map((f, k) => {
+            const daFase = etapas.filter((e) => f.slugs.includes(e.slug));
+            const feita = daFase.length > 0 && daFase.every((e) => e.ok);
+            const agora = k === fAtual;
+            const destino = daFase.find((e) => !e.ok && !e.travada) ?? daFase[0];
+            const bolinha = (
+              <span className={`grid size-[34px] place-items-center rounded-full border-2 transition-all duration-500 ${agora ? "pulsa scale-110" : ""}`} style={{ ["--cor" as string]: f.cor, borderColor: agora || feita ? f.cor : "var(--line-2)", background: agora ? f.cor : feita ? `color-mix(in srgb, ${f.cor} 18%, var(--surface))` : "var(--bg)", color: agora ? "var(--accent-ink)" : feita ? f.cor : "var(--muted)" }}>
+                <Icone nome={feita && !agora ? "check" : f.icone} tamanho={16} espessura={feita && !agora ? 3 : 2} />
+              </span>
+            );
             return (
-              <li key={e.slug} style={{ color: e.travada && !atual ? undefined : v.cor }}>
-                {e.travada && !atual ? (
-                  <span className={`${cls} opacity-60`} title={e.travada}>{marca} {e.nome}</span>
-                ) : (
-                  <Link href={hrefEtapaCliente(pastaId, e.slug)} aria-current={atual ? "step" : undefined} className={cls} style={atual ? { borderColor: v.cor } : undefined}>
-                    {marca} <span className="text-text">{e.nome}</span>
-                  </Link>
-                )}
+              <li key={f.k} className="relative z-[1] flex w-14 flex-col items-center gap-1 text-center">
+                {destino && !destino.travada && !agora ? <Link href={hrefEtapaCliente(pastaId, destino.slug)} aria-label={`Fase ${f.nome}`} className="no-underline">{bolinha}</Link> : bolinha}
+                <span className={`text-[11px] leading-tight ${agora ? "font-bold text-text" : "text-muted"}`}>{f.nome}</span>
               </li>
             );
           })}
         </ol>
-        <RolarAtual />
+        <div className="flex items-center justify-between gap-2 border-t border-line pt-2 text-xs">
+          <span className="text-muted">Passo <b className="text-text">{i + 1}</b> de {etapas.length}</span>
+          {prox ? <span className="truncate text-muted">Depois: <b className="text-text-2">{prox.nome}</b></span> : <span className="font-bold text-ok">Último passo</span>}
+        </div>
+        <details className="group">
+          <summary className="flex min-h-9 cursor-pointer list-none items-center justify-center gap-1 text-xs font-bold text-accent-2 [&::-webkit-details-marker]:hidden">
+            Ver todos os passos <span aria-hidden className="transition group-open:rotate-90">›</span>
+          </summary>
+          <ol className="surge m-0 mt-1 grid list-none gap-1 p-0 sm:grid-cols-2">
+            {etapas.map((e, k) => {
+              const atual = e.slug === etapa.slug;
+              const v = visualEtapa(e.slug);
+              const conteudo = (
+                <>
+                  <span className={`grid size-6 shrink-0 place-items-center rounded-full text-[11px] font-bold ${e.ok ? "bg-ok text-accent-ink" : atual ? "text-accent-ink" : "border border-line-2 text-muted"}`} style={atual && !e.ok ? { background: v.cor } : undefined}>
+                    {e.ok ? <Icone nome="check" tamanho={12} espessura={3} /> : k + 1}
+                  </span>
+                  <span className={`truncate ${atual ? "font-bold text-text" : e.travada ? "text-muted" : "text-text-2"}`}>{e.nome}</span>
+                </>
+              );
+              return (
+                <li key={e.slug}>
+                  {e.travada && !atual ? (
+                    <span className="flex min-h-10 items-center gap-2 rounded-lg px-2 text-sm opacity-60" title={e.travada}>{conteudo}</span>
+                  ) : (
+                    <Link href={hrefEtapaCliente(pastaId, e.slug)} aria-current={atual ? "step" : undefined} className={`flex min-h-10 items-center gap-2 rounded-lg px-2 text-sm no-underline ${atual ? "bg-sel" : "hover:bg-surface-2"}`}>{conteudo}</Link>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
+        </details>
       </nav>
+
       <div className="flex items-center gap-3">
         <span className="flutua grid size-12 shrink-0 place-items-center rounded-2xl" style={{ color: visualEtapa(etapa.slug).cor, background: `color-mix(in srgb, ${visualEtapa(etapa.slug).cor} 16%, transparent)` }}>
           <Icone nome={visualEtapa(etapa.slug).icone} tamanho={26} />
         </span>
-        <h1 className="m-0 text-[24px] font-bold leading-tight lg:text-[30px]">{etapa.nome}</h1>
+        <span className="flex flex-col">
+          <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: fases[fAtual]?.cor }}>{fases[fAtual]?.nome}</span>
+          <h1 className="m-0 text-[24px] font-bold leading-tight lg:text-[30px]">{etapa.nome}</h1>
+        </span>
       </div>
-      <div className="-mt-2 flex flex-col gap-1">
-        {etapa.ok ? <span className="text-sm font-bold text-ok">Etapa feita. Pode rever ou mudar o que quiser.</span> : null}
-      </div>
+      {etapa.ok ? <span className="-mt-1 text-sm font-bold text-ok">Etapa feita. Pode rever ou mudar o que quiser.</span> : null}
       {guia ? (
         <details open={!etapa.ok} className="group surge rounded-2xl border-[1.5px] bg-surface" style={{ borderColor: `color-mix(in srgb, ${cor} 45%, transparent)` }}>
           <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 px-4 py-2.5 [&::-webkit-details-marker]:hidden">

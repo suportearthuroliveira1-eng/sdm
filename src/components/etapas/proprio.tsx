@@ -12,9 +12,8 @@ import { tabelaPrecos } from "@/lib/server/config-app";
 import { LinkTester } from "./link-tester";
 import { BarraAcao, PassoAPasso } from "./comum";
 import { ETAPAS_PROPRIO } from "@/lib/domain/etapas";
-import { FASES_PROPRIO, PENSAMENTOS_IA } from "@/lib/domain/explica-etapas";
-import { visualEtapa } from "@/lib/domain/visual-etapas";
-import { CaminhoFases, PensamentoIa } from "./entenda-produto";
+import { FASES_PASTA } from "@/lib/domain/jornada";
+import { Robo } from "@/components/ux/ia-trabalhando";
 import { PilotoAutomatico } from "./piloto";
 
 type P = { id: string; dados: Record<string, unknown>; studentId: string; paisVenda: string | null };
@@ -27,39 +26,51 @@ async function AvisoIa() {
   return <div className="warn">A IA ainda não está ligada neste app. Assim que o time colocar a chave, os botões de IA funcionam.</div>;
 }
 
-/** B0 · antes de criar: o que vai acontecer (4 fases que se acendem), o que a IA pensa e a escolha logo no começo. */
+const JORNADA_PROPRIO: Record<string, { frase: string; tempo: string }> = {
+  criar: { frase: "A IA sugere 3 ideias. Você escolhe uma e ela monta a ficha, a oferta e o preço.", tempo: "uns 3 min" },
+  ebook: { frase: "A IA escreve o ebook, capítulo por capítulo. Você confere e aprova.", tempo: "uns 3 min" },
+  vender: { frase: "Página de vendas, onde receber e uma compra de teste.", tempo: "com você" },
+  divulgar: { frase: "Anúncio ou vídeo: a IA escreve, você posta e acompanha.", tempo: "com você" },
+};
+
+/** B0 · antes de criar: a jornada em 4 fases (clara, de cima pra baixo) e a escolha: a IA faz tudo ou passo a passo. */
 export async function ProprioEntenda({ p, proxima }: { p: P; proxima: string }) {
-  const d = await db().query.diagnostics.findFirst({ where: eq(schema.diagnostics.studentId, p.studentId), orderBy: desc(schema.diagnostics.versao) });
-  const r = (d?.respostas ?? {}) as Record<string, string | string[]>;
-  const txt = (v: string | string[] | undefined) => (Array.isArray(v) ? v.join(", ") : v ?? "");
-  const dados = [
-    ["Gosta de", r.assuntos],
-    ["Mora em", r.pais],
-    ["Fala", r.idiomas],
-    ["Tempo por dia", r.tempo],
-    ["Quer", r.objetivo],
-  ]
-    .map(([rotulo, v]) => ({ rotulo: rotulo as string, valor: txt(v as string | string[] | undefined) }))
-    .filter((x) => x.valor);
-  const fases = FASES_PROPRIO.map((f) => {
-    const v = visualEtapa(f.etapas[0]);
-    return {
-      k: f.k,
-      nome: f.nome,
-      frase: f.frase,
-      minutos: f.minutos,
-      cor: v.cor,
-      icone: v.icone,
-      passos: f.etapas.map((slug) => ({ nome: ETAPAS_PROPRIO.find((x) => x.slug === slug)?.nome ?? slug, ...visualEtapa(slug) })),
-    };
-  });
+  const fases = FASES_PASTA.proprio.filter((f) => f.k !== "comecar");
+  const nomes = (slugs: string[]) => slugs.map((s) => ETAPAS_PROPRIO.find((x) => x.slug === s)?.nome).filter(Boolean).join(" · ");
   const jaComecou = feito(p, "entenda");
   return (
     <>
-      <section className="surge relative overflow-hidden rounded-3xl border border-line p-5" style={{ background: "radial-gradient(120% 120% at 100% 0%, color-mix(in srgb, var(--c-teal) 16%, transparent), transparent 55%), radial-gradient(120% 120% at 0% 100%, color-mix(in srgb, var(--c-pink) 14%, transparent), transparent 55%), var(--surface)" }}>
-        <h2 className="m-0 text-[22px] font-bold leading-snug">Você vai criar um ebook curto, sobre algo que você já conhece</h2>
-        <p className="tx m-0 mt-1.5">A IA faz o trabalho pesado. Você escolhe e aprova. Tudo em português primeiro: o país de venda vem depois.</p>
-        <div className="mt-4"><PensamentoIa dados={dados} pensamentos={PENSAMENTOS_IA} /></div>
+      <section className="surge flex items-center gap-3 rounded-3xl border border-line p-4" style={{ background: "radial-gradient(120% 120% at 100% 0%, color-mix(in srgb, var(--c-teal) 14%, transparent), transparent 55%), var(--surface)" }}>
+        <span className="shrink-0"><Robo tamanho={76} /></span>
+        <span className="flex flex-col gap-1">
+          <span className="text-[20px] font-bold leading-snug">Vamos criar o seu ebook</span>
+          <span className="text-sm text-text-2">A IA faz o trabalho pesado. Você escolhe e aprova. Tudo em português.</span>
+        </span>
+      </section>
+
+      <section aria-labelledby="jornada" className="flex flex-col gap-2">
+        <h2 id="jornada" className="m-0 text-lg font-bold">O seu caminho</h2>
+        <ol className="m-0 flex list-none flex-col p-0">
+          {fases.map((f, i) => (
+            <li key={f.k} className="oc-revela relative flex gap-3" style={{ animationDelay: `${i * 160}ms` }}>
+              <span className="flex flex-col items-center">
+                <span className={`relative z-[1] grid size-11 shrink-0 place-items-center rounded-2xl ${i === 0 ? "pulsa" : ""}`} style={{ ["--cor" as string]: f.cor, color: i === 0 ? "var(--accent-ink)" : f.cor, background: i === 0 ? f.cor : `color-mix(in srgb, ${f.cor} 16%, var(--bg))` }}>
+                  <Icone nome={f.icone} tamanho={22} />
+                </span>
+                {i < fases.length - 1 ? <span aria-hidden className="fluxo-traco my-1 w-[2.5px] flex-1 rounded-full opacity-70" style={{ ["--cor" as string]: f.cor }} /> : null}
+              </span>
+              <div className={`mb-3 flex flex-1 flex-col gap-1 rounded-2xl border p-3.5 ${i === 0 ? "bg-surface" : "border-transparent"}`} style={i === 0 ? { borderColor: `color-mix(in srgb, ${f.cor} 50%, transparent)` } : undefined}>
+                <span className="flex flex-wrap items-center gap-2">
+                  <span className="text-[11px] font-bold uppercase tracking-wider" style={{ color: f.cor }}>{i + 1}. {f.nome}</span>
+                  {i === 0 ? <span className="rounded-full px-2 py-0.5 text-[10px] font-bold text-accent-ink" style={{ background: f.cor }}>começa aqui</span> : null}
+                  <span className="ml-auto text-[11px] text-muted">{JORNADA_PROPRIO[f.k]?.tempo}</span>
+                </span>
+                <span className="text-[15px] font-semibold leading-snug text-text">{JORNADA_PROPRIO[f.k]?.frase}</span>
+                <span className="text-xs text-muted">{f.k === "divulgar" ? "Pago, orgânico ou os dois" : nomes(f.slugs)}</span>
+              </div>
+            </li>
+          ))}
+        </ol>
       </section>
 
       <section className="flex flex-col gap-2.5" aria-labelledby="como-quer">
@@ -68,15 +79,10 @@ export async function ProprioEntenda({ p, proxima }: { p: P; proxima: string }) 
           <PilotoAutomatico pastaId={p.id} revisaoHref={`/app/p/${p.id}/revisao`} />
           <div className="flex flex-col gap-1.5 rounded-2xl border border-line bg-surface p-4">
             <span className="flex items-center gap-2 font-bold"><span className="text-accent"><Icone nome="passos" tamanho={20} /></span> Quero ir junto, passo a passo</span>
-            <span className="mu text-sm">Você vê e decide cada etapa. Cada uma explica o que é antes de pedir algo.</span>
+            <span className="mu text-sm">Você decide cada etapa. Cada uma explica o que é antes.</span>
             <div className="mt-auto pt-1"><MarcarFeito pastaId={p.id} etapa="entenda" feita={jaComecou} proxima={proxima}>Começar passo a passo</MarcarFeito></div>
           </div>
         </div>
-      </section>
-
-      <section className="cd gap-3" aria-labelledby="o-caminho">
-        <h2 id="o-caminho" className="m-0 flex items-center gap-2 text-lg font-bold"><span className="text-c-amber"><Icone nome="passos" tamanho={22} /></span> O que vai acontecer, em 4 fases</h2>
-        <CaminhoFases fases={fases} />
       </section>
     </>
   );

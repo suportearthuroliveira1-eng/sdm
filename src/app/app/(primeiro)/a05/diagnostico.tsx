@@ -121,13 +121,7 @@ export function Diagnostico({ perguntas, inicial, inicio }: { perguntas: Pergunt
 
   return (
     <>
-      <Passos atual={3} rotulo="Diagnóstico" />
-      <div className="flex flex-col gap-1.5">
-        <div className="flex h-1.5 overflow-hidden rounded-[3px] bg-line" aria-hidden>
-          <div className="rounded-[3px] bg-accent transition-[width] duration-300" style={{ width: `${(i / perguntas.length) * 100}%` }} />
-        </div>
-        <span className="mu font-bold">Pergunta {i + 1} de {perguntas.length}</span>
-      </div>
+      <Passos atual={3} rotulo="Perguntas" sub={{ feitas: i, total: perguntas.length }} />
 
       <div key={p.k} className="oc-revela flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">

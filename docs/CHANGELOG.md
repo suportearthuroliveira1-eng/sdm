@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-09 · Jornada mais clara: fases no topo de cada etapa e Entenda de cima pra baixo
+- **Topo de toda etapa**: saíram as 13 etiquetas soltas. Agora aparece uma trilha de poucas fases (`src/lib/domain/jornada.ts`): no produto próprio Começar · Criar · Ebook · Vender · Divulgar, na afiliada Começar · Afiliação · Preparar · Divulgar. A fase de agora pulsa, a linha anda conforme as etapas da fase ficam prontas, e embaixo tem "Passo X de Y · Depois: próxima". A lista completa fica em "Ver todos os passos". O título da etapa mostra a fase.
+- **Entenda do produto próprio**: abre com o robô e "Vamos criar o seu ebook". "O seu caminho" vem em 4 fases de cima pra baixo, cada uma com uma frase, o tempo e as etapas, e a primeira marcada "começa aqui". Embaixo, a escolha (A IA faz tudo / passo a passo). Saíram o balão que trocava sozinho, os dados do diagnóstico e a trilha que girava (`entenda-produto.tsx` removido).
+- **Perguntas do primeiro acesso**: uma barra só. A trilha de 5 passos anda conforme as respostas e mostra "3 de 10" (antes eram duas barras).
+- Varredura: produto próprio 19/19, afiliada 10/10.
+
 ## 2026-11-09 · Primeiro acesso mais visual, com menos texto
 - **Trilha nova** no topo das 5 telas: bolinhas com ícone, a de agora pulsa, as feitas ganham check.
 - **Explicação quando ela pede**: botões "Pra que serve?", "Por que essa pergunta?", "Por quê?" e "Ver detalhes" (`components/primeiro/pra-que-serve.tsx`). O texto longo fica escondido até ela tocar.

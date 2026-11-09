@@ -1,6 +1,6 @@
 # Estado do projeto
 
-> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-09 (22ª tarefa: primeiro acesso mais visual e com menos texto, toque que já responde, Brasil como sugestão pra quem só fala português)** · branch `claude/intelligent-bohr-54teds`.
+> Foto atual (reescrita a cada tarefa). Última atualização: **2026-11-09 (23ª tarefa: jornada em fases no topo das etapas, Entenda de cima pra baixo, uma barra nas perguntas; contas do time zeradas em produção)** · branch `claude/intelligent-bohr-54teds`.
 
 ## Fase atual
 **O app segue `docs/App_SDM_Fluxo_Ideal.pdf`** (dois caminhos + divulgação). **IA ligada em produção** (chave da OpenAI em Admin → Chaves e variáveis, tabela `app_secrets`). Quase tudo do app é configurável no admin, sem deploy: perguntas do diagnóstico e regras de decisão, regras do primeiro acesso, textos, IA (modelos, limites, regras base, Professora, prompt de cada agente com versões).

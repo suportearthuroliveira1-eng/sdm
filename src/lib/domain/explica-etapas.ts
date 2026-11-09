@@ -40,19 +40,3 @@ export function guiaEtapa(tipo: string, slug: string): GuiaEtapa | null {
   if (slug === "entenda") return null;
   return (tipo === "proprio" ? PROPRIO[slug] : SDM[slug]) ?? COMUM[slug] ?? null;
 }
-
-/** As 4 fases do produto próprio (o "Entenda" mostra o caminho assim, em vez de 10 passos soltos). */
-export const FASES_PROPRIO = [
-  { k: "ideia", nome: "A ideia", frase: "A IA sugere 3 ideias ligadas ao que você gosta. Você escolhe uma.", etapas: ["ideias"], minutos: "1 min" },
-  { k: "produto", nome: "O produto", frase: "Ficha, oferta e preço, tudo em português. Depois você escolhe o país de venda.", etapas: ["ficha", "oferta", "mercado"], minutos: "2 min" },
-  { k: "ebook", nome: "O ebook", frase: "A IA escreve capítulo por capítulo, com tradução. Você confere e aprova.", etapas: ["ebook", "revisao"], minutos: "3 min" },
-  { k: "vender", nome: "Vender", frase: "Página de vendas, onde receber e um teste de compra antes de divulgar.", etapas: ["pagina", "plataforma", "conta", "teste"], minutos: "com você" },
-] as const;
-
-/** O que a IA "pensa" (balão do robô no Entenda, um por vez). */
-export const PENSAMENTOS_IA = [
-  "Junto o que você sabe com o que as pessoas procuram.",
-  "Escolho um problema pequeno: ebook curto vende quando resolve uma coisa só.",
-  "Escrevo uma promessa honesta: sem cura, sem ganho garantido, sem número inventado.",
-  "Confiro as regras antes de te mostrar. Se falhar, refaço sozinha.",
-];
