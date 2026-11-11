@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useActionState, useState, useTransition } from "react";
-import { criarMembro, mudarMembro, type TimeState } from "@/lib/actions/admin-time";
+import { criarMembro, mudarMembro, senhaMembro, type TimeState } from "@/lib/actions/admin-time";
 
 const PAPEIS = [
   { k: "admin", t: "Admin" },
@@ -39,6 +39,14 @@ export function MembroLinha({ id, nome, email, papel, ativo, eu }: { id: string;
   const router = useRouter();
   const [p, start] = useTransition();
   const [erro, setErro] = useState("");
+  const [senha, setSenha] = useState("");
+  const gerarSenha = () =>
+    start(async () => {
+      setErro("");
+      const r = await senhaMembro(id);
+      if (r.erro) setErro(r.erro);
+      else setSenha(r.senha ?? "");
+    });
   const mudar = (m: Parameters<typeof mudarMembro>[1]) =>
     start(async () => {
       setErro("");
@@ -52,12 +60,14 @@ export function MembroLinha({ id, nome, email, papel, ativo, eu }: { id: string;
         <span className="truncate text-sm font-bold">{nome || email}{eu ? " (você)" : ""}</span>
         <span className="truncate text-xs text-muted">{email}{ativo ? "" : " · sem acesso"}</span>
         {erro ? <span role="alert" className="text-xs text-danger">{erro}</span> : null}
+        {senha ? <span className="text-xs text-ok">Senha provisória: <b className="font-mono text-sm text-text" data-senha>{senha}</b> (aparece uma vez)</span> : null}
       </span>
       <span className="flex items-center gap-2">
         <label className="sr-only" htmlFor={`papel-${id}`}>Papel</label>
         <select id={`papel-${id}`} value={papel} disabled={p} onChange={(e) => mudar({ papel: e.target.value as "admin" | "suporte" | "conteudo" })} className="ain min-h-9 w-auto py-1 text-sm">
           {PAPEIS.map((x) => <option key={x.k} value={x.k}>{x.t}</option>)}
         </select>
+        <button type="button" className="ab2 min-h-9 px-3 text-xs" disabled={p} onClick={gerarSenha}>Gerar senha provisória</button>
         <button type="button" className="ab2 min-h-9 px-3 text-xs" disabled={p} onClick={() => mudar({ ativo: !ativo })}>{ativo ? "Tirar acesso" : "Devolver acesso"}</button>
       </span>
     </li>

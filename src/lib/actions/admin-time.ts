@@ -61,3 +61,26 @@ export async function mudarMembro(id: string, mudanca: { papel?: "admin" | "supo
   revalidatePath("/admin/time");
   return { ok: true };
 }
+
+/** Admin → Time: gera uma senha provisória nova pra alguém do time (mostra uma vez; a pessoa troca no 1º acesso). */
+export async function senhaMembro(id: string): Promise<{ ok?: boolean; erro?: string; senha?: string; email?: string }> {
+  const admin = await requireAdmin(["admin"]);
+  const uid = z.string().uuid().parse(id);
+  const m = await db().query.adminUsers.findFirst({ where: eq(schema.adminUsers.id, uid) });
+  if (!m) return { erro: "Pessoa não encontrada." };
+  let authId = m.authUserId;
+  try {
+    if (!authId) {
+      const sb = supabaseAdmin();
+      const c = await sb.auth.admin.createUser({ email: m.email, email_confirm: true });
+      authId = c.data.user?.id ?? (await sb.auth.admin.generateLink({ type: "magiclink", email: m.email })).data.user?.id ?? null;
+      if (!authId) return { erro: "Não deu pra criar o login dessa pessoa agora." };
+      await db().update(schema.adminUsers).set({ authUserId: authId }).where(eq(schema.adminUsers.id, uid));
+    }
+    const senha = await definirSenhaProvisoria(authId);
+    await audit(admin.id, "time.senha_provisoria", { tipo: "admin", id: m.email });
+    return { ok: true, senha, email: m.email };
+  } catch (e) {
+    return { erro: errMsg(e) };
+  }
+}
