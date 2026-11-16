@@ -126,7 +126,7 @@ body {
   @apply text-[13px] font-semibold;
 }
 @utility in {
-  @apply box-border block min-h-[46px] w-full rounded-[calc(var(--raio)-2px)] border border-line-2 bg-surface px-3 text-[15px] text-text placeholder:text-muted/70 focus:border-accent focus:outline-none;
+  @apply box-border block min-h-[46px] w-full rounded-[calc(var(--raio)-2px)] border border-line-2 bg-surface px-3 text-[15px] text-text transition-[border-color,box-shadow] duration-150 placeholder:text-muted/70 hover:border-accent/50 focus:border-accent focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--accent)_22%,transparent)] focus:outline-none;
 }
 @utility ta {
   @apply box-border block min-h-[84px] w-full resize-y rounded-[calc(var(--raio)-2px)] border border-line-2 bg-surface px-3 py-2.5 text-sm leading-[1.45] text-text focus:border-accent focus:outline-none;
@@ -141,7 +141,7 @@ body {
   @apply flex size-[26px] flex-none items-center justify-center rounded-full text-xs font-bold;
 }
 @utility ain {
-  @apply box-border block min-h-11 w-full rounded-xl border border-line-2 bg-bg px-3 text-sm text-text placeholder:text-muted/70 focus:border-accent focus:outline-none;
+  @apply box-border block min-h-11 w-full rounded-xl border border-line-2 bg-bg px-3 text-sm text-text transition-[border-color,box-shadow] duration-150 placeholder:text-muted/70 hover:border-accent/50 focus:border-accent focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--accent)_22%,transparent)] focus:outline-none;
 }
 
 /* ---------- movimento e retorno ao toque ---------- */

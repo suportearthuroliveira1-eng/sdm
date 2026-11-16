@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-16 · Campo de senha mais claro
+- Login, cadastro e trocar senha: campo de senha com cadeado, "mostrar o que digitei" (olho), dica dentro do campo e "Esqueci a senha" ao lado do rótulo. E-mail com ícone (`components/ui/campo.tsx`). Todos os campos ganharam borda mais visível ao passar o dedo/mouse e um brilho ao focar. Conta da Amanda virou admin (Admin → Time).
+
 ## 2026-11-11 · Senha provisória pra quem é do time
 - Admin → Time do admin: botão "Gerar senha provisória" em cada pessoa (mostra uma vez; no 1º acesso ao app ela cria a definitiva). Criado em produção o admin `Admin SDM` com papel Admin.
 

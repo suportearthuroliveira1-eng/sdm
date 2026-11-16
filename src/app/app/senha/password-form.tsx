@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { CampoSenha } from "@/components/ui/campo";
 import { useActionState, useEffect } from "react";
 import { setPassword, type FormState } from "@/lib/actions/auth";
 import { Notice } from "@/components/ui/screen";
@@ -19,12 +20,12 @@ export function PasswordForm({ to, primeiro }: { to: string; primeiro: boolean }
       <input type="hidden" name="to" value={to} />
       <div className="flex flex-col gap-1.5">
         <label htmlFor="senha" className="lb">Nova senha</label>
-        <input id="senha" name="senha" type="password" required minLength={8} autoComplete="new-password" className="in" aria-describedby="senha-regra" />
+        <CampoSenha id="senha" name="senha" required minLength={8} autoComplete="new-password" aria-describedby="senha-regra" placeholder="Crie uma senha" classe="in" />
         <span id="senha-regra" className="mu">Pelo menos 8 caracteres, com letra e número.</span>
       </div>
       <div className="flex flex-col gap-1.5">
         <label htmlFor="confirmar" className="lb">Repita a senha</label>
-        <input id="confirmar" name="confirmar" type="password" required autoComplete="new-password" className="in" />
+        <CampoSenha id="confirmar" name="confirmar" required autoComplete="new-password" placeholder="Repita a senha" classe="in" />
       </div>
       {state.error ? <Notice tone="danger">{state.error}</Notice> : null}
       <button className="b1" disabled={pending}>{pending ? "Salvando..." : "Salvar senha"}</button>
