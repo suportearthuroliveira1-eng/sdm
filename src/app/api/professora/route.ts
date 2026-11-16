@@ -4,6 +4,7 @@ import { getAuthUser } from "@/lib/auth/session";
 import { db, schema } from "@/lib/db";
 import { configIa, modelo, openai } from "@/lib/ai/run";
 import { promptProfessora } from "@/lib/ai/professora";
+import { contextoDaAluna } from "@/lib/ai/contexto-aluna";
 import { getSetting } from "@/lib/server/settings";
 import { rateLimit } from "@/lib/server/rate-limit";
 import { errMsg, log } from "@/lib/server/log";
@@ -45,7 +46,11 @@ export async function POST(req: Request) {
   await db().insert(schema.chatMessages).values({ studentId: student.id, studentProductId: pastaId ?? null, aulaAtual: aula ?? null, papel: "user", texto, anexoPath: print ? "[print enviado]" : null });
 
   const client = await openai();
-  const instrucoes = await promptProfessora(cfgIa);
+  const ficha = await contextoDaAluna(student.id).catch((e) => {
+    log("warn", "ficha da aluna falhou", { err: errMsg(e) });
+    return "";
+  });
+  const instrucoes = await promptProfessora(cfgIa, ficha);
   const input = [
     ...hist.map((m) => ({ role: m.papel === "assistant" ? ("assistant" as const) : ("user" as const), content: m.texto })),
     {

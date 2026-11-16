@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-16 · Professora consulta a ficha da aluna
+- `src/lib/ai/contexto-aluna.ts`: antes de cada resposta a Professora lê os dados da própria aluna.
+  - O que ela lê: nome, país, idiomas, se fez o diagnóstico e as respostas, a sugestão da IA e o caminho.
+  - De cada produto: etapas prontas, próximo passo com o endereço, o que está fechado e por quê, ideia, preço, país, divulgação e se veio do País Oculto.
+  - Também: aulas vistas (e as últimas), onde parou e se tem País Oculto.
+- **Mapa do app**: menu, ordem das etapas de cada caminho e onde tocar.
+- **Regras novas da Professora**: chamar pelo nome, dizer o próximo passo exato, não pedir o que já foi feito e não inventar o que não está na ficha.
+- A ficha vai no fim das instruções, então a parte fixa continua no cache da OpenAI.
+- Teste com conta real (3 de 12 prontas): ela respondeu "você parou em Oferta, toque em Produtos → ... → Oferta". Perguntada sobre o preço, disse que ainda não está definido (não inventou).
+
 ## 2026-11-16 · Campo de senha mais claro
 - Login, cadastro e trocar senha: campo de senha com cadeado, "mostrar o que digitei" (olho), dica dentro do campo e "Esqueci a senha" ao lado do rótulo. E-mail com ícone (`components/ui/campo.tsx`). Todos os campos ganharam borda mais visível ao passar o dedo/mouse e um brilho ao focar. Conta da Amanda virou admin (Admin → Time).
 
