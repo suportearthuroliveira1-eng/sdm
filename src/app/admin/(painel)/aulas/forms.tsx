@@ -5,7 +5,7 @@ import { useActionState, useEffect, useRef, useState, useTransition } from "reac
 import { Notice } from "@/components/ui/screen";
 import { Spinner } from "@/components/ux/submit-button";
 import { toast } from "@/components/ux/toaster";
-import { apagarAula, apagarTrilha, enviarImagem, moverAula, removerImagem, salvarAula, salvarTrilha, type AulasState } from "@/lib/actions/admin-aulas";
+import { apagarAula, apagarTrilha, enviarImagem, importarVideos, moverAula, removerImagem, salvarAula, salvarTrilha, type AulasState, type ImportVideos } from "@/lib/actions/admin-aulas";
 import { REGRA_LABEL, REGRAS_LIBERACAO, type TipoImagem } from "@/lib/domain/aulas-visual";
 import { PRODUCT_LABEL, PRODUCTS, type Product } from "@/lib/domain/entitlements";
 
@@ -271,5 +271,24 @@ export function Apagar({ tipo, id, bloqueio }: { tipo: "aula" | "trilha"; id: st
       {bloqueio ? <span className="mu">{bloqueio}</span> : null}
       {erro ? <Notice tone="danger">{erro}</Notice> : null}
     </div>
+  );
+}
+
+/** Colar vários vídeos de uma vez (id + link por linha). */
+export function ImportarVideos() {
+  const [st, action, pending] = useActionState(importarVideos, null as ImportVideos);
+  return (
+    <form action={action} className="flex flex-col gap-2 pt-2">
+      <p className="mu m-0 text-sm">Um por linha: o número da aula e o link do vídeo. Funciona com YouTube (pode ser não listado), Vimeo, Panda Video, Bunny Stream, Google Drive ou arquivo .mp4. Dá pra colar direto de uma planilha com duas colunas.</p>
+      <label htmlFor="lista-videos" className="sr-only">Lista de vídeos</label>
+      <textarea id="lista-videos" name="lista" className="ta min-h-40 font-mono text-xs" placeholder={"0.1 https://youtu.be/xxxxxxxxxxx\n0.2 https://vimeo.com/123456789\nP1.1 https://player-vz-....tv.pandavideo.com.br/embed/?v=..."} />
+      {st?.erro ? <Notice tone="danger">{st.erro}</Notice> : null}
+      {st?.ok ? (
+        <Notice tone={st.problemas?.length ? "warn" : "ok"}>
+          {st.salvas} vídeo(s) salvos.{st.problemas?.length ? ` Não salvei: ${st.problemas.join(" · ")}` : ""}
+        </Notice>
+      ) : null}
+      <button className="ab1 self-start" disabled={pending}>{pending ? "Salvando..." : "Salvar os vídeos"}</button>
+    </form>
   );
 }

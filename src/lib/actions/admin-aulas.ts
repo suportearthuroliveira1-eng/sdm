@@ -258,3 +258,42 @@ export async function removerImagem(tipo: TipoImagem, id: string): Promise<Aulas
   revalidar();
   return { ok: true, msg: "Imagem removida.", url: null };
 }
+
+export type ImportVideos = { ok?: boolean; erro?: string; salvas?: number; problemas?: string[] } | null;
+
+/**
+ * Admin → Aulas: cola vários vídeos de uma vez, um por linha: "0.1 https://link-do-video".
+ * Aceita espaço, tab, ponto e vírgula ou vírgula entre o id e o link (dá pra colar de planilha).
+ */
+export async function importarVideos(_p: ImportVideos, fd: FormData): Promise<ImportVideos> {
+  const admin = await requireAdmin(["admin", "conteudo"]);
+  const linhas = String(fd.get("lista") ?? "").split(/\r?\n/).map((l) => l.trim()).filter(Boolean).slice(0, 500);
+  if (!linhas.length) return { erro: "Cole pelo menos uma linha: id da aula e o link do vídeo." };
+  const { videoDaAula } = await import("@/lib/domain/video");
+  const ids = new Set((await db().select({ id: schema.lessons.id }).from(schema.lessons)).map((r) => r.id));
+  const problemas: string[] = [];
+  let salvas = 0;
+  for (const l of linhas) {
+    const m = l.match(/^\s*(?:aula\s*)?([A-Za-z0-9.\-]{1,16})[\s,;\t]+(\S+)\s*$/i);
+    if (!m) {
+      problemas.push(`"${l.slice(0, 40)}": use "id link"`);
+      continue;
+    }
+    const [, id, url] = m as unknown as [string, string, string];
+    if (!ids.has(id)) {
+      problemas.push(`${id}: aula não existe`);
+      continue;
+    }
+    const v = videoDaAula(url);
+    if (!v) {
+      problemas.push(`${id}: link inválido (precisa começar com https://)`);
+      continue;
+    }
+    await db().update(schema.lessons).set({ videoUrl: url }).where(eq(schema.lessons.id, id));
+    salvas++;
+  }
+  await audit(admin.id, "aula.videos_em_massa", { tipo: "aula", id: "varias" }, { salvas, problemas: problemas.length });
+  revalidatePath("/admin/aulas");
+  revalidatePath("/app", "layout");
+  return { ok: true, salvas, problemas };
+}

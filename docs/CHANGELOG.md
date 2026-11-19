@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-19 · Colar vídeos de várias aulas de uma vez
+- Admin → Aulas e trilhas → "Colar vídeos de várias aulas": um por linha, "0.1 https://link" (aceita colar de planilha). Valida a aula e o link (mesmas regras do player) e diz quais não salvou. Mostra quantas aulas já têm vídeo. `docs/aulas-videos.csv` traz as 117 aulas pra preencher.
+
 ## 2026-11-19 · Aula mostra o vídeo de verdade
 - A tela da aula (L02) mostrava sempre o aviso "[vídeo da aula · o time sobe pelo admin]", mesmo com vídeo cadastrado. Agora o link salvo em Admin → Aulas e trilhas → aula → Vídeo toca dentro do app.
 - Aceita YouTube (vira player sem cookies), Vimeo (inclusive privado com hash), Panda Video, Bunny Stream, Google Drive e arquivo .mp4/.webm (`src/lib/domain/video.ts`, com testes). Outro site vira botão "Abrir o vídeo da aula". http e links estranhos são recusados.

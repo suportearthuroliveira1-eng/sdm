@@ -5,7 +5,7 @@ import { db, schema } from "@/lib/db";
 import { AULAS_VISUAL_KEY, lerAulasVisual, REGRA_LABEL } from "@/lib/domain/aulas-visual";
 import { getSetting } from "@/lib/server/settings";
 import { AdminHead } from "../head";
-import { MoverAula, TrilhaForm } from "./forms";
+import { ImportarVideos, MoverAula, TrilhaForm } from "./forms";
 
 export const metadata = { title: "Aulas" };
 
@@ -15,7 +15,7 @@ export default async function AdminAulas() {
   const [mods, aulas, vRaw] = await Promise.all([
     db().select().from(schema.modules).orderBy(asc(schema.modules.ordem), asc(schema.modules.id)),
     db()
-      .select({ id: schema.lessons.id, moduleId: schema.lessons.moduleId, titulo: schema.lessons.titulo, minutos: schema.lessons.minutos, publicada: schema.lessons.publicada, regravar: schema.lessons.regravar, ordem: schema.lessons.ordem })
+      .select({ id: schema.lessons.id, moduleId: schema.lessons.moduleId, titulo: schema.lessons.titulo, minutos: schema.lessons.minutos, publicada: schema.lessons.publicada, regravar: schema.lessons.regravar, ordem: schema.lessons.ordem, videoUrl: schema.lessons.videoUrl })
       .from(schema.lessons)
       .orderBy(asc(schema.lessons.ordem), asc(schema.lessons.id)),
     getSetting<unknown>(AULAS_VISUAL_KEY, null),
@@ -23,10 +23,18 @@ export default async function AdminAulas() {
   const v = lerAulasVisual(vRaw);
   const partes = [...new Set(mods.map((m) => m.parte ?? ""))];
   const totalPub = aulas.filter((a) => a.publicada).length;
+  const comVideo = aulas.filter((a) => a.videoUrl).length;
 
   return (
     <section className="flex max-w-5xl flex-col gap-6">
       <AdminHead id="AULAS" t="Aulas e trilhas" d={`${mods.length} trilhas · ${aulas.length} aulas (${totalPub} publicadas). Capa, banner, ordem e em qual trilha cada aula fica.`} />
+
+      <details className="acd" open={comVideo === 0}>
+        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 font-bold [&::-webkit-details-marker]:hidden">
+          Colar vídeos de várias aulas <span className="mu text-xs font-normal">{comVideo} de {aulas.length} aulas com vídeo</span>
+        </summary>
+        <ImportarVideos />
+      </details>
 
       <details className="acd">
         <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 font-bold [&::-webkit-details-marker]:hidden">
