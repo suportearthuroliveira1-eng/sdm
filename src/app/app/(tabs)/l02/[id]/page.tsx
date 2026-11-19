@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { videoDaAula } from "@/lib/domain/video";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LockIcon } from "@/components/app/ui";
@@ -24,6 +25,7 @@ export default async function L02({ params }: PageProps<"/app/l02/[id]">) {
   const prox = todas.slice(i + 1).find((a) => !a.lock.travado);
   const capa = imagemDaAula(lerAulasVisual(vRaw), aula.id, mod.id);
   const alvo = agoraFacaLink(aula.agoraFacaAlvo, j.student.produtoAtivo);
+  const video = videoDaAula(aula.videoUrl);
 
   return (
     <div className="flex flex-col gap-3.5 pt-3 lg:max-w-3xl lg:pt-0">
@@ -43,12 +45,23 @@ export default async function L02({ params }: PageProps<"/app/l02/[id]">) {
         </div>
       ) : (
         <>
-          <div className="flex min-h-[190px] flex-col items-center justify-center gap-2.5 rounded-[18px] border border-line bg-surface-2 lg:min-h-[360px]">
-            <span className="flex size-[60px] items-center justify-center rounded-full bg-accent" aria-hidden>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="#140F1F"><path d="M8 5v14l11-7z" /></svg>
-            </span>
-            <span className="mu text-sm">[vídeo da aula · o time sobe pelo admin]</span>
-          </div>
+          {video?.tipo === "iframe" ? (
+            <div className="overflow-hidden rounded-[18px] border border-line bg-black">
+              <iframe src={video.src} title={`Vídeo da aula ${aula.titulo}`} className="aspect-video w-full" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowFullScreen loading="lazy" referrerPolicy="strict-origin-when-cross-origin" />
+            </div>
+          ) : video?.tipo === "arquivo" ? (
+            <video src={video.src} controls playsInline preload="metadata" className="aspect-video w-full rounded-[18px] border border-line bg-black" />
+          ) : video?.tipo === "link" ? (
+            <a href={video.src} target="_blank" rel="noopener noreferrer" className="flex min-h-[120px] flex-col items-center justify-center gap-2 rounded-[18px] border border-line bg-surface-2 text-text no-underline">
+              <span className="grid size-[56px] place-items-center rounded-full bg-accent" aria-hidden><svg width="22" height="22" viewBox="0 0 24 24" fill="#140F1F"><path d="M8 5v14l11-7z" /></svg></span>
+              <span className="text-sm font-bold">Abrir o vídeo da aula</span>
+            </a>
+          ) : (
+            <div className="flex min-h-[160px] flex-col items-center justify-center gap-2 rounded-[18px] border border-dashed border-line-2 bg-surface-2 px-4 text-center">
+              <span className="text-sm font-bold">O vídeo desta aula chega em breve</span>
+              <span className="mu text-xs">Enquanto isso, leia o resumo e faça o &quot;Agora faça&quot; abaixo.</span>
+            </div>
+          )}
           <div className="mu">{[aula.tipo, aula.minutos ? `${aula.minutos} min` : null].filter(Boolean).join(" · ")}</div>
           {aula.agoraFacaTexto ? (
             <div className="flex flex-col gap-2 rounded-2xl border border-accent bg-sel p-4">

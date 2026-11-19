@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-19 · Aula mostra o vídeo de verdade
+- A tela da aula (L02) mostrava sempre o aviso "[vídeo da aula · o time sobe pelo admin]", mesmo com vídeo cadastrado. Agora o link salvo em Admin → Aulas e trilhas → aula → Vídeo toca dentro do app.
+- Aceita YouTube (vira player sem cookies), Vimeo (inclusive privado com hash), Panda Video, Bunny Stream, Google Drive e arquivo .mp4/.webm (`src/lib/domain/video.ts`, com testes). Outro site vira botão "Abrir o vídeo da aula". http e links estranhos são recusados.
+- Sem vídeo, aparece "O vídeo desta aula chega em breve".
+- Situação: as 117 aulas do SDM (19 módulos) estão no app com título, tipo, minutos e "Agora faça", mas sem vídeo. O País Oculto não tem aulas: é uma área de IA (mapa, estratégia, plano, PDF).
+
 ## 2026-11-16 · Professora consulta a ficha da aluna
 - `src/lib/ai/contexto-aluna.ts`: antes de cada resposta a Professora lê os dados da própria aluna.
   - O que ela lê: nome, país, idiomas, se fez o diagnóstico e as respostas, a sugestão da IA e o caminho.

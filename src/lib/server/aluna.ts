@@ -13,6 +13,7 @@ export type AulaView = {
   minutos: number | null;
   agoraFacaTexto: string | null;
   agoraFacaAlvo: string | null;
+  videoUrl: string | null;
   po: boolean;
   vista: boolean;
   feita: boolean;
@@ -55,6 +56,7 @@ export const getJornada = cache(async () => {
           minutos: a.minutos,
           agoraFacaTexto: a.agoraFacaTexto,
           agoraFacaAlvo: a.agoraFacaAlvo,
+          videoUrl: a.videoUrl,
           po: a.requerEntitlements.length > 0,
           vista: Boolean(p?.vistaEm),
           feita: Boolean(p?.agoraFacaEm),
